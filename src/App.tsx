@@ -16,7 +16,7 @@ import {
   Profile,
 } from './pages';
 import { CustomerDetails } from './pages/customers/components';
-import { NewOrder, Order } from './pages/home/components';
+import { DispatcherNewActiveOrder, NewOrder, Order } from './pages/home/components';
 import { OldNewOrder } from './pages/home/components/old-order/components';
 import PWABadge from './PWABadge';
 import { InstallApp, NetworkStatus, useStorage } from './utils';
@@ -123,6 +123,7 @@ const App = () => {
               <Route path='/profile' element={<Profile />} />
               <Route path='/new-order' element={<NewOrder />} />
               <Route path='/order/:id' element={<Order />} />
+              <Route path='/order' element={<DispatcherNewActiveOrder />} />
               <Route path='/customers' element={<Customers />} />
               <Route
                 path='/customers/customer-details'

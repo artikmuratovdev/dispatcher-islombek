@@ -10,7 +10,8 @@ export const HomePage = () => {
     <div>
       <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full">
         <div className="flex w-[95%] m-auto items-center justify-between">
-          <h4 className="text-center justify-center text-white text-2xl font-semibold ml-[100px] leading-loose">
+          <div className="w-7"></div>
+          <h4 className="text-center justify-center text-white text-2xl font-semibold leading-loose">
             Buyurtmalar
           </h4>
           <button onClick={() => navigate("/notifications")}>

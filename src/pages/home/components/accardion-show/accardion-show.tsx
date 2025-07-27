@@ -29,7 +29,7 @@ export const MainPart = () => {
 
     return (
         <>
-            <div className="space-y-3">
+            <div className="space-y-3 mb-16">
               {activeOrders && activeOrders.orders.map((item) => (
                 <Order_item key={item._id} item={item} getTimes={getTimes} />
               ))}

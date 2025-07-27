@@ -1,0 +1,150 @@
+import { useEffect, useRef, useState } from "react";
+import { Edit } from "@/icons";
+import { Minus, Plus } from "lucide-react";
+import toast from "react-hot-toast";
+import { breadInfo } from "@/app/api/_order/types";
+
+type Props = {
+  bread: breadInfo;
+  onChange: (id: string, value: number) => void;
+  setBreads: React.Dispatch<React.SetStateAction<breadInfo[]>>;
+};
+
+const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
+  const [count, setCount] = useState(0);
+  const [price, setPrice] = useState(bread.breadSoldPrice);
+  const [priceVisible, setPriceVisible] = useState(false);
+
+  useEffect(() => {
+    setPrice(bread.breadSoldPrice);
+  }, [bread.breadSoldPrice]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Update totals and bread list
+  useEffect(() => {
+    // Narx 0 bo‘lsa umumiyga qo‘shilmasin
+    if (price === 0) {
+      onChange(bread._id, 0);
+      return;
+    }
+
+    // Umumiy narxni yangilash
+    onChange(bread._id, count * price);
+
+    // Breads massivini yangilash
+    setBreads((prev) => {
+      // count 0 bo‘lsa ro‘yxatdan o‘chirish
+      if (count === 0) {
+        return prev.filter((b) => b._id !== bread._id);
+      }
+
+      // Ro‘yxatda bor bo‘lsa yangilash
+      const exists = prev.find((b) => b._id === bread._id);
+      if (exists) {
+        return prev.map((b) =>
+          b._id === bread._id
+            ? { ...b, breadSoldPrice: price, amount: count }
+            : b,
+        );
+      }
+
+      // Ro‘yxatda bo‘lmasa yangi nonni qo‘shish
+      return [
+        ...prev,
+        {
+          ...bread,
+          breadSoldPrice: price,
+          amount: count,
+        },
+      ];
+    });
+  }, [count, price]);
+
+  // Blur input and hide when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setPriceVisible(false);
+        inputRef.current?.blur();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleEditClick = () => {
+    setPriceVisible((visible) => {
+      const newState = !visible;
+      if (!newState) {
+        inputRef.current?.blur();
+      } else {
+        setTimeout(() => inputRef.current?.focus(), 0);
+      }
+      return newState;
+    });
+  };
+
+  return (
+    <div
+      ref={wrapperRef}
+      className="grid grid-cols-3 gap-5 bg-white rounded-lg px-3 py-2"
+    >
+      <h3 className="text-blue-950 font-semibold">{bread.title}</h3>
+
+      <div className="text-blue-950 font-semibold flex gap-2 justify-center mr-5">
+        {!priceVisible && <p>{price}</p>}
+        <input
+          ref={inputRef}
+          type="number"
+          value={price}
+          onChange={(e) => {
+            const val = Number(e.target.value);
+            setPrice(isNaN(val) ? 0 : val);
+          }}
+          className={`max-w-[80px] ${
+            priceVisible ? "block" : "hidden"
+          } border border-[#FFCC15] transition-all duration-200 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+        />
+        <span onClick={handleEditClick}>
+          <Edit className="text-yellow cursor-pointer" />
+        </span>
+      </div>
+
+      <div className="text-blue-950 font-semibold flex items-center justify-center gap-2">
+        <Minus
+          className="bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer"
+          onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
+        />
+
+        <input
+          type="number"
+          value={count}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            setCount(isNaN(value) ? 0 : Math.max(value, 0));
+          }}
+          className="w-10 text-center border border-[#FFCC15] rounded bg-white
+                [&::-webkit-inner-spin-button]:appearance-none 
+                [&::-webkit-outer-spin-button]:appearance-none 
+                [appearance:textfield]"
+        />
+
+        <Plus
+          className="bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer"
+          onClick={() => {
+            if (price > 0) {
+              setCount((prev) => prev + 1);
+            } else {toast.error("Narx nol bo‘lishi mumkin emas");}
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default BreadPrices;
