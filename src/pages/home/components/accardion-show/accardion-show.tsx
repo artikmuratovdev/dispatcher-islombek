@@ -1,41 +1,38 @@
-import { useState } from "react";
-import { PopoverAnchor } from "..";
+import { useLazyGetActiveDispatchesQuery } from "@/app/api/_order";
+import Order_item from "./components/order-item";
+import { useEffect, useState } from "react";
 
 export const MainPart = () => {
-    const [open, setOpen] = useState(false);
-    const [openOne, setOpenOne] = useState(false);
-    const [openTwo, setOpenTwo] = useState(false);
+    const [getActiveOrders, {data:activeOrders}] = useLazyGetActiveDispatchesQuery();
+    const [currentTime, setCurrentTime] = useState(Date.now());
+
+
+
+    useEffect(() => {
+      getActiveOrders();
+      const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+
+    return () => clearInterval(interval);
+    },[])
+
+    const getTimes = (date: Date | string) => {
+    const past = new Date(date).getTime();
+    const diffMs = currentTime - past;
+
+    const minutes = Math.floor(diffMs / 60000);
+    const seconds = Math.floor((diffMs % 60000) / 1000);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  };
+
 
     return (
         <>
-            <div>
-                <div className="w-full h-10 bg-white rounded-lg border border-yellow-400 mt-10 justify-between flex items-center p-2">
-                    <h3 className="text-red-700 text-base font-bold leading-tight">Yubileyniy</h3>
-                    <div className="flex items-center gap-2">
-                        <div className="w-20 h-7 bg-gray-200 rounded-[10px] flex justify-center items-center">
-                            <h3>7:25</h3>
-                        </div>
-                        <PopoverAnchor open={open} setOpen={setOpen} />
-                    </div>
-                </div>
-                <div className="w-full h-10 bg-white rounded-lg border border-yellow-400 mt-10 justify-between flex items-center p-2">
-                    <h3 className="text-green-700 text-base font-bold leading-tight">Afruz to'yxonasi</h3>
-                    <div className="flex items-center gap-2">
-                        <div className="w-20 h-7 bg-gray-200 rounded-[10px] flex justify-center items-center">
-                            <h3>16:45</h3>
-                        </div>
-                        <PopoverAnchor open={openOne} setOpen={setOpenOne} />
-                    </div>
-                </div>
-                <div className="w-full h-10 bg-white rounded-lg border border-yellow-400 mt-10 justify-between flex items-center p-2">
-                    <h3 className="text-green-700 text-base font-bold leading-tight">Begoyim</h3>
-                    <div className="flex items-center gap-2">
-                        <div className="w-20 h-7 bg-gray-200 rounded-[10px] flex justify-center items-center">
-                            <h3>16:45</h3>
-                        </div>
-                        <PopoverAnchor open={openTwo} setOpen={setOpenTwo} />
-                    </div>
-                </div>
+            <div className="space-y-3">
+              {activeOrders && activeOrders.orders.map((item) => (
+                <Order_item key={item._id} item={item} getTimes={getTimes} />
+              ))}
             </div>
         </>
     );
