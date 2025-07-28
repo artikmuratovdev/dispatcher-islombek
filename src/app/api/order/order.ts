@@ -69,7 +69,6 @@ export const {
   useGetOrderQuery,
   useGetAllOrdersQuery,
   useEditOrdersMutation,
-  useDeleteOrdersMutation,
   useCreateNotificationMutation,
   useLazyGetOrderQuery,
 } = order;

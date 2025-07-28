@@ -17,7 +17,7 @@ import {
 import BreadList from "./components/BreadList";
 import toast from "react-hot-toast";
 
-export const DispatcherNewActiveOrder = () => {
+export const NewActiveOrder = () => {
   const {
     control,
     formState: { errors },

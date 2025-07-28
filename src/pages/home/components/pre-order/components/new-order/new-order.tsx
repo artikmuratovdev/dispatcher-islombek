@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { BreadItem } from "../../.."
 import { useState } from "react"
 
-export const OldNewOrder = () => {
+export const NewPreOrder = () => {
     const navigate = useNavigate();
     const [chigatoy, setChigatoy] = useState(0)
     const [patir, setPatir] = useState(1000)

@@ -30,7 +30,7 @@ const Order_item = ({ item , getTimes}: { item: activeOrder , getTimes: (date: D
         <div className='w-20 h-7 bg-gray-200 rounded-[10px] flex justify-center items-center'>
           <h3>{getTimes(item.updatedAt.toString())}</h3>
         </div>
-        <PopoverAnchor open={open} id={item._id} setOpen={setOpen} />
+        <PopoverAnchor title={setClientName(item.client)} open={open} id={item._id} setOpen={setOpen} />
       </div>
     </div>
   );

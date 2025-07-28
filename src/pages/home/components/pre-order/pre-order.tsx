@@ -1,6 +1,8 @@
+import { Button } from "@/components"
+import { Plus } from "@/icons"
 import { useNavigate } from "react-router-dom"
 
-export const OldOrder = () => {
+export const PreOrder = () => {
     const navigate = useNavigate()
     return (
         <div className="space-y-3">
@@ -16,6 +18,12 @@ export const OldOrder = () => {
                     <h3 className="text-blue-950 text-base font-semibold">16.04.2025 10:30</h3>
                 </div>
             </div>
+            <Button
+          className='fixed bottom-[104px] right-5 h-10 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
+          onClick={() => navigate('/orders/new-order')}
+        >
+          <Plus />
+        </Button>
         </div>
     )
 }

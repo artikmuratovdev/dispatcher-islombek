@@ -1,8 +1,7 @@
-import { MessagesIcon, Notifications, Plus } from "@/icons";
-import { Button } from "@/components";
+import { MessagesIcon, Notifications } from "@/icons";
 import { useNavigate } from "react-router-dom";
 import { Tabs } from "@/components/common/tabs";
-import { MainPart, OldOrder } from "./components";
+import { ActiveOrders, PreOrder } from "./components";
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -29,23 +28,17 @@ export const HomePage = () => {
           <Tabs contentClassName="mt-[20px]" tabs={[
             {
               label: "Faol buyurtmalar",
-              children: <MainPart />
+              children: <ActiveOrders />
             },
             {
               label: "Oldingi buyurtmalar",
-              children: <OldOrder />
+              children: <PreOrder />
             }
           ]}
             defaultTabIndex={0}
           />
         </div>
       </div>
-      <Button
-        className="fixed bottom-[104px] right-5 h-10 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]"
-        onClick={() => navigate("/order")}
-      >
-        <Plus />
-      </Button>
     </div>
   );
 };

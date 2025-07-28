@@ -90,6 +90,29 @@ export interface AddActiveOrderReq {
   phone: string;
 }
 
+export interface AddPreOrderReq {
+  client: string;
+  paidAmount: number;
+  breadsInfo: breadInfo[];
+  fromStaff: string;
+  commit: string;
+  deliveryTime: string;
+  address: string;
+  phone: string;
+}
+
 export interface AddActiveOrderRes {
   message: string;
+}
+
+export interface DeleteReq {
+  id: string;
+}
+export interface DeleteRes extends AddActiveOrderRes {}
+
+export interface UpdateReq extends AddActiveOrderReq {
+  _id:string;
+}
+export interface UpdateRes extends AddActiveOrderRes {
+  order: activeOrder;
 }

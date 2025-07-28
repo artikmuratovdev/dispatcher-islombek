@@ -16,8 +16,8 @@ import {
   Profile,
 } from './pages';
 import { CustomerDetails } from './pages/customers/components';
-import { DispatcherNewActiveOrder, NewOrder, Order } from './pages/home/components';
-import { OldNewOrder } from './pages/home/components/old-order/components';
+import { NewActiveOrder, Order } from './pages/home/components';
+import { NewPreOrder } from './pages/home/components/pre-order/components';
 import PWABadge from './PWABadge';
 import { InstallApp, NetworkStatus, useStorage } from './utils';
 import { AuthProvider } from './components/AuthProvider/AuthProvider';
@@ -121,15 +121,14 @@ const App = () => {
               <Route path='/messages' element={<Messages />} />
               <Route path='/chat/:id' element={<Chat />} />
               <Route path='/profile' element={<Profile />} />
-              <Route path='/new-order' element={<NewOrder />} />
-              <Route path='/order/:id' element={<Order />} />
-              <Route path='/order' element={<DispatcherNewActiveOrder />} />
+              <Route path='/orders/:id' element={<Order />} />
+              <Route path='/orders/new-order' element={<NewActiveOrder />} />
+              <Route path='/orders/pre-order' element={<NewPreOrder />} />
               <Route path='/customers' element={<Customers />} />
               <Route
                 path='/customers/customer-details'
                 element={<CustomerDetails />}
               />
-              <Route path='/dashboard/new-order' element={<OldNewOrder />} />
               <Route path='/notifications' element={<Notification />} />
             </Routes>
           </AuthProvider>

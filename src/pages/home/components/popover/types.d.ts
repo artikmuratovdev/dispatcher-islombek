@@ -4,4 +4,5 @@ export interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
   id: string;
+  title:string;
 }
