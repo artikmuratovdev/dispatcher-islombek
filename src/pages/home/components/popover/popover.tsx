@@ -17,7 +17,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button, Input } from '@/components';
 import React from 'react';
-import { useDeleteOrderMutation } from '@/app/api';
+import { useDeleteOrderMutation, useLazyGetActiveDispatchesQuery } from '@/app/api';
+import toast from 'react-hot-toast';
 
 export const PopoverAnchor = ({ open, setOpen, id, title }: Props) => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export const PopoverAnchor = ({ open, setOpen, id, title }: Props) => {
           <h3 className='text-blue-950 text-sm font-semibold'>Tahrirlash</h3>
         </div>
         <div className='h-[1px] bg-gray-200 mb-2'></div>
-        <DeletePopover title={title} id={id} />
+        <DeletePopover title={title} id={id} setOpenTag={setOpen} />
       </PopoverContent>
     </Popover>
   );
@@ -46,13 +47,15 @@ export const PopoverAnchor = ({ open, setOpen, id, title }: Props) => {
 type DeletePopoverProps = {
   title: string;
   id: string;
+  setOpenTag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const DeletePopover: React.FC<DeletePopoverProps> = ({ title, id }) => {
+export const DeletePopover: React.FC<DeletePopoverProps> = ({ title, id ,setOpenTag}) => {
   const [name, setName] = React.useState('');
   const [error, setError] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [deleteOrder] = useDeleteOrderMutation();
+  const [getActiveOrders] = useLazyGetActiveDispatchesQuery()
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,10 +63,10 @@ export const DeletePopover: React.FC<DeletePopoverProps> = ({ title, id }) => {
 
     if (trimmed === title) {
       try {
-        const res = await deleteOrder({ id }).unwrap();
-        console.log('Deleted:', id);
-        console.log(res.message);
+        await deleteOrder({ id }).unwrap();
         setError('');
+        setOpenTag(false);
+        toast.success("Buyurtma o'chirildi");
         setOpen(false);
       } catch (err) {
         setError("O'chirishda xatolik yuz berdi");
@@ -71,6 +74,7 @@ export const DeletePopover: React.FC<DeletePopoverProps> = ({ title, id }) => {
     } else {
       setError(`Iltimos, "${title}" deb yozing.`);
     }
+    await getActiveOrders();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

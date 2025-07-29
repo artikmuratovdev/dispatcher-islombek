@@ -1,4 +1,4 @@
-import { useEditPasswordMutation } from '@/app/api/authApi';
+// import { useEditPasswordMutation } from '@/app/api/authApi';
 import { BottomSheet, Button, Input } from '@/components';
 import { Label } from '@/components/ui/label';
 import { useHandleRequest } from '@/hooks/use-handle-request/use-handle-reuqest';
@@ -28,27 +28,27 @@ export const EditPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordtwo, setShowPasswordTwo] = useState(false);
   const [showPasswordth, setShowPasswordTh] = useState(false);
-  const [editPassword, { isLoading }] = useEditPasswordMutation();
+  // const [editPassword, { isLoading }] = useEditPasswordMutation();
   const [open, setOpen] = useState(false);
-  const onSubmit = async (data: PropsValue) => {
-    await handleRequest({
-      request: async () => {
-        const result = await editPassword({
-          oldPassword: data.oldPassword,
-          newPassword: data.newPassword,
-          confirmPassword: data.confirmPassword,
-        }).unwrap();
-        return result;
-      },
-      onSuccess: () => {
-        toast.success("Parol muvaffaqiyatli o'zgartirildi!");
-        if (toast.success("Parol muvaffaqiyatli o'zgartirildi!")) {
-          useStorage.removeCredentials();
-          window.location.reload();
-        }
-      },
-    });
-  };
+  // const onSubmit = async (data: PropsValue) => {
+  //   await handleRequest({
+  //     request: async () => {
+  //       const result = await editPassword({
+  //         oldPassword: data.oldPassword,
+  //         newPassword: data.newPassword,
+  //         confirmPassword: data.confirmPassword,
+  //       }).unwrap();
+  //       return result;
+  //     },
+  //     onSuccess: () => {
+  //       toast.success("Parol muvaffaqiyatli o'zgartirildi!");
+  //       if (toast.success("Parol muvaffaqiyatli o'zgartirildi!")) {
+  //         useStorage.removeCredentials();
+  //         window.location.reload();
+  //       }
+  //     },
+  //   });
+  // };
   return (
     <>
       <div
@@ -62,7 +62,7 @@ export const EditPasswordForm = () => {
       </div>
       <BottomSheet open={open} setOpen={setOpen}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          // onSubmit={form.handleSubmit(onSubmit)}
           noValidate
           className='w-full'
         >
@@ -181,7 +181,7 @@ export const EditPasswordForm = () => {
                 </>
               )}
             />
-            <Button
+            {/* <Button
               type='submit'
               disabled={isLoading}
               className='mt-6 w-full bg-[#ffcb15] text-[#1C2C57] hover:bg-[#ffcb15]'
@@ -191,7 +191,7 @@ export const EditPasswordForm = () => {
               ) : (
                 "O'zgartirish"
               )}
-            </Button>
+            </Button> */}
           </div>
         </form>
       </BottomSheet>

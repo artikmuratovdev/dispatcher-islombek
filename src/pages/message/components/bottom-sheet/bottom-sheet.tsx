@@ -1,4 +1,3 @@
-import { useGetAllUsersQuery, useSendComplaintMutation } from '@/app/api';
 import { Button, TextArea } from '@/components';
 import {
   Select,
@@ -19,33 +18,30 @@ export const SentMessage = ({
   setOpen: (value: boolean) => void;
 }) => {
   const form = useForm();
-  const [sendComplaint, { isLoading }] = useSendComplaintMutation();
+  // const [sendComplaint, { isLoading }] = useSendComplaintMutation();
   const handleRequest = useHandleRequest();
-  const { data } = useGetAllUsersQuery({
-    roles: Object.values(Role).filter((role) => role !== Role.CUSTOMER),
-  });
-  const onSubmit = async (data: PropsComp) => {
-    await handleRequest({
-      request: async () => {
-        const result = await sendComplaint(data).unwrap();
-        return result;
-      },
-      onSuccess: () => {
-        form.reset({
-          to: '',
-          content: '',
-        });
-        setOpen(false);
-        toast.success('Shikoyat muvaffaqiyatli yuborildi!', {
-          duration: 2000,
-        });
-      },
-    });
-  };
+  // const onSubmit = async (data: PropsComp) => {
+  //   await handleRequest({
+  //     request: async () => {
+  //       const result = await sendComplaint(data).unwrap();
+  //       return result;
+  //     },
+  //     onSuccess: () => {
+  //       form.reset({
+  //         to: '',
+  //         content: '',
+  //       });
+  //       setOpen(false);
+  //       toast.success('Shikoyat muvaffaqiyatli yuborildi!', {
+  //         duration: 2000,
+  //       });
+  //     },
+  //   });
+  // };
   return (
     <div>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        // onSubmit={form.handleSubmit(onSubmit)}
         className='flex flex-col gap-y-3'
       >
         <Controller
@@ -59,15 +55,13 @@ export const SentMessage = ({
                   <SelectValue placeholder='Xodimni tanlang' />
                 </SelectTrigger>
                 <SelectContent className='bg-white rounded-lg border border-[#ffcb15] mt-[9px]'>
-                  {data?.map((item) => (
-                    <SelectItem
+                    {/* <SelectItem
                       key={item._id}
                       value={item._id as string}
                       className='text-[#1b2b56] text-base font-semibold font-inter bg-white rounded-lg border border-[#ffcb15] mt-[9px] flex items-center gap-x-12'
                     >
                       {item.fullName}
-                    </SelectItem>
-                  ))}
+                    </SelectItem> */}
                 </SelectContent>
               </Select>
             </>
@@ -93,13 +87,13 @@ export const SentMessage = ({
           )}
         />
         <div className='flex justify-end'>
-          <Button
+          {/* <Button
             type='submit'
             disabled={isLoading}
             className=' bg-[#ffcb15] rounded-lg text-[#1b2b56] text-base font-semibold font-inter hover:bg-[#ffcb15] mt-[7px]'
           >
             {isLoading ? 'Yuborilmoqda...' : 'Yuborish'}
-          </Button>
+          </Button> */}
         </div>
       </form>
     </div>

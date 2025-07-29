@@ -1,4 +1,3 @@
-import { useEditOrdersMutation } from '@/app/api/order/order';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,37 +12,36 @@ import { toast } from 'react-hot-toast';
 import { AlertProps } from './types';
 
 export function Alert({ children, className, open, setOpen, id }: AlertProps) {
-  const [deleteOrders, { isLoading }] = useEditOrdersMutation();
   const handleRequest = useHandleRequest();
-  const handleLogOut = async (id: string) => {
-    await handleRequest({
-      request: async () => {
-        const result = await deleteOrders({
-          id,
-          body: {
-            status: OrderStatus.CANCELLED,
-          },
-        }).unwrap();
-        return result;
-      },
-      onSuccess: () => {
-        setOpen('');
-        toast.success("Muvaffaqiyatli o'chirildi!");
-      },
-    });
-  };
+  // const handleLogOut = async (id: string) => {
+  //   await handleRequest({
+  //     request: async () => {
+  //       const result = await deleteOrders({
+  //         id,
+  //         body: {
+  //           status: OrderStatus.CANCELLED,
+  //         },
+  //       }).unwrap();
+  //       return result;
+  //     },
+  //     onSuccess: () => {
+  //       setOpen('');
+  //       toast.success("Muvaffaqiyatli o'chirildi!");
+  //     },
+  //   });
+  // };
   return (
     <AlertDialog open={open} onOpenChange={() => setOpen && setOpen('')}>
       <AlertDialogContent>
         <AlertDialogHeader className={className}>{children}</AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel
+          {/* <AlertDialogCancel
             onClick={() => handleLogOut(id as string)}
             className='bg-red-500 hover:bg-red-500 text-white hover:text-white'
             disabled={isLoading}
           >
             {isLoading ? "O'chirilmoqda..." : "O'chirish"}
-          </AlertDialogCancel>
+          </AlertDialogCancel> */}
           <AlertDialogAction>Bekor qilish</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

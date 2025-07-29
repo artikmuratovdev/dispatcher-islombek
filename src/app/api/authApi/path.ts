@@ -1,7 +1,6 @@
 export enum PATHS {
   LOGIN = "auth/login",
   ME = "auth/me",
-  UPDATE = "/user/",
-  EDITPASSWORD = "user/password",
-  SALARY = "/user/salary",
+  GET_ALL_USERS="auth/get-all-users",
+  USER='auth/user/',
 }

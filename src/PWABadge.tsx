@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
-import { useCreateSubscribeMutation } from './app/api';
+// import { useCreateSubscribeMutation } from './app/api';
 import { useHandleRequest } from './hooks/use-handle-request/use-handle-reuqest';
 import './PWABadge.css';
 
@@ -13,7 +13,7 @@ function urlBase64ToUint8Array(base64String: string) {
 
 function PWABadge() {
   const handleRequest = useHandleRequest();
-  const [createSubscribe] = useCreateSubscribeMutation();
+  // const [createSubscribe] = useCreateSubscribeMutation();
   const period = 60 * 60 * 1000;
   const [showSubscribe, setShowSubscribe] = useState(false);
   const [subscribtion, setSubscription] = useState(() =>
@@ -94,7 +94,7 @@ function PWABadge() {
       console.warn('User subscribed:', subscription);
       await handleRequest({
         request: async () => {
-          await createSubscribe(subscription).unwrap();
+          // await createSubscribe(subscription).unwrap();
         },
       });
 

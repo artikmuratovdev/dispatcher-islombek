@@ -1,8 +1,8 @@
-import {
-  useGetMessagesQuery,
-  useGetOneUserQuery,
-  useMessageMutation,
-} from '@/app/api';
+// import {
+//   useGetMessagesQuery,
+//   useGetOneUserQuery,
+//   useMessageMutation,
+// } from '@/app/api';
 import { Button, Input } from '@/components';
 import { socket } from '@/utils';
 import { useEffect, useState } from 'react';
@@ -11,41 +11,41 @@ import { Link, useParams } from 'react-router-dom';
 
 export const Chat = () => {
   const { id } = useParams();
-  const { data: user, isError } = useGetOneUserQuery(id);
-  const { data: messages, refetch } = useGetMessagesQuery(id as string);
-  const [sendMessage, { isLoading }] = useMessageMutation();
+  // const { data: user, isError } = useGetOneUserQuery(id);
+  // const { data: messages, refetch } = useGetMessagesQuery(id as string);
+  // const [sendMessage, { isLoading }] = useMessageMutation();
   const [message, setMessage] = useState('');
 
-  if (isError) {
-    location.replace('/messages');
-    return;
-  }
+  // if (isError) {
+  //   location.replace('/messages');
+  //   return;
+  // }
 
-  useEffect(() => {
-    socket.on('message', (data) => {
-      if (data.to === id || data.from === id) {
-        refetch();
-      }
-    });
-    return () => {
-      socket.off('message');
-    };
-  }, [id, refetch]);
+  // useEffect(() => {
+  //   socket.on('message', (data) => {
+  //     if (data.to === id || data.from === id) {
+  //       refetch();
+  //     }
+  //   });
+  //   return () => {
+  //     socket.off('message');
+  //   };
+  // }, [id, refetch]);
 
-  const handleSendMessage = async () => {
-    if (!message.trim()) return;
-    try {
-      const newMessage = await sendMessage({
-        content: message,
-        to: id as string,
-      }).unwrap();
-      socket.emit('message', newMessage);
-      setMessage('');
-      refetch();
-    } catch (error) {
-      console.error('Failed to send message:', error);
-    }
-  };
+  // const handleSendMessage = async () => {
+  //   if (!message.trim()) return;
+  //   try {
+  //     const newMessage = await sendMessage({
+  //       content: message,
+  //       to: id as string,
+  //     }).unwrap();
+  //     socket.emit('message', newMessage);
+  //     setMessage('');
+  //     refetch();
+  //   } catch (error) {
+  //     console.error('Failed to send message:', error);
+  //   }
+  // };
   const dates: { [x: string]: true | undefined } = {};
 
   return (
@@ -57,20 +57,20 @@ export const Chat = () => {
             className='bg-[#FFCC15] text-[#1C2C57] rounded-full p-1 cursor-pointer'
           />
         </Link>
-        {user?.avatar && (
+        {/* {user?.avatar && (
           <img
             src={user.avatar}
             alt='avatar'
             className='rounded-full w-10 h-10'
           />
-        )}
+        )} */}
         <span className='text-white font-bold'>
-          {user?.fullName || 'Loading...'}
+          {/* {user?.fullName || 'Loading...'} */}
         </span>
       </div>
 
       <div className='pb-20 pt-16 px-4 flex flex-col gap-4 mt-[29px]'>
-        {messages?.map(
+        {/* {messages?.map(
           (msg, index) => (
             (msg = messages[messages.length - index - 1]),
             (
@@ -102,7 +102,7 @@ export const Chat = () => {
               </div>
             )
           )
-        )}
+        )} */}
       </div>
       <div className='flex items-center gap-x-2 fixed bottom-0 w-full p-2 bg-black'>
         <Input
@@ -111,13 +111,13 @@ export const Chat = () => {
           className='flex-1 rounded-full border border-white bg-[#000] text-white pl-4'
           placeholder='Type a message...'
         />
-        <Button
+        {/* <Button
           onClick={handleSendMessage}
           className='bg-[#527AFF] rounded-[8px] py-[10px] px-[20px] font-[700] text-white hover:bg-[#527AFF]'
           disabled={isLoading}
         >
           {isLoading ? 'Sending...' : 'Send'}
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

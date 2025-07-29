@@ -1,4 +1,4 @@
-import { useLazyGetActiveDispatchesQuery } from '@/app/api/_order';
+import { useLazyGetActiveDispatchesQuery } from '@/app/api';
 import Order_item from './components/order-item';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components';

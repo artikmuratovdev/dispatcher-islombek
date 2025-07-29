@@ -1,4 +1,4 @@
-import { useEditMutation, useMeQuery } from '@/app/api/authApi';
+import { useMeQuery } from '@/app/api/authApi';
 import { useUploadImageMutation } from '@/app/api/uploadImg/uploadImg';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { toast } from 'react-hot-toast';
 export const ProfileTop = () => {
   const { data: user } = useMeQuery(' ');
   const form = useForm();
-  const [editProfile] = useEditMutation();
+  // const [editProfile] = useEditMutation();
   const [uploadImage] = useUploadImageMutation();
   const [selectedImage, setSelectedImage] = useState<File | undefined>(
     undefined
@@ -28,38 +28,40 @@ export const ProfileTop = () => {
     }
   }, [user, form]);
 
-  const handleFileChange = async (formState: any) => {
-    await handleRequest({
-      request: async () => {
-        let userImage = formState.avatar;
-        if (selectedImage) {
-          const formData = new FormData();
-          formData.append('file', selectedImage);
-          userImage = await uploadImage(formData).unwrap();
-        }
-        const result = await editProfile({
-          _id: user?._id,
-          fullName: formState.fullName,
-          avatar: userImage,
-        }).unwrap();
-        return result;
-      },
-      onSuccess: () => {
-        toast.success("Muvaffaqiyatli o'zgartirildi!");
-        setIsModalOpen(false);
-      },
-    });
-  };
+  // const handleFileChange = async (formState: any) => {
+  //   await handleRequest({
+  //     request: async () => {
+  //       let userImage = formState.avatar;
+  //       if (selectedImage) {
+  //         const formData = new FormData();
+  //         formData.append('file', selectedImage);
+  //         userImage = await uploadImage(formData).unwrap();
+  //       }
+  //       const result = await editProfile({
+  //         _id: user?._id,
+  //         fullName: formState.fullName,
+  //         avatar: userImage,
+  //       }).unwrap();
+  //       return result;
+  //     },
+  //     onSuccess: () => {
+  //       toast.success("Muvaffaqiyatli o'zgartirildi!");
+  //       setIsModalOpen(false);
+  //     },
+  //   });
+  // };
 
-  useEffect(() => {
-    if (selectedImage) {
-      handleFileChange(form.getValues());
-    }
-  }, [selectedImage, form.watch('fullName')]);
+  // useEffect(() => {
+  //   if (selectedImage) {
+  //     handleFileChange(form.getValues());
+  //   }
+  // }, [selectedImage, form.watch('fullName')]);
 
   return (
     <div className='border-b-2 border-[#FFCC15] pb-6 rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full'>
-      <form onSubmit={form.handleSubmit(handleFileChange)}>
+      <form 
+      // onSubmit={form.handleSubmit(handleFileChange)}
+      >
         <div className='flex w-[95%] m-auto gap-x-3 items-center'>
           <div className='relative'>
             <Avatar className='w-[116px] h-[116px]'>

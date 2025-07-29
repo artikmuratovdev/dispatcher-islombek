@@ -1,4 +1,4 @@
-import { useGetChatsQuery } from '@/app/api';
+// import { useGetChatsQuery } from '@/app/api';
 import {
   Avatar,
   AvatarFallback,
@@ -14,7 +14,7 @@ import { AddPerson } from './components';
 export const Messages = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { data: chats } = useGetChatsQuery();
+  // const { data: chats } = useGetChatsQuery();
   return (
     <div>
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full'>
@@ -25,7 +25,7 @@ export const Messages = () => {
         </div>
       </div>
       <div className='mt-[70px] p-5'>
-        <div className='flex flex-col gap-y-[27px]'>
+        {/* <div className='flex flex-col gap-y-[27px]'>
           {chats?.map((item) => (
             <div
               onClick={() => navigate(`/chat/${item.chat._id}`)}
@@ -50,7 +50,7 @@ export const Messages = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
       <Button
         onClick={() => setOpen(true)}

@@ -69,3 +69,14 @@ export interface GetSalaryResponse {
     updatedAt?: string;
   };
 }
+
+export interface GetAllUsersResponse {
+  _id: string;
+  fullName: string;
+  username: string;
+  role: Role;
+  createdAt: string;
+}
+export interface GetAllUsersRequest {
+  roles: Role[];
+}

@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { Edit } from "@/icons";
 import { Minus, Plus } from "lucide-react";
 import toast from "react-hot-toast";
@@ -10,47 +16,50 @@ type Props = {
   setBreads: React.Dispatch<React.SetStateAction<breadInfo[]>>;
 };
 
-const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
+const BreadPrices = forwardRef(function BreadPrices(
+  { bread, onChange, setBreads }: Props,
+  ref
+) {
   const [count, setCount] = useState(0);
   const [price, setPrice] = useState(bread.breadSoldPrice);
   const [priceVisible, setPriceVisible] = useState(false);
+
+  const priceInputRef = useRef<HTMLInputElement>(null);
+  const countInputRef = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      priceInputRef.current?.focus();
+    },
+  }));
 
   useEffect(() => {
     setPrice(bread.breadSoldPrice);
   }, [bread.breadSoldPrice]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  // Update totals and bread list
   useEffect(() => {
-    // Narx 0 bo‘lsa umumiyga qo‘shilmasin
     if (price === 0) {
       onChange(bread._id, 0);
       return;
     }
 
-    // Umumiy narxni yangilash
     onChange(bread._id, count * price);
 
-    // Breads massivini yangilash
     setBreads((prev) => {
-      // count 0 bo‘lsa ro‘yxatdan o‘chirish
       if (count === 0) {
         return prev.filter((b) => b._id !== bread._id);
       }
 
-      // Ro‘yxatda bor bo‘lsa yangilash
       const exists = prev.find((b) => b._id === bread._id);
       if (exists) {
         return prev.map((b) =>
           b._id === bread._id
             ? { ...b, breadSoldPrice: price, amount: count }
-            : b,
+            : b
         );
       }
 
-      // Ro‘yxatda bo‘lmasa yangi nonni qo‘shish
       return [
         ...prev,
         {
@@ -62,7 +71,6 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
     });
   }, [count, price]);
 
-  // Blur input and hide when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -70,9 +78,11 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
         !wrapperRef.current.contains(event.target as Node)
       ) {
         setPriceVisible(false);
-        inputRef.current?.blur();
+        priceInputRef.current?.blur();
+        countInputRef.current?.blur();
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -81,9 +91,9 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
     setPriceVisible((visible) => {
       const newState = !visible;
       if (!newState) {
-        inputRef.current?.blur();
+        priceInputRef.current?.blur();
       } else {
-        setTimeout(() => inputRef.current?.focus(), 0);
+        setTimeout(() => priceInputRef.current?.focus(), 0);
       }
       return newState;
     });
@@ -98,8 +108,9 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
 
       <div className="text-blue-950 font-semibold flex gap-2 justify-center mr-5">
         {!priceVisible && <p>{price}</p>}
+
         <input
-          ref={inputRef}
+          ref={priceInputRef}
           type="number"
           value={price}
           onChange={(e) => {
@@ -108,8 +119,11 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
           }}
           className={`max-w-[80px] ${
             priceVisible ? "block" : "hidden"
-          } border border-[#FFCC15] transition-all duration-200 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+          } border border-[#FFCC15] transition-all duration-200 appearance-none 
+          [&::-webkit-inner-spin-button]:appearance-none 
+          [&::-webkit-outer-spin-button]:appearance-none`}
         />
+
         <span onClick={handleEditClick}>
           <Edit className="text-yellow cursor-pointer" />
         </span>
@@ -122,6 +136,7 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
         />
 
         <input
+          ref={countInputRef}
           type="number"
           value={count}
           onChange={(e) => {
@@ -129,9 +144,9 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
             setCount(isNaN(value) ? 0 : Math.max(value, 0));
           }}
           className="w-10 text-center border border-[#FFCC15] rounded bg-white
-                [&::-webkit-inner-spin-button]:appearance-none 
-                [&::-webkit-outer-spin-button]:appearance-none 
-                [appearance:textfield]"
+            [&::-webkit-inner-spin-button]:appearance-none 
+            [&::-webkit-outer-spin-button]:appearance-none 
+            [appearance:textfield]"
         />
 
         <Plus
@@ -139,12 +154,14 @@ const BreadPrices = ({ bread, onChange, setBreads }: Props) => {
           onClick={() => {
             if (price > 0) {
               setCount((prev) => prev + 1);
-            } else {toast.error("Narx nol bo‘lishi mumkin emas");}
+            } else {
+              toast.error("Narx nol bo‘lishi mumkin emas");
+            }
           }}
         />
       </div>
     </div>
   );
-};
+});
 
 export default BreadPrices;

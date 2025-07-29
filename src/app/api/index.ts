@@ -1,6 +1,2 @@
 export * from "./authApi"
-export * from "./uploadImg/uploadImg"
-export * from "./chat/chat"
-export * from "./complaint/complaint"
-export * from "./_order"
-export * from "./notification/notification"
+export * from "./order"

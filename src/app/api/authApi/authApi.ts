@@ -3,15 +3,12 @@ import { API_TAGS } from '@/constants';
 import { baseApi, updateCache } from '../baseApi';
 import { PATHS } from './path';
 import {
-  EditPasswordRequest,
-  EditPasswordResponse,
-  GetSalaryResponse,
+  GetAllUsersRequest,
+  GetAllUsersResponse,
   LoginRequest,
   LoginResponse,
   MeRequest,
   MeResponse,
-  UpdateMeRequest,
-  UpdateMeResponse,
 } from './types';
 
 export const authApi = baseApi.injectEndpoints({
@@ -37,27 +34,24 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: [API_TAGS.USER],
     }),
-    edit: builder.mutation<UpdateMeResponse, UpdateMeRequest>({
-      query: (body) => ({
-        url: PATHS.UPDATE + body._id,
-        method: 'PATCH',
-        body,
-      }),
-      invalidatesTags: [API_TAGS.USER],
+    getAllUsers: builder.query<GetAllUsersResponse[], GetAllUsersRequest>({
+      query: ({ roles }) => {
+        const queryString = roles
+          .map((role) => `roles=${encodeURIComponent(role)}`)
+          .join("&");
+
+        return {
+          url: `/auth/get-all-users?${queryString}`,
+          method: "GET",
+        };
+      },
+      providesTags: [API_TAGS.USER],
     }),
-    editPassword: builder.mutation<EditPasswordResponse, EditPasswordRequest>({
-      query: (body) => ({
-        url: PATHS.EDITPASSWORD,
-        method: 'PATCH',
-        body,
+    getUser: builder.query<MeResponse, string>({
+      query: (id) => ({
+        url: PATHS.USER + id,
       }),
-      invalidatesTags: [API_TAGS.USER],
-    }),
-    getSalary: builder.query<GetSalaryResponse[], void>({
-      query: () => ({
-        url: PATHS.SALARY,
-      }),
-    }),
+    })
   }),
 });
 
@@ -65,7 +59,6 @@ export const {
   useLoginMutation,
   useMeQuery,
   useLazyMeQuery,
-  useEditMutation,
-  useEditPasswordMutation,
-  useGetSalaryQuery,
+  useGetAllUsersQuery,
+  useLazyGetUserQuery
 } = authApi;

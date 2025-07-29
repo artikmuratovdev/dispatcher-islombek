@@ -1,6 +1,7 @@
-import { useState } from "react";
-import BreadPrices from "./BreadPrices";
-import { breadInfo } from "@/app/api/_dispatcherApi/types";
+
+import { useState } from 'react';
+import BreadPrices from './BreadPrices';
+import { breadInfo } from '@/app/api/_order/types';
 
 type BreadListProps = {
   breadPrices: breadInfo[];
@@ -18,7 +19,7 @@ const BreadList = ({ breadPrices, setBreads }: BreadListProps) => {
 
   return (
     <div>
-      <div className="mt-5 flex flex-col gap-y-2">
+      <div className='mt-5 flex flex-col gap-y-2'>
         {breadPrices.map((bread) => (
           <BreadPrices
             key={bread._id}
@@ -29,7 +30,7 @@ const BreadList = ({ breadPrices, setBreads }: BreadListProps) => {
         ))}
       </div>
 
-      <div className="mt-4 text-white text-2xl font-semibold">
+      <div className='mt-4 text-white text-2xl font-semibold'>
         Umumiy: {grandTotal} so'm
       </div>
     </div>

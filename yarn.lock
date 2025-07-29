@@ -2377,6 +2377,11 @@ data-view-byte-offset@^1.0.1:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
+date-fns@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
+  integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
+
 debug@^4.1.0, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.3.6, debug@^4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.4.1.tgz#e5a8bc6cbc4c6cd3e64308b0693a3d4fa550189b"
@@ -3370,7 +3375,7 @@ isexe@^2.0.0:
     "@reduxjs/toolkit" "^2.5.1"
     class-variance-authority "^0.7.1"
     clsx "^2.1.1"
-    islombek-bakery-dispatcher "file:C:/Users/Savitar/AppData/Local/Yarn/Cache/v6/npm-islombek-bakery-dispatcher-0.0.0-a89e067d-d38a-4747-805b-45c9260c4d81-1753506590561/node_modules/islombek-bakery-dispatcher"
+    islombek-bakery-dispatcher "file:C:/Users/Savitar/AppData/Local/Yarn/Cache/v6/npm-islombek-bakery-dispatcher-0.0.0-f71a88bb-a55f-48cf-b73f-a7d6d4171e66-1753773647521/node_modules/islombek-bakery-dispatcher"
     lucide-react "^0.471.2"
     react "^18.3.1"
     react-bootstrap "^2.10.9"

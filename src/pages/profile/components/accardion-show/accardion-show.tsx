@@ -1,4 +1,3 @@
-import { useGetSalaryQuery } from '@/app/api';
 import { useGetAllExpenceQuery } from '@/app/api/expence/expence';
 import {
   Accordion,
@@ -10,23 +9,23 @@ import { ArrowDown } from '@/icons';
 import { useState } from 'react';
 export const AccardionShow = () => {
   const [openAcc, setOpenAcc] = useState(false);
-  const { data: salary } = useGetSalaryQuery();
+  // const { data: salary } = useGetSalaryQuery();
   const { data: getAllExpence } = useGetAllExpenceQuery();
 
-  const totalSalary =
-    salary?.reduce((acc, cur) => acc + (cur?.salary?.amount || 0), 0) || 0;
+  // const totalSalary =
+  //   salary?.reduce((acc, cur) => acc + (cur?.salary?.amount || 0), 0) || 0;
 
   const totalExpence =
     getAllExpence
       ?.filter((item) => !item.reason)
       .reduce((acc, cur) => acc + (cur?.amount || 0), 0) || 0;
 
-  const balance = totalSalary - totalExpence;
+  // const balance = totalSalary - totalExpence;
 
   return (
     <div className='mt-4'>
       <h1 className='text-[#ffcb15] text-xl font-bold mb-5'>
-        Balans: {balance}
+        {/* Balans: {balance} */}
       </h1>
       <Accordion
         type='single'

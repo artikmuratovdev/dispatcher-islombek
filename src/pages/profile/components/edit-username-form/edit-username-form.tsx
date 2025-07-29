@@ -1,4 +1,4 @@
-import { useEditMutation, useMeQuery } from '@/app/api/authApi';
+import {  useMeQuery } from '@/app/api/authApi';
 import { BottomSheet, Button, Input } from '@/components';
 import { Label } from '@/components/ui/label';
 import { useHandleRequest } from '@/hooks/use-handle-request/use-handle-reuqest';
@@ -13,7 +13,7 @@ export const EditUsernameForm = () => {
   const form = useForm();
   const { data: user } = useMeQuery(' ');
   const handleRequest = useHandleRequest();
-  const [editProfile, { isLoading }] = useEditMutation();
+  // const [editProfile, { isLoading }] = useEditMutation();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -23,22 +23,22 @@ export const EditUsernameForm = () => {
       });
     }
   }, [user, form]);
-  const onSubmit = async (formState: any) => {
-    await handleRequest({
-      request: async () => {
-        const result = await editProfile({
-          _id: user?._id,
-          username: formState.username,
-        }).unwrap();
-        return result;
-      },
-      onSuccess: () => {
-        toast.success("Username muvaffaqiyatli o'zgartirildi!");
-        useStorage.removeCredentials();
-        window.location.reload();
-      },
-    });
-  };
+  // const onSubmit = async (formState: any) => {
+  //   await handleRequest({
+  //     request: async () => {
+  //       const result = await editProfile({
+  //         _id: user?._id,
+  //         username: formState.username,
+  //       }).unwrap();
+  //       return result;
+  //     },
+  //     onSuccess: () => {
+  //       toast.success("Username muvaffaqiyatli o'zgartirildi!");
+  //       useStorage.removeCredentials();
+  //       window.location.reload();
+  //     },
+  //   });
+  // };
   return (
     <>
       <div
@@ -52,7 +52,7 @@ export const EditUsernameForm = () => {
       </div>
       <BottomSheet open={open} setOpen={setOpen}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          // onSubmit={form.handleSubmit(onSubmit)}
           noValidate
           className='w-full'
         >
@@ -78,13 +78,13 @@ export const EditUsernameForm = () => {
                 </>
               )}
             />
-            <Button className='mt-6 w-full bg-[#ffcb15] text-[#1C2C57] hover:bg-[#ffcb15]'>
+            {/* <Button className='mt-6 w-full bg-[#ffcb15] text-[#1C2C57] hover:bg-[#ffcb15]'>
               {isLoading || isLoading ? (
                 <LiaSpinnerSolid className='animate-spin' size={40} />
               ) : (
                 "O'zgartirish"
               )}
-            </Button>
+            </Button> */}
           </div>
         </form>
       </BottomSheet>

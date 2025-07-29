@@ -1,4 +1,4 @@
-import { useGetAllUsersQuery } from '@/app/api';
+
 import { Button } from '@/components';
 import {
   Select,
@@ -14,9 +14,6 @@ import { useNavigate } from 'react-router-dom';
 export const AddPerson = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState('');
-  const { data } = useGetAllUsersQuery({
-    roles: Object.values(Role),
-  });
   return (
     <div className='h-[200px]'>
       <Select onValueChange={(value) => setUserId(value)}>
@@ -24,15 +21,13 @@ export const AddPerson = () => {
           <SelectValue placeholder='Xodimni tanlang' />
         </SelectTrigger>
         <SelectContent className='bg-white rounded-lg border border-[#ffcb15] mt-[9px]'>
-          {data?.map((item) => (
-            <SelectItem
+            {/* <SelectItem
               key={item._id}
               value={item._id as string}
               className='text-[#1b2b56] text-base font-semibold font-inter bg-white rounded-lg border border-[#ffcb15] mt-[9px] flex items-center gap-x-12'
             >
               {item.fullName}
-            </SelectItem>
-          ))}
+            </SelectItem> */}
         </SelectContent>
         <div className='flex justify-end mt-[35px]'>
           <Button

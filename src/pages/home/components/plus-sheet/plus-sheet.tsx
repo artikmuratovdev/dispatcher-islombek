@@ -1,12 +1,6 @@
 import {
-  useGetAllUsersQuery,
   useLazyMeQuery,
-  usePushNotificationMutation,
 } from '@/app/api';
-import {
-  useCreateNotificationMutation,
-  useCreateOrderMutation,
-} from '@/app/api/order/order';
 import {
   Button,
   Input,
@@ -39,13 +33,7 @@ export const PlusSheet = ({
   setOpen: (v: boolean) => void;
   customerId?: string | undefined;
 }) => {
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
-  const [sendPushNotification] = usePushNotificationMutation();
-  const [createNotification] = useCreateNotificationMutation();
   const [getUser, { data: dispatcher }] = useLazyMeQuery();
-  const { data: users } = useGetAllUsersQuery({
-    roles: [Role.CUSTOMER],
-  });
   const handleRequest = useHandleRequest();
   const {
     watch,
@@ -114,49 +102,49 @@ export const PlusSheet = ({
       return;
     }
 
-    await handleRequest({
-      request: async () => {
-        const result = await createOrder({
-          amount: data.amount,
-          location: data.location || undefined,
-          customer: data.customer === 'null' ? undefined : data.customer,
-        }).unwrap();
+    // await handleRequest({
+    //   request: async () => {
+    //     const result = await createOrder({
+    //       amount: data.amount,
+    //       location: data.location || undefined,
+    //       customer: data.customer === 'null' ? undefined : data.customer,
+    //     }).unwrap();
 
-        const notification = await createNotification({
-          order: result._id,
-          role: Role.DRIVER,
-          type: Type.ORDER,
-        }).unwrap();
+    //     const notification = await createNotification({
+    //       order: result._id,
+    //       role: Role.DRIVER,
+    //       type: Type.ORDER,
+    //     }).unwrap();
 
-        if (notification?.users?.length) {
-          await Promise.all(
-            notification.users.map(async (userId) => {
-              const pushNotification = await sendPushNotification({
-                id: userId,
-                body: {
-                  title: 'Buyurtma',
-                  body: 'Yangi buyurtma',
-                  data: { url: '/orders' },
-                  actions: [
-                    { action: 'accept', title: 'Qabul qilish' },
-                    { action: 'decline', title: 'Bekor qilish' },
-                  ],
-                  vibrate: [200, 100, 300],
-                },
-              });
-              console.log(`Push notification sent to user:`, pushNotification);
-            })
-          );
-        }
+    //     if (notification?.users?.length) {
+    //       await Promise.all(
+    //         notification.users.map(async (userId) => {
+    //           const pushNotification = await sendPushNotification({
+    //             id: userId,
+    //             body: {
+    //               title: 'Buyurtma',
+    //               body: 'Yangi buyurtma',
+    //               data: { url: '/orders' },
+    //               actions: [
+    //                 { action: 'accept', title: 'Qabul qilish' },
+    //                 { action: 'decline', title: 'Bekor qilish' },
+    //               ],
+    //               vibrate: [200, 100, 300],
+    //             },
+    //           });
+    //           console.log(`Push notification sent to user:`, pushNotification);
+    //         })
+    //       );
+    //     }
 
-        socket.emit('notification', notification);
-        return result;
-      },
-      onSuccess: () => {
-        toast.success("Buyurtma muvaffaqiyatli qo'shildi!");
-        setOpen(false);
-      },
-    });
+    //     socket.emit('notification', notification);
+    //     return result;
+    //   },
+    //   onSuccess: () => {
+    //     toast.success("Buyurtma muvaffaqiyatli qo'shildi!");
+    //     setOpen(false);
+    //   },
+    // });
   };
 
   useEffect(() => {
@@ -187,11 +175,9 @@ export const PlusSheet = ({
                     <SelectValue placeholder='Mijozni tanlang' />
                   </SelectTrigger>
                   <SelectContent className='bg-white rounded-lg border border-[#ffcb15]'>
-                    {users?.map((user) => (
-                      <SelectItem value={user._id as string} key={user?._id}>
+                      {/* <SelectItem value={user._id as string} key={user?._id}>
                         {user.fullName}
-                      </SelectItem>
-                    ))}
+                      </SelectItem> */}
                     <SelectItem value='null'>Boshqa</SelectItem>
                   </SelectContent>
                 </Select>
@@ -244,12 +230,12 @@ export const PlusSheet = ({
             />
           )}
           <div className='flex justify-end mt-5'>
-            <Button
+            {/* <Button
               className='w-1/3 bg-[#ffcb15] text-[#1b2b56] hover:bg-[#ffcb15]'
               disabled={isLoading}
             >
               {isLoading ? 'Yuborilmoqda' : 'Saqlash'}
-            </Button>
+            </Button> */}
           </div>
         </div>
       </form>

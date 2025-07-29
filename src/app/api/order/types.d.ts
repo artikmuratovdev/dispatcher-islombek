@@ -1,71 +1,116 @@
-import { OrderStatus, Role, Status, Type } from '@/constants';
-import { MeResponse } from '../authApi/types';
-
-export interface CreateOrderRequest {
-  amount: number;
-  cost?: string;
-  customer?: string;
-  location?: string;
-  debt?: string;
-}
-
-export interface CreateOrderResponse {
-  _id?: string;
-  branch?: string;
-  status?: OrderStatus;
-  amount: number;
-  debt?: string;
-  location?: string;
-  customer?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface GetAllOrdersRequest {
-  status?: OrderStatus[];
-}
-
-export interface GetAllOrdersResponse {
+export interface activeOrder {
   _id: string;
-  branch?: string;
-  location?: string;
-  status?: OrderStatus;
-  oldAmount?: number;
-  amount: number;
-  debt?: number;
-  customer?: MeResponse;
-  createdAt: string;
-  updatedAt?: string;
-}
-
-export interface EditOrdersRequest {
-  id: string;
-  body: {
-    amount?: number;
-    oldAmount?: number;
-    cost?: number;
-    status?: OrderStatus;
+  client:
+    | {
+        _id: string;
+        fullName: string;
+      }
+    | string;
+  branch: string;
+  status: number;
+  address: string;
+  paidAmount: number;
+  totalAmount: number;
+  debtAmount: number;
+  deliveryTime?: string;
+  acceptedDriver?: {
+    _id: string;
+    fullName: string;
   };
+  acceptedTimeDriver?: string;
+  commit: string;
+  phone: string;
+  approval: string;
+  deliveryStatus: string;
+  breadsInfo: breadInfo[];
+  isClient: boolean;
+  isChangePrice: boolean;
+  type: string;
+  fromStaff: string;
+  paymentHistory: Payment[] | [];
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
-export interface DeleteOrdersRequest {
+export interface preOrder extends activeOrder {}
+
+export interface breadInfo {
+  _id: string;
+  title: string;
+  amount: number;
+  breadPrice: number;
+  breadSoldPrice: number;
+}
+
+type Payment = {
+  _id: string;
+  amount: number;
+  fromUser: FromUser | null;
+  paymentDate: Date | string;
+};
+
+type FromUser = {
+  _id: string;
+  role: string;
+  fullName: string;
+};
+
+export interface GetActiveResponse {
+  orders: activeOrder[];
+}
+
+export interface GetPreResponse {
+  orders: preOrder[];
+}
+
+export interface GetRequest {
   id?: string;
 }
-
-export interface CreateNotificationRequest {
-  type?: Type;
-  role?: Role;
-  users?: string[];
-  order?: string;
+export interface ClientQuery {
+  client?: string;
 }
 
-export interface CreateNotificationResponse {
-  _id?: stirng;
-  users?: string[];
-  status?: Status;
-  type?: Type;
-  order?: string;
-  from?: string;
-  createdAt?: string;
-  updatedAt?: string;
+export interface Clients {
+  clients: client[];
+}
+export interface client {
+  _id: string;
+  fullName: string;
+  hasOrder: boolean;
+  phone?: string;
+}
+
+export interface AddActiveOrderReq {
+  client: string;
+  breadsInfo: breadInfo[];
+  commit: string;
+  address: string;
+  phone: string;
+}
+
+export interface AddPreOrderReq {
+  client: string;
+  paidAmount: number;
+  breadsInfo: breadInfo[];
+  fromStaff: string;
+  commit: string;
+  deliveryTime: string;
+  address: string;
+  phone: string;
+}
+
+export interface AddActiveOrderRes {
+  message: string;
+}
+
+export interface DeleteReq {
+  id: string;
+}
+export interface DeleteRes extends AddActiveOrderRes {}
+
+export interface UpdateReq extends AddActiveOrderReq {
+  _id:string;
+}
+export interface UpdateRes extends AddActiveOrderRes {
+  order: activeOrder;
 }

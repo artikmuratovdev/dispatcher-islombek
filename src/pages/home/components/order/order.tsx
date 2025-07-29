@@ -1,5 +1,5 @@
-import { useLazyGetActiveDispatchQuery } from '@/app/api/_order';
-import { activeOrder as ActiveOrderType } from '@/app/api/_order/types';
+import { useLazyGetActiveDispatchQuery } from '@/app/api';
+import { activeOrder as ActiveOrderType } from '@/app/api/order/types';
 import { Button, Input, OrderCard } from '@/components';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';

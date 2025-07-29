@@ -1,74 +1,98 @@
-import { API_TAGS } from "@/constants";
-import { baseApi } from "../baseApi/baseApi";
-import { PATH } from "./path";
+import { baseApi } from '../baseApi';
 import {
-  CreateNotificationRequest,
-  CreateNotificationResponse,
-  CreateOrderRequest,
-  CreateOrderResponse,
-  DeleteOrdersRequest,
-  EditOrdersRequest,
-  GetAllOrdersRequest,
-  GetAllOrdersResponse,
-} from "./types";
+  GetRequest,
+  GetActiveResponse,
+  activeOrder,
+  preOrder,
+  breadInfo,
+  Clients,
+  ClientQuery,
+  AddActiveOrderReq,
+  AddActiveOrderRes,
+  DeleteReq,
+  DeleteRes,
+  UpdateReq,
+  UpdateRes,
+  AddPreOrderReq,
+} from './types';
+import { PATH } from './path';
 
-export const order = baseApi.injectEndpoints({
+export const dispatcherApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createOrder: builder.mutation<CreateOrderResponse, CreateOrderRequest>({
-      query: (body) => ({
-        url: PATH.ORDER,
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: [API_TAGS.ORDER],
+    getActiveDispatches: builder.query<GetActiveResponse, void>({
+      query: () => PATH.ACTIVE_ORDERS,
     }),
-    getOrder: builder.query<GetAllOrdersResponse, string>({
-      query: (id) => ({
-        url: PATH.EDIT_ORDER + id,
-        method: "GET",
-      }),
+    getPreDispatches: builder.query<preOrder[], void>({
+      query: () => PATH.PRE_ORDERS,
     }),
-    getAllOrders: builder.query<GetAllOrdersResponse[], GetAllOrdersRequest>({
-      query: ({ status }) => ({
-        url: PATH.ORDER,
-        params: { status },
-        method: "GET",
-      }),
-      providesTags: [API_TAGS.ORDER],
+    getActiveDispatch: builder.query<activeOrder, GetRequest>({
+      query: ({ id }) => PATH.ACTIVE_ORDERS_ID + id, // order id
     }),
-    editOrders: builder.mutation<GetAllOrdersResponse, EditOrdersRequest>({
-      query: ({ id, body }) => ({
-        url: PATH.EDIT_ORDER + id,
-        method: "PATCH",
-        body,
+    getPreDispatch: builder.query<activeOrder, GetRequest>({
+      query: ({ id }) => PATH.PRE_ORDERS_ID + id, // order id
+    }),
+    getBreadPrices: builder.query<breadInfo[], GetRequest>({
+      query: ({ id: clientId }) =>
+        PATH.BREAD_PRICES + (clientId ? `?client=${clientId}` : ''),
+    }),
+    getOrderByClientId: builder.query<activeOrder[], GetRequest>({
+      query: ({ id }) => PATH.WITH_CLIENT_ID + id + '/orders',
+    }),
+    getClients: builder.query<Clients, ClientQuery>({
+      query: ({ client }) => ({
+        url: PATH.CLIENT_QUERY + (client ? `?search=${client}` : ''),
+        method: 'GET',
       }),
     }),
-    deleteOrders: builder.mutation<GetAllOrdersResponse, DeleteOrdersRequest>({
+    addActiveOrder: builder.mutation<AddActiveOrderRes, AddActiveOrderReq>({
+      query: (data) => ({
+        url: PATH.CREATE_ACTIVE_ORDER,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    addPreOrder: builder.mutation<AddActiveOrderRes, AddPreOrderReq>({
+      query: (data) => ({
+        url: PATH.CREATE_PRE_ORDER,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    deleteOrder: builder.mutation<DeleteRes, DeleteReq>({
       query: ({ id }) => ({
-        url: PATH.EDIT_ORDER + id,
-        method: "DELETE",
+        url: `/order/orders/${id}`,
+        method: 'DELETE',
       }),
-      invalidatesTags: [API_TAGS.ORDER],
     }),
-    createNotification: builder.mutation<
-      CreateNotificationResponse,
-      CreateNotificationRequest
-    >({
-      query: (body) => ({
-        url: PATH.NOTIFICATION,
-        method: "POST",
-        body,
+    updateActiveOrders: builder.mutation<UpdateRes, UpdateReq>({
+      query: (data) => ({
+        url: (PATH.UPDATE_ACTIVE + data._id),
+        method: 'PATCH',
+        body: data,
       }),
-      invalidatesTags: [API_TAGS.NOTIFICATION],
     }),
+    updatePreOrders: builder.mutation<UpdateRes, UpdateReq>({
+      query: (data) => ({
+        url: (PATH.UPDATE_PRE + data._id),
+        method: 'PATCH',
+        body: data,
+      }),
+    })
   }),
 });
 
 export const {
-  useCreateOrderMutation,
-  useGetOrderQuery,
-  useGetAllOrdersQuery,
-  useEditOrdersMutation,
-  useCreateNotificationMutation,
-  useLazyGetOrderQuery,
-} = order;
+  useLazyGetActiveDispatchesQuery,
+  useLazyGetActiveDispatchQuery,
+  useGetPreDispatchesQuery,
+  useGetPreDispatchQuery,
+  useLazyGetClientsQuery,
+  useLazyGetOrderByClientIdQuery,
+  useLazyGetBreadPricesQuery,
+  useGetBreadPricesQuery,
+  useAddActiveOrderMutation,
+  useAddPreOrderMutation,
+  useDeleteOrderMutation,
+  useUpdateActiveOrdersMutation,
+  useUpdatePreOrdersMutation
+} = dispatcherApi;
