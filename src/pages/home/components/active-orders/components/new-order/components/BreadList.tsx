@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import BreadPrices from './BreadPrices';
-import { breadInfo } from '@/app/api/_order/types';
+import { breadInfo } from '@/app/api/order/types';
 
 type BreadListProps = {
   breadPrices: breadInfo[];
@@ -12,10 +11,14 @@ const BreadList = ({ breadPrices, setBreads }: BreadListProps) => {
   const [totals, setTotals] = useState<Record<string, number>>({});
 
   const handleTotalChange = (id: string, value: number) => {
-    setTotals((prev) => ({ ...prev, [id]: value }));
+    setTotals((prev) => ({...prev,[id]: Number(value) || 0,}));
   };
 
-  const grandTotal = Object.values(totals).reduce((acc, val) => acc + val, 0);
+  // Safely calculate grand total
+  const grandTotal = Object.values(totals).reduce(
+    (acc, val) => acc + (Number(val) || 0),
+    0
+  );
 
   return (
     <div>
@@ -31,7 +34,7 @@ const BreadList = ({ breadPrices, setBreads }: BreadListProps) => {
       </div>
 
       <div className='mt-4 text-white text-2xl font-semibold'>
-        Umumiy: {grandTotal} so'm
+        Umumiy: {grandTotal.toLocaleString('uz-UZ')} so'm
       </div>
     </div>
   );

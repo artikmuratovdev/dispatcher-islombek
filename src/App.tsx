@@ -16,11 +16,10 @@ import {
   Profile,
 } from './pages';
 import { CustomerDetails } from './pages/customers/components';
-import { NewActiveOrder, NewPreOrder, Order } from './pages/home/components';
+import { EditPreOrder, NewActiveOrder, NewPreOrder, Order, ShowPreOrder } from './pages/home/components';
 import PWABadge from './PWABadge';
 import { InstallApp, NetworkStatus, useStorage } from './utils';
 import { AuthProvider } from './components/AuthProvider/AuthProvider';
-import { EditPreOrder } from './pages/home/components/pre-order/edit-order/edit-order';
 
 const App = () => {
   const [getUser, { isError, isLoading, data }] = useLazyMeQuery();
@@ -121,10 +120,11 @@ const App = () => {
               <Route path='/messages' element={<Messages />} />
               <Route path='/chat/:id' element={<Chat />} />
               <Route path='/profile' element={<Profile />} />
-              <Route path='/orders/:id' element={<Order />} />
+              <Route path='/orders/active-order/:id' element={<Order />} />
               <Route path='/orders/new-order' element={<NewActiveOrder />} />
               <Route path='/orders/new-pre-order' element={<NewPreOrder />} />
-              <Route path='/orders/pre-order/:id' element={<EditPreOrder />} />
+              <Route path='/orders/pre-order/:id' element={<ShowPreOrder />} />
+              <Route path='/orders/pre-order/:id/edit' element={<EditPreOrder />} />
               <Route path='/customers' element={<Customers />} />
               <Route
                 path='/customers/customer-details'

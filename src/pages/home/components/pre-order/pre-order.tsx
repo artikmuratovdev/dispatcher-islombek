@@ -1,11 +1,12 @@
 import { useGetPreDispatchesQuery } from '@/app/api';
 import { Button } from '@/components';
 import { Plus } from '@/icons';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const PreOrder = () => {
   const navigate = useNavigate();
-  const { data: preOrders} =
+  const { data: preOrders , refetch} =
     useGetPreDispatchesQuery();
 
   const getTime = (date: string) => {
@@ -17,7 +18,10 @@ export const PreOrder = () => {
     const year = d.getFullYear();
     return `${day}.${month}.${year} ${hours}:${minutes}`;
   }
-  console.log(preOrders);
+
+  useEffect(() => {
+    refetch();
+  },[preOrders])
   return (
     <div className='space-y-3'>
         {preOrders && preOrders.map((order) => (

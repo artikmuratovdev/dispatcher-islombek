@@ -1,45 +1,25 @@
+import { useGetPreDispatchQuery, useLazyGetUserQuery } from '@/app/api';
 import {
   Button,
   Input,
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Notifications } from '@/icons';
+import { format, isValid, parse } from 'date-fns';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { useGetBreadPricesQuery, useGetAllUsersQuery, useAddPreOrderMutation } from '@/app/api';
-import BreadList from '../../active-orders/components/new-order/components/BreadList';
-import { breadInfo } from '@/app/api/order/types';
-import { Role } from '@/constants';
-import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import { DeletePopover } from '../../DeletePopover';
+import { BreadItem } from '../components/BreadItem';
+export const ShowPreOrder = () => {
+  const { id } = useParams<{ id: string }>();
+  const { data: preOrder, refetch } = useGetPreDispatchQuery({ id: id ?? '' });
+  const [getUser, { data: user }] = useLazyGetUserQuery();
 
-export const NewPreOrder = () => {
-  const { data: users } = useGetAllUsersQuery({
-    roles: [
-      Role.CEO,
-      Role.ADMIN,
-      Role.BAKER,
-      Role.DRIVER,
-      Role.DIVIDER,
-      Role.DOUGHMAKER,
-      Role.DISPATCHER,
-    ],
-  });
-
-  const { data: breadPrice } = useGetBreadPricesQuery({});
-  const [addPreOrder] = useAddPreOrderMutation();
-
-  const [breads, setBreads] = useState<breadInfo[]>([]);
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
+  const { control, reset } = useForm({
     defaultValues: {
       client: '',
       phone: '',
@@ -47,34 +27,65 @@ export const NewPreOrder = () => {
       commit: '',
       deliveryTime: '',
       fromStaff: '',
-      paidAmount: '',
+      paidAmount: 0,
     },
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
 
-  const onSubmit = async (data: any) => {
-    data.breadsInfo = breads;
-    console.log(data);
-    if (data.phone.startsWith('+998') || data.phone.startsWith('998')) {
-      data.phone = data.phone.replace(/\D/g, "").slice(-9);
-    } else {
-      data.phone = data.phone.replace(/\D/g, "").trim();
+  useEffect(() => {
+    if (preOrder?.fromStaff) {
+      getUser(preOrder.fromStaff);
+      refetch();
     }
+  }, [preOrder, getUser]);
 
-    if(data.phone.length !== 9){
-      toast.error('Telefon raqamni to`g`ri kiriting');
-      return
+  useEffect(() => {
+    if (preOrder && user) {
+      let deliveryTime = '';
+
+      if (preOrder.deliveryTime) {
+        const isoParsed = new Date(preOrder.deliveryTime);
+        const fallbackParsed = parse(
+          preOrder.deliveryTime,
+          'dd.MM.yyyy HH:mm',
+          new Date()
+        );
+
+        if (isValid(isoParsed)) {
+          deliveryTime = format(isoParsed, "yyyy-MM-dd'T'HH:mm");
+        } else if (isValid(fallbackParsed)) {
+          deliveryTime = format(fallbackParsed, "yyyy-MM-dd'T'HH:mm");
+        }
+      }
+
+      reset({
+        client: String(preOrder.client),
+        phone: preOrder.phone,
+        address: preOrder.address,
+        commit: preOrder.commit,
+        deliveryTime,
+        fromStaff: user.fullName,
+        paidAmount: preOrder.paidAmount,
+      });
     }
+  }, [preOrder, user, reset]);
 
+  const parsedDate: Date | null = (() => {
+    if (!preOrder?.deliveryTime) return null;
 
-    const {message} =await addPreOrder(data).unwrap();
-    if (message) {
-      toast.success(message);
-      navigate('/dashboard');
-    }
-  };
+    const iso = new Date(preOrder.deliveryTime);
+    if (isValid(iso)) return iso;
 
+    const fallback = parse(
+      preOrder.deliveryTime,
+      'dd.MM.yyyy HH:mm',
+      new Date()
+    );
+    return isValid(fallback) ? fallback : null;
+  })();
+
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   return (
     <div>
@@ -87,17 +98,15 @@ export const NewPreOrder = () => {
             <ArrowLeft className='text-2xl' />
           </Button>
           <h4 className='text-center text-white text-2xl font-semibold font-inter leading-[31.20px]'>
-            Yangi buyurtma
+            Buyurtma
           </h4>
           <button onClick={() => navigate('/notifications')}>
             <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
           </button>
         </div>
       </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className='my-[70px] p-[16px] space-y-3'
-      >
+      {/* form */}
+      <form className='my-[70px] p-[16px] space-y-3'>
         <div className='mb-2 space-y-2'>
           <Label className='text-yellow-400 text-base font-semibold leading-none'>
             Mijoz
@@ -115,11 +124,6 @@ export const NewPreOrder = () => {
                   type='text'
                   className=' text-blue-950 bg-white'
                 />
-                {errors.client && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors.client.message?.toString()}
-                  </p>
-                )}
               </>
             )}
           />
@@ -141,11 +145,6 @@ export const NewPreOrder = () => {
                   type='tel'
                   className=' text-blue-950 bg-white'
                 />
-                {errors.phone && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors?.phone?.message?.toString()}
-                  </p>
-                )}
               </>
             )}
           />
@@ -167,11 +166,6 @@ export const NewPreOrder = () => {
                   type='text'
                   className=' text-blue-950 bg-white'
                 />
-                {errors.address && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors?.address?.message?.toString()}
-                  </p>
-                )}
               </>
             )}
           />
@@ -193,11 +187,6 @@ export const NewPreOrder = () => {
                   type='text'
                   className=' text-blue-950 bg-white'
                 />
-                {errors.commit && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors?.commit?.message?.toString()}
-                  </p>
-                )}
               </>
             )}
           />
@@ -218,11 +207,6 @@ export const NewPreOrder = () => {
                   type='datetime-local'
                   className=' w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
                 />
-                {errors.deliveryTime && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors?.deliveryTime?.message?.toString()}
-                  </p>
-                )}
               </>
             )}
           />
@@ -239,22 +223,11 @@ export const NewPreOrder = () => {
               <>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className='w-full bg-white font-semibold'>
-                    <SelectValue placeholder='Xodimni tanlang' />
+                    {user && (
+                      <SelectValue placeholder={user.fullName?.toString()} />
+                    )}
                   </SelectTrigger>
-                  <SelectContent>
-                    {users?.map((driver) => (
-                      <SelectItem key={driver._id} value={driver._id}>
-                        {driver.role} ---- {driver.fullName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
                 </Select>
-
-                {errors.fromStaff && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors?.fromStaff?.message?.toString()}
-                  </p>
-                )}
               </>
             )}
           />
@@ -277,23 +250,67 @@ export const NewPreOrder = () => {
                   type='number'
                   className=' w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
                 />
-                {errors.paidAmount && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors?.paidAmount?.message?.toString()}
-                  </p>
-                )}
               </>
             )}
           />
         </div>
         <div className='space-y-3 pt-2 mb-5'>
-          {breadPrice && (
-            <BreadList breadPrices={breadPrice} setBreads={setBreads} />
+          {preOrder?.breadsInfo &&
+            preOrder?.breadsInfo.map((bread) => (
+              <BreadItem
+                key={bread._id}
+                name={bread.title}
+                price={bread.breadSoldPrice}
+                quantity={bread.amount}
+              />
+            ))}
+          {preOrder?.breadsInfo && (
+            <div className='mt-4 text-white text-2xl font-semibold'>
+              Umumiy: {preOrder.totalAmount.toLocaleString('uz-UZ')} so'm
+            </div>
           )}
         </div>
-        <div className='flex justify-end mb-5'>
-          <Button className='w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15]'>
-            Saqlash
+        {preOrder && (
+          <div className='w-full relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 px-2 py-1 flex justify-between mb-4'>
+            <h3 className='text-blue-950 text-base font-semibold'>
+              {user?.fullName}
+              <br />
+              <span className='text-green-700 text-base font-semibold'>
+                {preOrder.paidAmount}
+              </span>
+            </h3>
+            <h3 className='text-blue-950 text-base font-semibold'>
+              {parsedDate && (
+                <>
+                  {format(parsedDate, 'dd.MM.yyyy')}
+                  <br />
+                  {format(parsedDate, 'HH:mm')}
+                </>
+              )}
+            </h3>
+          </div>
+        )}
+        <div className='flex justify-between'>
+          {preOrder && (
+            <DeletePopover
+              title={preOrder.client.toString()}
+              id={preOrder._id}
+              setOpenTag={setOpen}
+              trigger={
+                <Button className='w-36 h-7 p-3 bg-red-700 hover:bg-white hover:text-blue-950 rounded-lg shadow-[0px_9px_28px_0px_rgba(0,0,0,0.05)]  gap-1'>
+                  O'chirish
+                </Button>
+              }
+            />
+          )}
+          <Button
+            type='button'
+            onClick={() => {
+              if (preOrder) navigate(`/orders/pre-order/${preOrder._id}/edit`);
+            }}
+            className='w-36 h-7 p-3 bg-yellow-400 hover:bg-white rounded-lg shadow-[0px_9px_28px_0px_rgba(0,0,0,0.05)] shadow-[0px_3px_6px_0px_rgba(0,0,0,0.12)] shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] gap-1 text-[#1B2B56] font-bold'
+          >
+            Tahrirlash
           </Button>
         </div>
       </form>

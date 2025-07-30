@@ -1,8 +1,15 @@
-import { activeOrder } from '@/app/api/_order/types';
+import { activeOrder } from '@/app/api/order/types';
 import { PopoverAnchor } from '../..';
 import React from 'react';
+import { Delete } from '@/icons';
 
-const Order_item = ({ item , getTimes}: { item: activeOrder , getTimes: (date: Date | string) => string}) => {
+const Order_item = ({
+  item,
+  getTimes,
+}: {
+  item: activeOrder;
+  getTimes: (date: Date | string) => string;
+}) => {
   const setClientName = (client: activeOrder['client']) => {
     if (typeof client === 'string') return client;
     return client.fullName;
@@ -30,7 +37,17 @@ const Order_item = ({ item , getTimes}: { item: activeOrder , getTimes: (date: D
         <div className='w-20 h-7 bg-gray-200 rounded-[10px] flex justify-center items-center'>
           <h3>{getTimes(item.updatedAt.toString())}</h3>
         </div>
-        <PopoverAnchor title={setClientName(item.client)} open={open} id={item._id} setOpen={setOpen} />
+        <PopoverAnchor
+          title={setClientName(item.client)}
+          open={open}
+          id={item._id}
+          setOpen={setOpen}
+        >
+          <div className='flex items-center gap-2 cursor-pointer'>
+            <Delete />
+            <h3 className='text-red-500 text-sm font-semibold'>O'chirish</h3>
+          </div>
+        </PopoverAnchor>
       </div>
     </div>
   );

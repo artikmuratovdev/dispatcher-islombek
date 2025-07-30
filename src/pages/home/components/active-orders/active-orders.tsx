@@ -1,4 +1,4 @@
-import { useLazyGetActiveDispatchesQuery } from '@/app/api';
+import { useGetActiveDispatchesQuery } from '@/app/api';
 import Order_item from './components/order-item';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components';
@@ -6,19 +6,19 @@ import { Plus } from '@/icons';
 import { useNavigate } from 'react-router-dom';
 
 export const ActiveOrders = () => {
-  const [getActiveOrders, { data: activeOrders }] =
-    useLazyGetActiveDispatchesQuery();
+  const { data: activeOrders , refetch} =
+    useGetActiveDispatchesQuery();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const navigate = useNavigate();
 
   useEffect(() => {
-    getActiveOrders();
+    refetch()
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [activeOrders]);
 
   const getTimes = (date: Date | string) => {
     const past = new Date(date).getTime();

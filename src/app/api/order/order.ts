@@ -84,8 +84,10 @@ export const dispatcherApi = baseApi.injectEndpoints({
 export const {
   useLazyGetActiveDispatchesQuery,
   useLazyGetActiveDispatchQuery,
+  useGetActiveDispatchesQuery,
   useGetPreDispatchesQuery,
   useGetPreDispatchQuery,
+  useLazyGetPreDispatchesQuery,
   useLazyGetClientsQuery,
   useLazyGetOrderByClientIdQuery,
   useLazyGetBreadPricesQuery,
