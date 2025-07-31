@@ -61,7 +61,7 @@ export const NewActiveOrder = () => {
     }
 
     if (values.fullName) {
-      setValue('mijoz', values.fullName);
+      setValue('mijoz', values._id);
     }
     if (values.phone) {
       setValue('telifon', values.phone);
@@ -119,7 +119,7 @@ export const NewActiveOrder = () => {
         </button>
       </header>
 
-      <main className='mt-5 mb-19 px-5'>
+      <main className='mt-5 mb-20 px-5'>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className='flex flex-col gap-y-2 mb-5'

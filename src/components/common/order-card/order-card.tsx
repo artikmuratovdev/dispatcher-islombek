@@ -1,4 +1,4 @@
-import { breadInfo } from '@/app/api/_order/types';
+import { breadInfo } from '@/app/api/order/types';
 import { Card, CardContent } from '@/components/ui/card';
 
 export const OrderCard = ({ item }: { item: breadInfo }) => {

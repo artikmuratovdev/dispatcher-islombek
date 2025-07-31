@@ -10,7 +10,7 @@ import {
   Customers,
   HomePage,
   Login,
-  Message,
+  Complaints,
   Messages,
   Notification,
   Profile,
@@ -116,7 +116,7 @@ const App = () => {
               <Route path='/' element={<Navigate to='/login' />} />
               <Route path='/login' element={<Login />} />
               <Route path='/dashboard' element={<HomePage />} />
-              <Route path='/message' element={<Message />} />
+              <Route path='/complaints' element={<Complaints />} />
               <Route path='/messages' element={<Messages />} />
               <Route path='/chat/:id' element={<Chat />} />
               <Route path='/profile' element={<Profile />} />
@@ -127,7 +127,7 @@ const App = () => {
               <Route path='/orders/pre-order/:id/edit' element={<EditPreOrder />} />
               <Route path='/customers' element={<Customers />} />
               <Route
-                path='/customers/customer-details'
+                path='/customers/customer-details/:id'
                 element={<CustomerDetails />}
               />
               <Route path='/notifications' element={<Notification />} />

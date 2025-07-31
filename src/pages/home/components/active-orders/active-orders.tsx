@@ -10,6 +10,7 @@ export const ActiveOrders = () => {
     useGetActiveDispatchesQuery();
   const [currentTime, setCurrentTime] = useState(Date.now());
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     refetch()
@@ -19,6 +20,8 @@ export const ActiveOrders = () => {
 
     return () => clearInterval(interval);
   }, [activeOrders]);
+
+  // console.log(activeOrders)
 
   const getTimes = (date: Date | string) => {
     const past = new Date(date).getTime();

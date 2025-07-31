@@ -20,7 +20,7 @@ export const HomePage = () => {
       </div>
       <div className="mt-[80px] w-[100%] p-[12px]">
         <div className="flex items-center justify-between">
-          <button onClick={() => navigate("/message")}>
+          <button onClick={() => navigate("/complaints")}>
             <MessagesIcon className="w-6 h-6 text-[#FFCC15]" />
           </button>
         </div>

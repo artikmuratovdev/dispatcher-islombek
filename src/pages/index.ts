@@ -1,6 +1,6 @@
 export * from "./login";
 export * from "./home";
-export * from "./message";
+export * from "./complaints";
 export * from "./messages";
 export * from "./chat";
 export * from "./profile";
