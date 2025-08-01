@@ -4,7 +4,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Props } from './types';
-import { Delete, Edit, Third } from '@/icons';
+import {  Edit, Third } from '@/icons';
 import { useNavigate } from 'react-router-dom';
 
 export const PopoverAnchor = ({ open, setOpen, id, title ,children}: Props) => {
@@ -47,7 +47,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button, Input } from '@/components';
-import { useDeleteOrderMutation, useLazyGetActiveDispatchesQuery, useLazyGetPreDispatchesQuery } from '@/app/api';
+import { useDeleteOrderMutation } from '@/app/api';
 import toast from 'react-hot-toast';
 
 type DeletePopoverProps = {

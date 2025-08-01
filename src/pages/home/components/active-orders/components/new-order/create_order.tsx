@@ -1,7 +1,7 @@
 import {
   useAddActiveOrderMutation,
   useLazyGetBreadPricesQuery,
-  useLazyGetClientsQuery,
+  useGetClientsQuery,
 } from '@/app/api';
 import { AddActiveOrderReq, breadInfo, client } from '@/app/api/order/types';
 import { Combobox } from '@/components/common/combobox/combobox';
@@ -19,6 +19,7 @@ export const NewActiveOrder = () => {
     formState: { errors },
     handleSubmit,
     setValue,
+    reset,
   } = useForm({
     defaultValues: {
       mijoz: '',
@@ -31,7 +32,7 @@ export const NewActiveOrder = () => {
   });
 
   const navigate = useNavigate();
-  const [getClients, { data: clients }] = useLazyGetClientsQuery();
+  const { data: clients } = useGetClientsQuery({});
   const [getBreadPrices, { data: breadPrices }] = useLazyGetBreadPricesQuery();
   const [addActiveOrder] = useAddActiveOrderMutation();
   const [selectedClient, setSelectedClient] = React.useState({
@@ -41,16 +42,15 @@ export const NewActiveOrder = () => {
   const [breads, setBreads] = React.useState<breadInfo[]>([]);
 
   useEffect(() => {
-    getClients({}).unwrap();
-  }, []);
-
-  useEffect(() => {
     if (selectedClient.fullName === 'Boshqa') {
       getBreadPrices({}).unwrap();
     } else {
       getBreadPrices({ id: selectedClient.id }).unwrap();
     }
   }, [selectedClient]);
+
+  console.log(clients);
+  console.log(breadPrices);
 
   const onChangeClient = (values: client) => {
     if (values.fullName === 'Boshqa') {
@@ -93,10 +93,12 @@ export const NewActiveOrder = () => {
 
     toast.success('Buyurtma yuborildi');
     setBreads([]);
-    setValue('mijoz', '');
-    setValue('telifon', '');
-    setValue('manzil', '');
-    setValue('izoh', '');
+    reset({
+      mijoz: '',
+      telifon: '',
+      manzil: '',
+      izoh: '',
+    });
     navigate('/dashboard');
 
     console.warn('Yuborilayotgan data:', sentData);

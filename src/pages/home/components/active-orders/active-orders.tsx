@@ -21,7 +21,7 @@ export const ActiveOrders = () => {
     return () => clearInterval(interval);
   }, [activeOrders]);
 
-  // console.log(activeOrders)
+  console.log(activeOrders)
 
   const getTimes = (date: Date | string) => {
     const past = new Date(date).getTime();

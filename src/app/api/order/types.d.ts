@@ -8,7 +8,7 @@ export interface activeOrder {
     | string;
   branch: string;
   status: number;
-  address: string;
+  address: string | {lat:number,lng:number};
   paidAmount: number;
   totalAmount: number;
   debtAmount: number;

@@ -52,7 +52,7 @@ export const dispatcherApi = baseApi.injectEndpoints({
       }),
       providesTags: [API_TAGS.ORDER],
     }),
-    getClientById: builder.query<activeOrder[], GetRequest>({
+    getClientById: builder.query<GetActiveResponse, GetRequest>({
       query: ({ id }) => PATH.WITH_CLIENT_ID + id + '/orders',
       providesTags: [API_TAGS.ORDER],
     }),

@@ -13,20 +13,20 @@ export const Order = () => {
   const [getActiveDispatch] = useLazyGetActiveDispatchQuery();
   const { id } = useParams<{ id: string }>();
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-  } = useForm();
+  const { control, handleSubmit, reset } = useForm();
 
   const getUser = async (orderId: string) => {
     try {
-      const data: ActiveOrderType = await getActiveDispatch({ id: orderId }).unwrap();
+      const data: ActiveOrderType = await getActiveDispatch({
+        id: orderId,
+      }).unwrap();
 
       reset({
-        mijoz: typeof data.client === 'string' ? data.client : data.client.fullName,
+        mijoz:
+          typeof data.client === 'string' ? data.client : data.client.fullName,
         telifon: data.phone,
-        manzil: data.address,
+        manzil:
+          typeof data.address === 'string' ? data.address : data.address.lat,
         izoh: data.commit || '',
       });
 
@@ -43,10 +43,14 @@ export const Order = () => {
 
   const getTime = (date: string | Date) => {
     const d = new Date(date);
-    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    return `${String(d.getHours()).padStart(2, '0')}:${String(
+      d.getMinutes()
+    ).padStart(2, '0')}`;
   };
 
-  const [orderData, setOrderData] = React.useState<ActiveOrderType | null>(null);
+  const [orderData, setOrderData] = React.useState<ActiveOrderType | null>(
+    null
+  );
 
   useEffect(() => {
     if (id) {
@@ -66,7 +70,7 @@ export const Order = () => {
           <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
             <div className='flex w-[95%] m-auto items-center justify-between'>
               <Button
-                type="button"
+                type='button'
                 onClick={() => navigate('/dashboard')}
                 className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] p-4 rounded-full'
               >
@@ -75,7 +79,7 @@ export const Order = () => {
               <h4 className='text-center text-white text-2xl font-semibold font-inter leading-[31.20px]'>
                 Buyurtma
               </h4>
-              <button type="button" onClick={() => navigate('/notifications')}>
+              <button type='button' onClick={() => navigate('/notifications')}>
                 <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
               </button>
             </div>
@@ -86,7 +90,9 @@ export const Order = () => {
             <Card className='border-2 border-[#FFCC15] rounded-lg h-11 mb-3'>
               <CardContent className='w-full'>
                 <div className='flex justify-between items-center'>
-                  <h3 className='text-blue-950 text-sm font-bold mt-[11px]'>Buyurtma vaqti</h3>
+                  <h3 className='text-blue-950 text-sm font-bold mt-[11px]'>
+                    Buyurtma vaqti
+                  </h3>
                   <h4 className='text-blue-950 text-sm font-bold mt-[11px]'>
                     {getTime(orderData.createdAt)}
                   </h4>
@@ -113,22 +119,22 @@ export const Order = () => {
 
             {/* Form fields */}
             <div className='flex flex-col gap-y-1 mb-3'>
-              <Label className='text-yellow-400 text-base font-semibold'>Mijoz</Label>
+              <Label className='text-yellow-400 text-base font-semibold'>
+                Mijoz
+              </Label>
               <Controller
                 name='mijoz'
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    readOnly
-                    className='bg-white'
-                  />
+                  <Input {...field} readOnly className='bg-white' />
                 )}
               />
             </div>
 
             <div className='flex flex-col gap-y-1 mb-3'>
-              <Label className='text-yellow-400 text-base font-semibold'>Telefon</Label>
+              <Label className='text-yellow-400 text-base font-semibold'>
+                Telefon
+              </Label>
               <Controller
                 name='telifon'
                 control={control}
@@ -145,7 +151,9 @@ export const Order = () => {
             </div>
 
             <div className='flex flex-col gap-y-1 mb-3'>
-              <Label className='text-yellow-400 text-base font-semibold'>Manzili</Label>
+              <Label className='text-yellow-400 text-base font-semibold'>
+                Manzili
+              </Label>
               <Controller
                 name='manzil'
                 control={control}
@@ -161,7 +169,9 @@ export const Order = () => {
             </div>
 
             <div className='flex flex-col gap-y-1 mb-3'>
-              <Label className='text-yellow-400 text-base font-semibold'>Izoh</Label>
+              <Label className='text-yellow-400 text-base font-semibold'>
+                Izoh
+              </Label>
               <Controller
                 name='izoh'
                 control={control}
@@ -185,7 +195,8 @@ export const Order = () => {
 
             <h1 className="text-white text-2xl font-semibold font-['Inter'] leading-none">
               Umumiy summa:{' '}
-              {new Intl.NumberFormat('uz-UZ').format(orderData.totalAmount)} so'm
+              {new Intl.NumberFormat('uz-UZ').format(orderData.totalAmount)}{' '}
+              so'm
             </h1>
           </div>
         </>
