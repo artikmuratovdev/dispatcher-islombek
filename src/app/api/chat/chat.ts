@@ -1,33 +1,45 @@
 import { API_TAGS } from "@/constants";
-import { baseApi } from "../baseApi/baseApi";
-import { PATHS } from "../baseApi/path";
-import { AllUsersRequest, GetOneUserRequest, MeResponse, MessageRequest, MessageResponse } from "./types";
+import { baseApi } from "../baseApi";
+import { PATHS } from "./path";
+import { AddMessageRes, ChatResponse, MessageRequest, MessageResponse, readMessages } from "./types";
 
-export const chat = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    message: builder.mutation<MessageResponse, MessageRequest>({
+export const messageApi = baseApi.injectEndpoints({
+  endpoints: (build) => ({
+    getAllMessages: build.query<MessageResponse[], void>({
+      query: () => ({
+        url: PATHS.CHAT,
+        method: "GET",
+        providesTags: [API_TAGS.MESSAGE],
+      })
+    }),
+    addMessage: build.mutation<AddMessageRes, MessageRequest>({
       query: (body) => ({
-        url: PATHS.MESSAGE,
+        url: PATHS.POST_MESSAGE,
         method: "POST",
         body,
       }),
       invalidatesTags: [API_TAGS.MESSAGE],
     }),
-    getMessages: builder.query<MessageResponse[], string>({
+    getChat: build.query<ChatResponse, string>({
       query: (id) => ({
-        url: PATHS.MESSAGES + id,
-      }),
+        url: PATHS.CHAT + id,
+        method: "GET",
+        providesTags: [API_TAGS.MESSAGE],
+      })
     }),
-    getChats: builder.query<{ lastMessage: string; chat: MeResponse }[], void>({
-      query: () => ({
-        url: PATHS.MESSAGE,
+    readMessages: build.mutation<void, readMessages>({
+      query: ({receiverId, messageId: id}) => ({
+        url: PATHS.READ_MESSAGE + `${receiverId}/${id}`,
+        method: "PATCH",
       }),
-    }),
+      invalidatesTags: [API_TAGS.MESSAGE],
+    })
   }),
 });
 
 export const {
-    useMessageMutation,
-    useGetMessagesQuery,
-    useGetChatsQuery,
-} = chat
+  useGetAllMessagesQuery,
+  useGetChatQuery,
+  useAddMessageMutation,
+  useReadMessagesMutation
+} = messageApi;

@@ -60,5 +60,6 @@ export const {
   useMeQuery,
   useLazyMeQuery,
   useGetAllUsersQuery,
+  useGetUserQuery,
   useLazyGetUserQuery
 } = authApi;
