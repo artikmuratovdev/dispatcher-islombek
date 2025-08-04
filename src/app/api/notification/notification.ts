@@ -1,29 +1,21 @@
-import { API_TAGS } from '@/constants';
-import { MeResponse } from '../authApi/types';
 import baseApi from '../baseApi/baseApi';
 import { PATHS } from './path';
-import { CreateNotificationRequest, PushNotificationRequest } from './types';
+import { Notification } from './types';
 
 export const notification = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    createSubscribe: build.mutation<MeResponse, CreateNotificationRequest>({
-      query: (body) => ({
-        url: PATHS.SUBSCRIBE,
-        method: 'POST',
-        body,
-      }),
-      invalidatesTags: [API_TAGS.NOTIFICATION],
+    getByUserId: build.query<Notification[],string>({
+      query : (id) => ({
+        url: PATHS.HEAD + id + '/' + PATHS.TAIL
+      })
     }),
-    pushNotification: build.mutation<void, PushNotificationRequest>({
-      query: ({ body, id }) => ({
-        url: PATHS.PUSHNOTIFICATION + id,
-        method: 'POST',
-        body,
-      }),
-      invalidatesTags: [API_TAGS.NOTIFICATION],
-    }),
+    getById: build.query<Notification,string>({
+      query : (id) => ({
+        url: PATHS.HEAD + PATHS.TAIL + '/' + id
+      })
+    })
   }),
 });
 
-export const { useCreateSubscribeMutation, usePushNotificationMutation } =
+export const { useGetByIdQuery, useGetByUserIdQuery } =
   notification;

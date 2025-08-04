@@ -18,6 +18,7 @@ export interface MeResponse {
   avatar?: string;
   createdAt?: string;
   updatedAt?: string;
+  user?: string;
   debt?: number;
   subsription?: {
     endpoint: string;
@@ -27,7 +28,6 @@ export interface MeResponse {
     };
   };
 }
-export interface MeRequest {}
 export interface AllUsersRequest {
   roles: Role[];
 }

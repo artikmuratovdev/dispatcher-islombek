@@ -66,8 +66,8 @@ export const NewActiveOrder = () => {
     if (values.phone) {
       setValue('telifon', values.phone);
     }
-    if (values.fullName) {
-      setValue('manzil', values.fullName);
+    if (values.address && typeof values.address === 'string') {
+      setValue('manzil', values.address);
     }
   };
 
@@ -89,18 +89,21 @@ export const NewActiveOrder = () => {
       return;
     }
 
-    await addActiveOrder(sentData).unwrap();
-
-    toast.success('Buyurtma yuborildi');
-    setBreads([]);
-    reset({
-      mijoz: '',
-      telifon: '',
-      manzil: '',
-      izoh: '',
-    });
-    navigate('/dashboard');
-
+    try {
+      await addActiveOrder(sentData).unwrap();
+      toast.success('Buyurtma yuborildi');
+      setBreads([]);
+      reset({
+        mijoz: '',
+        telifon: '',
+        manzil: '',
+        izoh: '',
+      });
+      navigate('/dashboard');
+    } catch (error : any) {
+      toast.error(error.msg || error.message);
+      return;
+    }
     console.warn('Yuborilayotgan data:', sentData);
   };
 

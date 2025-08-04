@@ -1,4 +1,4 @@
 export enum PATHS {
-    SUBSCRIBE = "/notification/subscribe",
-    PUSHNOTIFICATION = "/notification/push/"
+    HEAD = '/info-notification/',
+    TAIL = 'notifications/info'
 }

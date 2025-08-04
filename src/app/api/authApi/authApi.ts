@@ -7,7 +7,6 @@ import {
   GetAllUsersResponse,
   LoginRequest,
   LoginResponse,
-  MeRequest,
   MeResponse,
 } from './types';
 
@@ -28,7 +27,7 @@ export const authApi = baseApi.injectEndpoints({
         }
       },
     }),
-    me: builder.query<MeResponse, MeRequest>({
+    me: builder.query<MeResponse, void>({
       query: () => ({
         url: PATHS.ME,
       }),

@@ -78,6 +78,7 @@ export interface client {
   fullName: string;
   hasOrder: boolean;
   phone?: string;
+  address: string | {lat:number,lng:number};
 }
 
 export interface AddActiveOrderReq {
