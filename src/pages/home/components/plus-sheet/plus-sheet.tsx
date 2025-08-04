@@ -149,7 +149,7 @@ export const PlusSheet = ({
 
   useEffect(() => {
     if (customerId) {
-      getUser({ id: customerId });
+      getUser();
     }
   }, [customerId]);
   useEffect(() => {

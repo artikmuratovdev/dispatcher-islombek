@@ -76,7 +76,7 @@ export const ShowPreOrder = () => {
     return isValid(fallback) ? fallback : null;
   })();
 
-  const [open, setOpen] = useState(false);
+  const setOpen = useState(false)[1];
   const navigate = useNavigate();
   return (
     <div>

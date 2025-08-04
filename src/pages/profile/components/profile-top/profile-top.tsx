@@ -14,7 +14,6 @@ export const ProfileTop = () => {
   const { data:me, refetch } = useMeQuery();
   const handleRequest = useHandleRequest();
   const [uploadImage] = useUploadImageMutation();
-
   const [updateAvatar] = useUbdateAvatarMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
