@@ -50,7 +50,13 @@ export const authApi = baseApi.injectEndpoints({
       query: (id) => ({
         url: PATHS.USER + id,
       }),
-    })
+    }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: PATHS.LOGOUT,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -60,5 +66,6 @@ export const {
   useLazyMeQuery,
   useGetAllUsersQuery,
   useGetUserQuery,
-  useLazyGetUserQuery
+  useLazyGetUserQuery,
+  useLogoutMutation
 } = authApi;

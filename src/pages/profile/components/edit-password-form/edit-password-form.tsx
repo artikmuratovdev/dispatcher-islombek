@@ -1,197 +1,184 @@
-// import { useEditPasswordMutation } from '@/app/api/authApi';
-import { BottomSheet, Button, Input } from '@/components';
-import { Label } from '@/components/ui/label';
-import { useHandleRequest } from '@/hooks/use-handle-request/use-handle-reuqest';
-import { Password } from '@/icons';
-import { useStorage } from '@/utils';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
-import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
-import { LiaSpinnerSolid } from 'react-icons/lia';
-
-interface PropsValue {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
+import { BottomSheet } from "@/components/common";
+import { Input } from "@/components/ui/input";
+import {
+  Controller,
+  FieldValues,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
+import { useState } from "react";
+import { Password } from "@/icons";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components";
+import { useUpdatePasswordMutation } from "@/app/api";
+import { useHandleRequest } from "@/hooks";
 
 export const EditPasswordForm = () => {
-  const form = useForm({
-    defaultValues: {
-      oldPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-    },
-  });
-  const handleRequest = useHandleRequest();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordtwo, setShowPasswordTwo] = useState(false);
-  const [showPasswordth, setShowPasswordTh] = useState(false);
-  // const [editPassword, { isLoading }] = useEditPasswordMutation();
   const [open, setOpen] = useState(false);
-  // const onSubmit = async (data: PropsValue) => {
-  //   await handleRequest({
-  //     request: async () => {
-  //       const result = await editPassword({
-  //         oldPassword: data.oldPassword,
-  //         newPassword: data.newPassword,
-  //         confirmPassword: data.confirmPassword,
-  //       }).unwrap();
-  //       return result;
-  //     },
-  //     onSuccess: () => {
-  //       toast.success("Parol muvaffaqiyatli o'zgartirildi!");
-  //       if (toast.success("Parol muvaffaqiyatli o'zgartirildi!")) {
-  //         useStorage.removeCredentials();
-  //         window.location.reload();
-  //       }
-  //     },
-  //   });
-  // };
+  const [showOld, setShowOld] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const [updatePassword] = useUpdatePasswordMutation();
+  const handleRequest = useHandleRequest();
+
+  const onSubmit: SubmitHandler<FieldValues> = (formValues) => {
+    handleRequest({
+      request: async () => {
+        await updatePassword({
+          confirmPassword: formValues.confirmPassword,
+          newPassword: formValues.newPassword,
+          oldPassword: formValues.oldPassword,
+        }).unwrap();
+      },
+      onSuccess: () => {
+        reset();
+        setOpen(false);
+      },
+    });
+  };
+
+  const inputClass =
+    "w-full font-semibold bg-white rounded-lg border border-[#ffcb15] pr-10";
+  const iconStyle = "absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer";
+
   return (
     <>
       <div
-        className='bg-white rounded-lg p-3 flex gap-x-[8px] items-center cursor-pointer border border-[#ffcb15]'
+        className="bg-white rounded-lg p-3 flex gap-x-[8px] items-center cursor-pointer"
         onClick={() => setOpen(true)}
       >
-        <Password className='text-[#1b2b56]' />
-        <h4 className='text-center text-[#1b2b56] text-sm font-black'>
+        <Password className="text-[#1b2b56]" />
+        <h4 className="text-center text-[#1b2b56] text-sm font-black">
           Profile parolini o’zgartirish
         </h4>
       </div>
+
       <BottomSheet open={open} setOpen={setOpen}>
-        <form
-          // onSubmit={form.handleSubmit(onSubmit)}
-          noValidate
-          className='w-full'
-        >
-          <div className='w-full py-10'>
-            <Label htmlFor='oldPassword' className='text-right text-[#FFCC15]'>
-              Eski Parol
-            </Label>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="w-full">
+          <div className="w-full py-10 space-y-4">
+            {/* Eski parol */}
+            <label htmlFor="oldPassword" className="text-right text-[#ffcb15]">
+              Eski parol
+            </label>
             <Controller
-              name='oldPassword'
-              control={form.control}
-              rules={{ required: 'Eski Parolni kiriting!' }}
+              name="oldPassword"
+              control={control}
+              rules={{ required: "Eski parolni kiriting" }}
               render={({ field }) => (
-                <>
+                <div className="relative">
                   <Input
-                    type={showPassword ? 'text' : 'password'}
-                    onChange={field.onChange}
-                    value={field.value}
-                    id='oldPassword'
-                    className={`placeholder:text-[#1C2C57] bg-white rounded-lg border border-[#ffcb15] ${
-                      form.formState.errors.oldPassword ? 'border-red' : ''
-                    }`}
-                    placeholder='Eski Parolni kiriting'
+                    type={showOld ? "text" : "password"}
+                    className={inputClass}
+                    placeholder="Eski parolni kiriting"
+                    {...field}
                   />
-                  <button
-                    type='button'
-                    className='absolute -mt-[30px] right-5 text-gray-500'
-                    onClick={() => setShowPassword((prev) => !prev)}
-                  >
-                    {showPassword ? (
-                      <IoIosEyeOff className='w-6 h-6' />
-                    ) : (
-                      <IoIosEye className='w-6 h-6' />
-                    )}
-                  </button>
-                  {form.formState.errors.oldPassword && (
-                    <p className='text-red text-sm mt-1 text-red-500'>
-                      {form.formState.errors.oldPassword.message as string}
+                  {showOld ? (
+                    <EyeOff
+                      className={iconStyle}
+                      onClick={() => setShowOld(false)}
+                    />
+                  ) : (
+                    <Eye
+                      className={iconStyle}
+                      onClick={() => setShowOld(true)}
+                    />
+                  )}
+                  {errors.oldPassword && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.oldPassword.message as string}
                     </p>
                   )}
-                </>
+                </div>
               )}
             />
-            <Label htmlFor='name' className='text-right text-[#FFCC15]'>
-              Yangi Parol
-            </Label>
+
+            <label htmlFor="newPassword" className="text-right text-[#ffcb15]">
+              Yangi parol
+            </label>
             <Controller
-              name='newPassword'
-              control={form.control}
-              rules={{ required: 'Yangi Parolni kiriting!' }}
+              name="newPassword"
+              control={control}
+              rules={{ required: "Yangi parolni kiriting" }}
               render={({ field }) => (
-                <>
+                <div className="relative">
                   <Input
-                    type={showPasswordtwo ? 'text' : 'password'}
-                    onChange={field.onChange}
-                    value={field.value}
-                    id='name'
-                    className={`placeholder:text-[#1C2C57] bg-white rounded-lg border border-[#ffcb15] ${
-                      form.formState.errors.newPassword ? 'border-red' : ''
-                    }`}
-                    placeholder='Yangi Parolni kiriting'
+                    type={showNew ? "text" : "password"}
+                    className={inputClass}
+                    placeholder="Yangi parolni kiriting"
+                    {...field}
                   />
-                  <button
-                    type='button'
-                    className='absolute -mt-[30px] right-5 text-gray-500'
-                    onClick={() => setShowPasswordTwo((prev) => !prev)}
-                  >
-                    {showPasswordtwo ? (
-                      <IoIosEyeOff className='w-6 h-6' />
-                    ) : (
-                      <IoIosEye className='w-6 h-6' />
-                    )}
-                  </button>
-                  {form.formState.errors.newPassword && (
-                    <p className='text-red text-sm mt-1 text-red-500'>
-                      {form.formState.errors.newPassword.message as string}
+                  {showNew ? (
+                    <EyeOff
+                      className={iconStyle}
+                      onClick={() => setShowNew(false)}
+                    />
+                  ) : (
+                    <Eye
+                      className={iconStyle}
+                      onClick={() => setShowNew(true)}
+                    />
+                  )}
+                  {errors.newPassword && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.newPassword.message as string}
                     </p>
                   )}
-                </>
+                </div>
               )}
             />
-            <Label htmlFor='name' className='text-right text-[#FFCC15]'>
-              Parolni tasdiqlang
-            </Label>
-            <Controller
-              name='confirmPassword'
-              control={form.control}
-              rules={{ required: 'Qayta kiriting!' }}
-              render={({ field }) => (
-                <>
-                  <Input
-                    type={showPasswordth ? 'text' : 'password'}
-                    onChange={field.onChange}
-                    value={field.value}
-                    id='name'
-                    className={`placeholder:text-[#1C2C57] bg-white rounded-lg border border-[#ffcb15] ${
-                      form.formState.errors.confirmPassword ? 'border-red' : ''
-                    }`}
-                    placeholder='Qayta kiriting'
-                  />
-                  <button
-                    type='button'
-                    className='absolute -mt-[30px] right-5 text-gray-500'
-                    onClick={() => setShowPasswordTh((prev) => !prev)}
-                  >
-                    {showPasswordth ? (
-                      <IoIosEyeOff className='w-6 h-6' />
-                    ) : (
-                      <IoIosEye className='w-6 h-6' />
-                    )}
-                  </button>
-                  {form.formState.errors.confirmPassword && (
-                    <p className='text-red text-sm mt-1 text-red-500'>
-                      {form.formState.errors.confirmPassword.message as string}
-                    </p>
-                  )}
-                </>
-              )}
-            />
-            {/* <Button
-              type='submit'
-              disabled={isLoading}
-              className='mt-6 w-full bg-[#ffcb15] text-[#1C2C57] hover:bg-[#ffcb15]'
+
+            <label
+              htmlFor="confirmPassword"
+              className="text-right text-[#ffcb15]"
             >
-              {isLoading || isLoading ? (
-                <LiaSpinnerSolid className='animate-spin' size={40} />
-              ) : (
-                "O'zgartirish"
+              Yangi parolni tasdiqlash
+            </label>
+            <Controller
+              name="confirmPassword"
+              control={control}
+              rules={{ required: "Parolni tasdiqlash kerak" }}
+              render={({ field }) => (
+                <div className="relative">
+                  <Input
+                    type={showConfirm ? "text" : "password"}
+                    className={inputClass}
+                    placeholder="Yangi parolni tasdiqlang"
+                    {...field}
+                  />
+                  {showConfirm ? (
+                    <EyeOff
+                      className={iconStyle}
+                      onClick={() => setShowConfirm(false)}
+                    />
+                  ) : (
+                    <Eye
+                      className={iconStyle}
+                      onClick={() => setShowConfirm(true)}
+                    />
+                  )}
+                  {errors.confirmPassword && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.confirmPassword.message as string}
+                    </p>
+                  )}
+                </div>
               )}
-            </Button> */}
+            />
+
+            <Button
+              type="submit"
+              className="mt-6 w-full py-[3px] bg-[#ffcb15] rounded-lg text-[#1b2b56] hover:text-white justify-center items-center"
+            >
+              Yuborish
+            </Button>
           </div>
         </form>
       </BottomSheet>

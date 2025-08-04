@@ -1,103 +1,82 @@
-import { useMeQuery } from '@/app/api/authApi';
-import { useUploadImageMutation } from '@/app/api/uploadImg/uploadImg';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useHandleRequest } from '@/hooks/use-handle-request/use-handle-reuqest';
-import { Camera } from '@/icons';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef } from "react";
+import {
+  useGetUserQuery,
+  useMeQuery,
+  useUbdateAvatarMutation,
+  useUploadImageMutation,
+} from "@/app/api";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useHandleRequest } from "@/hooks";
+import { Camera } from "@/icons";
+import toast from "react-hot-toast";
 
 export const ProfileTop = () => {
-  const { data: user } = useMeQuery(' ');
-  const form = useForm();
-  // const [editProfile] = useEditMutation();
-  const [uploadImage] = useUploadImageMutation();
-  const [selectedImage, setSelectedImage] = useState<File | undefined>(
-    undefined
-  );
+  const { data, refetch } = useMeQuery();
+  const {data:me} = useGetUserQuery(data?.user as string);
   const handleRequest = useHandleRequest();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  useEffect(() => {
-    if (user) {
-      form.reset({
-        fullName: user.fullName,
-        avatar: user.avatar,
-      });
-    }
-  }, [user, form]);
+  const [uploadImage] = useUploadImageMutation();
 
-  // const handleFileChange = async (formState: any) => {
-  //   await handleRequest({
-  //     request: async () => {
-  //       let userImage = formState.avatar;
-  //       if (selectedImage) {
-  //         const formData = new FormData();
-  //         formData.append('file', selectedImage);
-  //         userImage = await uploadImage(formData).unwrap();
-  //       }
-  //       const result = await editProfile({
-  //         _id: user?._id,
-  //         fullName: formState.fullName,
-  //         avatar: userImage,
-  //       }).unwrap();
-  //       return result;
-  //     },
-  //     onSuccess: () => {
-  //       toast.success("Muvaffaqiyatli o'zgartirildi!");
-  //       setIsModalOpen(false);
-  //     },
-  //   });
-  // };
+  const [updateAvatar] = useUbdateAvatarMutation();
 
-  // useEffect(() => {
-  //   if (selectedImage) {
-  //     handleFileChange(form.getValues());
-  //   }
-  // }, [selectedImage, form.watch('fullName')]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return toast.error("Fayl tanlanmadi");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    console.log(file);
+
+    await handleRequest({
+      request: async () => {
+        const { url } = await uploadImage(formData).unwrap();
+        return await updateAvatar({ avatar: url }).unwrap();
+      },
+      onSuccess: () => {
+        toast.success("Profil rasmi muvaffaqiyatli o’zgartirildi");
+        refetch();
+      },
+    });
+  };
 
   return (
-    <div className='border-b-2 border-[#FFCC15] pb-6 rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full'>
-      <form 
-      // onSubmit={form.handleSubmit(handleFileChange)}
-      >
-        <div className='flex w-[95%] m-auto gap-x-3 items-center'>
-          <div className='relative'>
-            <Avatar className='w-[116px] h-[116px]'>
-              <AvatarImage
-                className='w-[116px] h-[116px]'
-                src={
-                  selectedImage
-                    ? URL.createObjectURL(selectedImage)
-                    : user?.avatar
-                }
-                alt='Avatar'
-              />
-              <AvatarFallback>
-                {user?.fullName?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div className='absolute -bottom-1 right-1 !h-9 !w-9'>
-              <Label htmlFor='picture' className='w-full'>
-                <Camera className='!h-9 !w-9' />
-              </Label>
-              <Input
-                id='picture'
-                type='file'
-                accept='image/*'
-                onChange={(e) => setSelectedImage(e.target.files?.[0])}
-                className='hidden'
-              />
-            </div>
-          </div>
-          <div className='flex items-center gap-x-2'>
-            <h5 className='text-center text-white text-base font-semibold leading-[31.20px]'>
-              {user?.fullName}
-            </h5>
-          </div>
-        </div>
-      </form>
+    <div className="flex items-start gap-x-5">
+      <div className="flex flex-col relative">
+        <Avatar className="w-[95px] h-[95px]">
+          <AvatarImage src={me?.avatar} alt="@shadcn" />
+          <AvatarFallback>{me?.fullName?.charAt(0)}</AvatarFallback>
+        </Avatar>
+
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
+        <button
+          onClick={handleUploadClick}
+          className="absolute bottom-2 right-1 bg-black/50 rounded-full p-1"
+        >
+          <Camera className="text-white w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="flex gap-x-4 mt-5 items-center">
+        <h3 className="text-center justify-center text-white text-base font-bold">
+          {me?.fullName || "Loading..."}
+        </h3>
+      </div>
     </div>
   );
 };

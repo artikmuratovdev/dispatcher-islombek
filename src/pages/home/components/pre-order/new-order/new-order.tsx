@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Notifications } from '@/icons';
+import { ArrowLeft, Notification } from '@/icons';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -90,7 +90,7 @@ export const NewPreOrder = () => {
             Yangi buyurtma
           </h4>
           <button onClick={() => navigate('/notifications')}>
-            <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
+            <Notification className='cursor-pointer text-[#FFCC15] w-6 h-6' />
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useGetClientsQuery } from '@/app/api';
 import { Input } from '@/components';
-import { Notifications } from '@/icons';
+import { Notification } from '@/icons';
 import { XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ export const Customers = () => {
             Mijozlar
           </h4>
           <button onClick={() => navigate('/notifications')}>
-            <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
+            <Notification className='cursor-pointer text-[#FFCC15] w-6 h-6' />
           </button>
         </div>
       </div>

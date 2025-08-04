@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Notifications } from '@/icons';
+import { ArrowLeft, Notification } from '@/icons';
 import { format, isValid, parse } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -20,15 +20,6 @@ export const ShowPreOrder = () => {
   const [getUser, { data: user }] = useLazyGetUserQuery();
 
   const { control, reset } = useForm({
-    defaultValues: {
-      client: '',
-      phone: '',
-      address: '',
-      commit: '',
-      deliveryTime: '',
-      fromStaff: '',
-      paidAmount: 0,
-    },
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
@@ -60,13 +51,13 @@ export const ShowPreOrder = () => {
       }
 
       reset({
-        client: String(preOrder.client),
-        phone: preOrder.phone,
-        address: preOrder.address,
-        commit: preOrder.commit,
+        client: preOrder.client ? String(preOrder.client) : '',
+        phone: preOrder.phone || '',
+        address: preOrder.address as { lat: number; lng: number } || '',
+        commit: preOrder.commit || '',
         deliveryTime,
-        fromStaff: user.fullName,
-        paidAmount: preOrder.paidAmount,
+        fromStaff: user ? user.fullName : '',
+        paidAmount: preOrder.paidAmount || 0,
       });
     }
   }, [preOrder, user, reset]);
@@ -101,7 +92,7 @@ export const ShowPreOrder = () => {
             Buyurtma
           </h4>
           <button onClick={() => navigate('/notifications')}>
-            <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
+            <Notification className='cursor-pointer text-[#FFCC15] w-6 h-6' />
           </button>
         </div>
       </div>

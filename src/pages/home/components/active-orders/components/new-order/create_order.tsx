@@ -6,7 +6,7 @@ import {
 import { AddActiveOrderReq, breadInfo, client } from '@/app/api/order/types';
 import { Combobox } from '@/components/common/combobox/combobox';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Notifications } from '@/icons';
+import { ArrowLeft, Notification } from '@/icons';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -21,12 +21,6 @@ export const NewActiveOrder = () => {
     setValue,
     reset,
   } = useForm({
-    defaultValues: {
-      mijoz: '',
-      telifon: '',
-      manzil: '',
-      izoh: '',
-    },
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
@@ -48,9 +42,6 @@ export const NewActiveOrder = () => {
       getBreadPrices({ id: selectedClient.id }).unwrap();
     }
   }, [selectedClient]);
-
-  console.log(clients);
-  console.log(breadPrices);
 
   const onChangeClient = (values: client) => {
     if (values.fullName === 'Boshqa') {
@@ -120,7 +111,7 @@ export const NewActiveOrder = () => {
           Yangi buyurtma
         </h4>
         <button onClick={() => navigate('/notification')}>
-          <Notifications className='text-yellow-500' />
+          <Notification className='text-yellow-500' />
         </button>
       </header>
 

@@ -3,7 +3,7 @@ import { activeOrder as ActiveOrderType } from '@/app/api/order/types';
 import { Button, Input, OrderCard } from '@/components';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Notifications } from '@/icons';
+import { ArrowLeft, Notification } from '@/icons';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -80,7 +80,7 @@ export const Order = () => {
                 Buyurtma
               </h4>
               <button type='button' onClick={() => navigate('/notifications')}>
-                <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
+                <Notification className='cursor-pointer text-[#FFCC15] w-6 h-6' />
               </button>
             </div>
           </div>

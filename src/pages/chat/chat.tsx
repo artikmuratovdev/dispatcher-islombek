@@ -23,8 +23,6 @@ export const Chat = () => {
     return;
   }
 
-  console.log(chat);
-
   useEffect(() => {
     if (user && user._id && unReadsId?.length) {
       unReadsId.forEach((id) =>

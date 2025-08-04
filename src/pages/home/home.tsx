@@ -1,4 +1,4 @@
-import { MessagesIcon, Notifications } from "@/icons";
+import { MessagesIcon, Notification } from "@/icons";
 import { useNavigate } from "react-router-dom";
 import { Tabs } from "@/components/common/tabs";
 import { ActiveOrders, PreOrder } from "./components";
@@ -14,7 +14,7 @@ export const HomePage = () => {
             Buyurtmalar
           </h4>
           <button onClick={() => navigate("/notifications")}>
-            <Notifications className="cursor-pointer text-[#FFCC15] w-6 h-6" />
+            <Notification className="cursor-pointer text-[#FFCC15] w-6 h-6" />
           </button>
         </div>
       </div>

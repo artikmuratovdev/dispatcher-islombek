@@ -4,5 +4,6 @@ export enum API_TAGS {
     COMPLAINT = "Complaint",
     ORDER = "Order",
     NOTIFICATION = "Notification",
-    EXPENCE = "Expence"
+    EXPENCE = "Expence",
+    PROFILE = "Profile"
 }

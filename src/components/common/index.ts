@@ -4,3 +4,5 @@ export * from "./alert-modal";
 export * from "./alert";
 export * from "./loader";
 export * from "./order-card";
+export * from './tabs'
+export * from './uzb-time'

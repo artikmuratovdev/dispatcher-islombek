@@ -43,7 +43,6 @@ export const SentMessage = ({
       },
     });
   };
-  console.log(users);
   return (
     <div>
       <form

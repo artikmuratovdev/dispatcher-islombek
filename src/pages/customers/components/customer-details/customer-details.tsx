@@ -1,6 +1,6 @@
 import { useGetClientByIdQuery } from '@/app/api';
 import { Button } from '@/components';
-import { ArrowLeft, Clock, Notifications } from '@/icons';
+import { ArrowLeft, Clock, Notification } from '@/icons';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 export const CustomerDetails = () => {
@@ -10,7 +10,6 @@ export const CustomerDetails = () => {
   const [searchParams] = useSearchParams();
   const name = searchParams.get('name');
   const number = searchParams.get('number');
-  console.log(data?.orders);
 
   const setTime = (isoString: Date | string): string => {
     const date = new Date(isoString);
@@ -33,7 +32,7 @@ export const CustomerDetails = () => {
             {name} <br /> {number}
           </h4>
           <button onClick={() => navigate('/notifications')}>
-            <Notifications className='cursor-pointer text-[#FFCC15] w-6 h-6' />
+            <Notification className='cursor-pointer text-[#FFCC15] w-6 h-6' />
           </button>
         </div>
       </div>
