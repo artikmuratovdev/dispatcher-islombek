@@ -1,5 +1,4 @@
 import {
-  useGetUserQuery,
   useLazyGetStaffProfileCalculatedMoneyQuery,
   useLazyGetStaffProfileReceivedMoneyQuery,
   useMeQuery,
@@ -15,8 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 export const MySalaries = () => {
   const navigate = useNavigate();
-  const { data } = useMeQuery();
-  const {data:me} = useGetUserQuery(data?.user as string);
+  const { data : me} = useMeQuery();
   const [open, setOpen] = useState(false);
   const [receivedOpen, setReceivedOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("hisoblangan");

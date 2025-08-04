@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from "react";
 import {
-  useGetUserQuery,
   useMeQuery,
   useUbdateAvatarMutation,
   useUploadImageMutation,
@@ -12,8 +11,7 @@ import { Camera } from "@/icons";
 import toast from "react-hot-toast";
 
 export const ProfileTop = () => {
-  const { data, refetch } = useMeQuery();
-  const {data:me} = useGetUserQuery(data?.user as string);
+  const { data:me, refetch } = useMeQuery();
   const handleRequest = useHandleRequest();
   const [uploadImage] = useUploadImageMutation();
 
