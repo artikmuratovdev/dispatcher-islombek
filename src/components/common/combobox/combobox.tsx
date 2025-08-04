@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { ChevronDown, CircleX } from "lucide-react";
 import { ComboboxProps } from "./types";
-import { client } from "@/app/api/_order/types";
+import { client } from "@/app/api/order/types";
 
 export const Combobox: React.FC<ComboboxProps> = ({
   clients,
