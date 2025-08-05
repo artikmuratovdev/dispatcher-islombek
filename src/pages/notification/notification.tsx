@@ -32,7 +32,7 @@ export const Notification = () => {
               },
               {
                 label: 'Avans',
-                children: <Avans />
+                children: <Avans />,
               },
             ]}
             defaultTabIndex={0}

@@ -7,10 +7,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      strategies: "injectManifest",
+      strategies: "generateSW",
       registerType: "autoUpdate",
       injectRegister: false,
-      srcDir: "",
+      srcDir: "src",
       filename: "sw.js",
       manifest: {
         name: "Islombek nonlari dispatcher",
@@ -51,6 +51,7 @@ export default defineConfig({
         ],
       },
       injectManifest: {
+        swSrc:"src/sw.js",
         globPatterns: ["**/*.{js,css,html,png,svg,jpg}"],
       },
     }),
