@@ -13,7 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useGetBreadPricesQuery, useGetAllUsersQuery, useAddPreOrderMutation } from '@/app/api';
-import BreadList from '../../active-orders/components/new-order/components/BreadList';
+import BreadList from '../components/BreadList';
 import { breadInfo } from '@/app/api/order/types';
 import { Role } from '@/constants';
 import toast from 'react-hot-toast';

@@ -18,7 +18,7 @@ import {
   useLazyGetUserQuery,
   useUpdatePreOrdersMutation,
 } from '@/app/api';
-import BreadList from '../../active-orders/components/new-order/components/BreadList';
+import BreadList from '../components/BreadList';
 import { breadInfo } from '@/app/api/order/types';
 import { format, isValid, parse } from 'date-fns';
 import { Role } from '@/constants';

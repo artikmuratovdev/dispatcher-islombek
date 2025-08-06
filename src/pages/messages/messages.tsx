@@ -25,7 +25,7 @@ export const Messages = () => {
     <div>
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[12px] pt-[20px] fixed top-0 w-full'>
         <div className='flex w-[95%] m-auto justify-center items-center'>
-          <h3 className='mr-[35px] text-center w-full text-white text-2xl font-semibold font-inter leading-[31.20px]'>
+          <h3 className='text-center w-full text-white text-2xl font-semibold font-inter leading-[31.20px]'>
             Message
           </h3>
         </div>

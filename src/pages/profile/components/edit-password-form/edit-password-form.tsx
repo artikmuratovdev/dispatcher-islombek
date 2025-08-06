@@ -47,7 +47,7 @@ export const EditPasswordForm = () => {
 
   const inputClass =
     "w-full font-semibold bg-white rounded-lg border border-[#ffcb15] pr-10";
-  const iconStyle = "absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer";
+  const iconStyle = "absolute right-3 top-[6px] cursor-pointer";
 
   return (
     <>

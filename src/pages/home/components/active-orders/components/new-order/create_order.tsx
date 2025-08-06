@@ -248,7 +248,7 @@ export const NewActiveOrder = () => {
           ) : (
             <div className='mt-5 flex flex-col gap-y-2'>
               {breadPrices && (
-                <BreadList breadPrices={breadPrices} setBreads={setBreads} />
+                <BreadList breadPrices={breadPrices} setBreads={() => {}} />
               )}
             </div>
           )}

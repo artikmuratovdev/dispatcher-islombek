@@ -144,6 +144,10 @@ const BreadPrices = forwardRef(function BreadPrices(
           [&::-webkit-inner-spin-button]:appearance-none 
           [&::-webkit-outer-spin-button]:appearance-none`}
         />
+
+        <span onClick={handleEditClick}>
+          <Edit className='text-yellow cursor-pointer' />
+        </span>
       </div>
 
       <div className='text-blue-950 font-semibold flex items-center justify-center gap-2'>
