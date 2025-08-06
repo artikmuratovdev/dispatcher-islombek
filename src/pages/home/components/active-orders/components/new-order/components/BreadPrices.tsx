@@ -5,7 +5,6 @@ import {
   forwardRef,
   useImperativeHandle,
 } from 'react';
-import { Edit } from '@/icons';
 import { Minus, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { breadInfo } from '@/app/api/order/types';
@@ -107,18 +106,6 @@ const BreadPrices = forwardRef(function BreadPrices(
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  const handleEditClick = () => {
-    setPriceVisible((visible) => {
-      const newState = !visible;
-      if (!newState) {
-        priceInputRef.current?.blur();
-      } else {
-        setTimeout(() => priceInputRef.current?.focus(), 0);
-      }
-      return newState;
-    });
-  };
 
   return (
     <div
