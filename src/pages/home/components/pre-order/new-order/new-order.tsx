@@ -47,7 +47,6 @@ export const NewPreOrder = () => {
       commit: '',
       deliveryTime: '',
       fromStaff: '',
-      paidAmount: '',
     },
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -253,33 +252,6 @@ export const NewPreOrder = () => {
                 {errors.fromStaff && (
                   <p className='text-red-600 font-semibold text-base'>
                     {errors?.fromStaff?.message?.toString()}
-                  </p>
-                )}
-              </>
-            )}
-          />
-        </div>
-
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
-            Olingan pul
-          </Label>
-          <Controller
-            name='paidAmount'
-            control={control}
-            rules={{ required: 'Olingan pul miqdorini kiriting' }}
-            render={({ field }) => (
-              <>
-                <Input
-                  {...field}
-                  placeholder='Olingan pul miqdorini kiriting'
-                  id='paidAmount'
-                  type='number'
-                  className=' w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
-                />
-                {errors.paidAmount && (
-                  <p className='text-red-600 font-semibold text-base'>
-                    {errors?.paidAmount?.message?.toString()}
                   </p>
                 )}
               </>
