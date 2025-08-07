@@ -53,7 +53,7 @@ export const ShowPreOrder = () => {
       reset({
         client: preOrder.client ? String(preOrder.client) : '',
         phone: preOrder.phone || '',
-        address: preOrder.address as { lat: number; lng: number } || '',
+        address: (preOrder.address as { lat: number; lng: number }) || '',
         commit: preOrder.commit || '',
         deliveryTime,
         fromStaff: user ? user.fullName : '',
@@ -105,20 +105,14 @@ export const ShowPreOrder = () => {
           <Controller
             name='client'
             control={control}
-            rules={{ required: 'Mijozni kiriting' }}
             render={({ field }) => (
-              <>
-                <Input
-                  {...field}
-                  placeholder='Mijozni kiriting'
-                  id='client'
-                  type='text'
-                  className=' text-blue-950 bg-white'
-                />
-              </>
+              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+                {field.value}
+              </span>
             )}
           />
         </div>
+
         <div className='mb-2 space-y-2'>
           <Label className='text-yellow-400 text-base font-semibold leading-none'>
             Telefon
@@ -126,20 +120,14 @@ export const ShowPreOrder = () => {
           <Controller
             name='phone'
             control={control}
-            rules={{ required: 'Telefonni kiriting' }}
             render={({ field }) => (
-              <>
-                <Input
-                  {...field}
-                  placeholder='Telefonni kiriting'
-                  id='phone'
-                  type='tel'
-                  className=' text-blue-950 bg-white'
-                />
-              </>
+              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+                {field.value}
+              </span>
             )}
           />
         </div>
+
         <div className='mb-2 space-y-2'>
           <Label className='text-yellow-400 text-base font-semibold leading-none'>
             Manzil
@@ -147,20 +135,16 @@ export const ShowPreOrder = () => {
           <Controller
             name='address'
             control={control}
-            rules={{ required: 'Manzilni kiriting' }}
             render={({ field }) => (
-              <>
-                <Input
-                  {...field}
-                  placeholder='Manzilni kiriting'
-                  id='address'
-                  type='text'
-                  className=' text-blue-950 bg-white'
-                />
-              </>
+              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+                {typeof field.value === 'object'
+                  ? `Latitude: ${field.value.lat}, Longitude: ${field.value.lng}`
+                  : field.value}
+              </span>
             )}
           />
         </div>
+
         <div className='mb-2 space-y-2'>
           <Label className='text-yellow-400 text-base font-semibold leading-none'>
             Izoh
@@ -168,20 +152,14 @@ export const ShowPreOrder = () => {
           <Controller
             name='commit'
             control={control}
-            rules={{ required: 'Izohni kiriting' }}
             render={({ field }) => (
-              <>
-                <Input
-                  {...field}
-                  placeholder='Izohni kiriting'
-                  id='commit'
-                  type='text'
-                  className=' text-blue-950 bg-white'
-                />
-              </>
+              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+                {field.value}
+              </span>
             )}
           />
         </div>
+
         <div className='mb-2 space-y-2'>
           <Label className='text-yellow-400 text-base font-semibold leading-none'>
             Topshirish vaqti
@@ -189,19 +167,16 @@ export const ShowPreOrder = () => {
           <Controller
             name='deliveryTime'
             control={control}
-            rules={{ required: 'Topshirish vaqtini kiriting' }}
             render={({ field }) => (
-              <>
-                <Input
-                  {...field}
-                  id='deliveryTime'
-                  type='datetime-local'
-                  className=' w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
-                />
-              </>
+              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+                {field.value
+                  ? `${format(new Date(field.value), 'dd.MM.yyyy HH:mm')}`
+                  : ''}
+              </span>
             )}
           />
         </div>
+
         <div className='mb-2 space-y-2'>
           <Label className='text-yellow-400 text-base font-semibold leading-none'>
             Olgan xodim
@@ -209,17 +184,10 @@ export const ShowPreOrder = () => {
           <Controller
             name='fromStaff'
             control={control}
-            rules={{ required: 'Xodimni kiriting' }}
             render={({ field }) => (
-              <>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className='w-full bg-white font-semibold'>
-                    {user && (
-                      <SelectValue placeholder={user.fullName?.toString()} />
-                    )}
-                  </SelectTrigger>
-                </Select>
-              </>
+              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+                {field.value}
+              </span>
             )}
           />
         </div>
@@ -231,17 +199,10 @@ export const ShowPreOrder = () => {
           <Controller
             name='paidAmount'
             control={control}
-            rules={{ required: 'Olingan pul miqdorini kiriting' }}
             render={({ field }) => (
-              <>
-                <Input
-                  {...field}
-                  placeholder='Olingan pul miqdorini kiriting'
-                  id='paidAmount'
-                  type='number'
-                  className=' w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
-                />
-              </>
+              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+                {Number(field.value).toLocaleString('uz-UZ')} so'm
+              </span>
             )}
           />
         </div>
@@ -257,7 +218,7 @@ export const ShowPreOrder = () => {
             ))}
           {preOrder?.breadsInfo && (
             <div className='mt-4 text-white text-2xl font-semibold'>
-              Umumiy: {preOrder.totalAmount.toLocaleString('uz-UZ')} so'm
+              Umumiy: {preOrder.totalAmount.toLocaleString('uz-UZ')}
             </div>
           )}
         </div>
