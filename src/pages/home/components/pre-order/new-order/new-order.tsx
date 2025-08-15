@@ -12,7 +12,11 @@ import { ArrowLeft, Notification } from '@/icons';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useGetBreadPricesQuery, useGetAllUsersQuery, useAddPreOrderMutation } from '@/app/api';
+import {
+  useGetBreadPricesQuery,
+  useGetAllUsersQuery,
+  useAddPreOrderMutation,
+} from '@/app/api';
 import BreadList from '../components/BreadList';
 import { breadInfo } from '@/app/api/order/types';
 import { Role } from '@/constants';
@@ -47,6 +51,7 @@ export const NewPreOrder = () => {
       commit: '',
       deliveryTime: '',
       fromStaff: '',
+      paidAmount: '',
     },
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -56,18 +61,17 @@ export const NewPreOrder = () => {
     data.breadsInfo = breads;
     console.log(data);
     if (data.phone.startsWith('+998') || data.phone.startsWith('998')) {
-      data.phone = data.phone.replace(/\D/g, "").slice(-9);
+      data.phone = data.phone.replace(/\D/g, '').slice(-9);
     } else {
-      data.phone = data.phone.replace(/\D/g, "").trim();
+      data.phone = data.phone.replace(/\D/g, '').trim();
     }
 
-    if(data.phone.length !== 9){
+    if (data.phone.length !== 9) {
       toast.error('Telefon raqamni to`g`ri kiriting');
-      return
+      return;
     }
 
-
-    const {message} =await addPreOrder(data).unwrap();
+    const { message } = await addPreOrder(data).unwrap();
     if (message) {
       toast.success(message);
       navigate('/dashboard');
@@ -258,6 +262,34 @@ export const NewPreOrder = () => {
             )}
           />
         </div>
+
+        <div className='mb-2 space-y-2'>
+          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+            Olingan pul
+          </Label>
+          <Controller
+            name='paidAmount'
+            control={control}
+            rules={{ required: 'Olingan pul miqdorini kiriting' }}
+            render={({ field }) => (
+              <>
+                <Input
+                  {...field}
+                  placeholder='Olingan pul miqdorini kiriting'
+                  id='paidAmount'
+                  type='number'
+                  className=' w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
+                />
+                {errors.paidAmount && (
+                  <p className='text-red-600 font-semibold text-base'>
+                    {errors?.paidAmount?.message?.toString()}
+                  </p>
+                )}
+              </>
+            )}
+          />
+        </div>
+
         <div className='space-y-3 pt-2 mb-5'>
           {breadPrice && (
             <BreadList breadPrices={breadPrice} setBreads={setBreads} />

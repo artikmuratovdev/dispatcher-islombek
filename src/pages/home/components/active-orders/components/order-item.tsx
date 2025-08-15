@@ -3,13 +3,15 @@ import { PopoverAnchor } from '../..';
 import React from 'react';
 import { Delete } from '@/icons';
 
+type Props = {
+  item: activeOrder;
+  getTimes: (date: Date | string) => string;
+}
+
 const Order_item = ({
   item,
   getTimes,
-}: {
-  item: activeOrder;
-  getTimes: (date: Date | string) => string;
-}) => {
+}: Props) => {
   const setClientName = (client: activeOrder['client']) => {
     if (typeof client === 'string') return client;
     return client.fullName;
