@@ -120,7 +120,7 @@ const BreadPrices = forwardRef(function BreadPrices(
         <input
           ref={priceInputRef}
           type='number'
-          value={price ?? 0}
+          value={(price ?? "").toString().replace(/^0+(?=\d)/, "")}
           onChange={(e) => {
             const val = Number(e.target.value);
             setPrice(isNaN(val) ? 0 : val);
@@ -142,7 +142,7 @@ const BreadPrices = forwardRef(function BreadPrices(
         <input
           ref={countInputRef}
           type='number'
-          value={count ?? 0}
+          value={(count ?? "").toString().replace(/^0+(?=\d)/, "")}
           onChange={(e) => {
             const value = Number(e.target.value);
             setCount(isNaN(value) ? 0 : Math.max(value, 0));

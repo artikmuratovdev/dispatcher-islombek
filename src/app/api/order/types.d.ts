@@ -13,10 +13,10 @@ export interface activeOrder {
   totalAmount: number;
   debtAmount: number;
   deliveryTime?: string;
-  acceptedDriver?: {
+  acceptedDriver: {
     _id: string;
     fullName: string;
-  };
+  } | string;
   acceptedTimeDriver?: string;
   commit: string;
   phone: string;

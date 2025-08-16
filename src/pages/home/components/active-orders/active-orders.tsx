@@ -19,7 +19,7 @@ export const ActiveOrders = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [activeOrders]);
+  }, [activeOrders,refetch]);
 
 
   const getTimes = (date: Date | string) => {

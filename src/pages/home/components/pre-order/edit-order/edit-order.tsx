@@ -14,6 +14,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   useGetAllUsersQuery,
+  useGetBreadPricesQuery,
   useGetPreDispatchQuery,
   useLazyGetUserQuery,
   useUpdatePreOrdersMutation,
@@ -29,13 +30,6 @@ export const EditPreOrder = () => {
   const { data: preOrder } = useGetPreDispatchQuery({ id });
   const [getUser, { data: user }] = useLazyGetUserQuery();
   const [updatePreOrder] = useUpdatePreOrdersMutation();
-  console.log(id);
-  useEffect(() => {
-    if (preOrder) {
-      getUser(preOrder.fromStaff);
-    }
-  }, [preOrder]);
-
   const { data: users } = useGetAllUsersQuery({
     roles: [
       Role.CEO,
@@ -47,6 +41,34 @@ export const EditPreOrder = () => {
       Role.DISPATCHER,
     ],
   });
+  const { data: breadPrices } = useGetBreadPricesQuery('');
+  const [breads, setBreads] = useState<breadInfo[]>([]);
+  const navigate = useNavigate();
+
+  // console.log()
+
+  useEffect(() => {
+    if (preOrder && breadPrices) {
+      const breadPricesWithAmount = breadPrices.map((bread) => {
+        const preOrderBread = preOrder.breadsInfo.find(
+          (b) => b._id === bread._id
+        );
+        return {
+          ...bread,
+          amount: preOrderBread?.amount ?? 0,
+          breadSoldPrice: preOrderBread?.breadSoldPrice ?? bread.breadSoldPrice,
+        };
+      });
+
+      setBreads(breadPricesWithAmount);
+    }
+  }, [preOrder, breadPrices]);
+
+  useEffect(() => {
+    if (preOrder) {
+      getUser(preOrder.fromStaff);
+    }
+  }, [preOrder]);
 
   const {
     control,
@@ -89,8 +111,6 @@ export const EditPreOrder = () => {
     console.log(preOrder);
   }, [preOrder, user, users]);
 
-  const [breads, setBreads] = useState<breadInfo[]>([]);
-
   const onSubmit = async (data: any) => {
     data.breadsInfo = breads;
     data.deliveryTime = format(new Date(data.deliveryTime), 'dd.MM.yyyy HH:mm');
@@ -107,6 +127,14 @@ export const EditPreOrder = () => {
       return;
     }
 
+    data.breadsInfo = data.breadsInfo.filter(
+      (element: breadInfo) => element.amount !== 0
+    );
+    if (data.breadsInfo.length === 0) {
+      toast.error("Non miqdori nol bo'lishi mumkin emas");
+      return;
+    }
+
     const { message } = await updatePreOrder(data).unwrap();
     if (message) {
       toast.success(message);
@@ -114,7 +142,6 @@ export const EditPreOrder = () => {
     }
   };
 
-  const navigate = useNavigate();
   return (
     <div>
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
@@ -300,10 +327,7 @@ export const EditPreOrder = () => {
         </div>
         <div className='space-y-3 pt-2 mb-5'>
           {preOrder?.breadsInfo && (
-            <BreadList
-              breadPrices={preOrder.breadsInfo}
-              setBreads={setBreads}
-            />
+            <BreadList breadPrices={breads} setBreads={setBreads} />
           )}
         </div>
         <div className='flex justify-end mb-5'>

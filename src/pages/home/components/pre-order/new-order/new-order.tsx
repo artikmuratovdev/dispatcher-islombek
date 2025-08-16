@@ -35,7 +35,7 @@ export const NewPreOrder = () => {
     ],
   });
 
-  const { data: breadPrice } = useGetBreadPricesQuery({});
+  const { data: breadPrice } = useGetBreadPricesQuery('');
   const [addPreOrder] = useAddPreOrderMutation();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
@@ -59,18 +59,26 @@ export const NewPreOrder = () => {
 
   const onSubmit = async (data: any) => {
     data.breadsInfo = breads;
-    console.log(data);
     if (data.phone.startsWith('+998') || data.phone.startsWith('998')) {
       data.phone = data.phone.replace(/\D/g, '').slice(-9);
     } else {
       data.phone = data.phone.replace(/\D/g, '').trim();
     }
-
+    
     if (data.phone.length !== 9) {
       toast.error('Telefon raqamni to`g`ri kiriting');
       return;
     }
-
+    
+    data.breadsInfo = data.breadsInfo.filter(
+      (element: breadInfo) => element.amount !== 0
+    );
+    if (data.breadsInfo.length === 0) {
+      toast.error('Non miqdorini kiriting');
+      return;
+    }
+    
+    console.log(data);
     const { message } = await addPreOrder(data).unwrap();
     if (message) {
       toast.success(message);
@@ -277,8 +285,15 @@ export const NewPreOrder = () => {
                   {...field}
                   placeholder='Olingan pul miqdorini kiriting'
                   id='paidAmount'
-                  type='number'
-                  className=' w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
+                  type='text'
+                  inputMode='numeric'
+                  pattern='[0-9]*'
+                  value={field.value}
+                  onChange={(e) => {
+                    const onlyNumbers = e.target.value.replace(/\D/g, '');
+                    field.onChange(onlyNumbers);
+                  }}
+                  className='w-full h-7 px-4 pt-4 pb-4 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-40 mb-2'
                 />
                 {errors.paidAmount && (
                   <p className='text-red-600 font-semibold text-base'>

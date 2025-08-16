@@ -8,15 +8,23 @@ import { useNavigate } from 'react-router-dom';
 export const Customers = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const { data , refetch} = useGetClientsQuery({client: search});
+  const { data, refetch } = useGetClientsQuery({ client: search });
 
   useEffect(() => {
-    refetch()
-  },[search])
+    refetch();
+  }, [search]);
 
   const setNumber = (number: string) => {
-    if(number.startsWith('+998') || number.startsWith('998')) {
-      return number.slice(4,6) + ' ' + number.slice(6,9) + ' ' + number.slice(9,11) + ' ' + number.slice(11)
+    if (number.startsWith('+998') || number.startsWith('998')) {
+      return (
+        number.slice(4, 6) +
+        ' ' +
+        number.slice(6, 9) +
+        ' ' +
+        number.slice(9, 11) +
+        ' ' +
+        number.slice(11)
+      );
     }
   };
 
@@ -25,7 +33,7 @@ export const Customers = () => {
     if (data.fullName) params.set('name', data.fullName);
     if (data.phone) params.set('number', data.phone.toString());
 
-    navigate('customer-details/' + data._id+`?${params.toString()}`);
+    navigate('customer-details/' + data._id + `?${params.toString()}`);
   };
 
   return (
@@ -60,11 +68,16 @@ export const Customers = () => {
         {data?.clients &&
           data.clients.map((client) => (
             <div
-            key={client._id}
+              key={client._id}
               className='w-full h-10 bg-white rounded-lg border border-yellow-400 flex justify-between items-center p-4'
               onClick={() => handleSubmit(client)}
             >
-              <h1 className={(client.hasOrder ? "text-green-700" : "text-red-700") +'  text-base font-bold leading-tight'}>
+              <h1
+                className={
+                  (client.hasOrder ? 'text-green-700' : 'text-red-700') +
+                  '  text-base font-bold leading-tight'
+                }
+              >
                 {client.fullName}
               </h1>
               <h3 className='bg-gray-200 rounded-[10px] w-32 h-7 flex justify-center items-center'>

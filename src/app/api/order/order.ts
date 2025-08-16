@@ -36,8 +36,8 @@ export const dispatcherApi = baseApi.injectEndpoints({
       query: ({ id }) => PATH.PRE_ORDERS_ID + id, // order id
       providesTags: [API_TAGS.ORDER],
     }),
-    getBreadPrices: builder.query<breadInfo[], GetRequest>({
-      query: ({ id: clientId }) =>
+    getBreadPrices: builder.query<breadInfo[], string>({
+      query: (clientId) =>
         PATH.BREAD_PRICES + (clientId ? `?client=${clientId}` : ''),
       providesTags: [API_TAGS.ORDER],
     }),

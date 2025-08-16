@@ -105,7 +105,7 @@ export const Order = () => {
                 <CardContent className='w-full'>
                   <div className='flex justify-between items-center'>
                     <h3 className='text-blue-950 text-sm font-bold mt-[11px]'>
-                      {orderData.acceptedDriver.fullName}
+                      {orderData.acceptedDriver as string}
                     </h3>
                     {orderData.acceptedTimeDriver && (
                       <h4 className='text-blue-950 text-sm font-bold mt-[11px]'>

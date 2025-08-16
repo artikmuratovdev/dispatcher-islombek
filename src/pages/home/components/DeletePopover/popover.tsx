@@ -47,7 +47,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button, Input } from '@/components';
-import { useDeleteOrderMutation } from '@/app/api';
+import { useDeleteOrderMutation, useGetActiveDispatchesQuery } from '@/app/api';
 import toast from 'react-hot-toast';
 
 type DeletePopoverProps = {
@@ -67,6 +67,8 @@ export const DeletePopover: React.FC<DeletePopoverProps> = ({
   const [error, setError] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [deleteOrder, { isLoading }] = useDeleteOrderMutation();
+  const {refetch} = useGetActiveDispatchesQuery();
+
   const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,7 +82,8 @@ export const DeletePopover: React.FC<DeletePopoverProps> = ({
         setOpenTag(false);
         toast.success("Buyurtma o'chirildi");
         setOpen(false);
-        navigate(`/dashboard`)
+        refetch()
+        navigate('/dashboard')
       } catch (err) {
         setError("O'chirishda xatolik yuz berdi");
       }

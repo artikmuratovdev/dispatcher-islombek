@@ -13,9 +13,20 @@ export const notification = baseApi.injectEndpoints({
       query : (id) => ({
         url: PATHS.HEAD + PATHS.TAIL + '/' + id
       })
+    }),
+    saleNotification: build.query<Notification[],string>({
+      query : (id) => ({
+        url: PATHS.SALE_NOTIFICATION + (id !== '' ? '/' + id : '')
+      })
+    }),
+    saleNotificationEdit: build.mutation<Notification[],string>({
+      query : (id) => ({
+        url: PATHS.SALE_NOTIFICATION + (id !== '' ? '/' + id : ''),
+        method: 'PATCH'
+      })
     })
   }),
 });
 
-export const { useGetByIdQuery, useGetByUserIdQuery } =
+export const { useGetByIdQuery, useGetByUserIdQuery , useSaleNotificationEditMutation, useSaleNotificationQuery} =
   notification;

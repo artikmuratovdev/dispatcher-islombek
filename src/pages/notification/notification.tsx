@@ -2,7 +2,7 @@ import { Button } from '@/components';
 import { Tabs } from '@/components/common/tabs';
 import { ArrowLeft } from '@/icons';
 import { useNavigate } from 'react-router-dom';
-import { Avans, Xabarnoma } from './tabs';
+import { Avans, Sotuv, Xabarnoma } from './tabs';
 
 export const Notification = () => {
   const navigate = useNavigate();
@@ -33,6 +33,10 @@ export const Notification = () => {
               {
                 label: 'Avans',
                 children: <Avans />,
+              },
+              {
+                label: 'Sotuv',
+                children: <Sotuv />,
               },
             ]}
             defaultTabIndex={0}

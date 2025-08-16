@@ -37,9 +37,9 @@ export const NewActiveOrder = () => {
 
   useEffect(() => {
     if (selectedClient.fullName === 'Boshqa') {
-      getBreadPrices({}).unwrap();
+      getBreadPrices('').unwrap();
     } else {
-      getBreadPrices({ id: selectedClient.id }).unwrap();
+      getBreadPrices(selectedClient.id).unwrap();
     }
   }, [selectedClient]);
 
@@ -70,12 +70,13 @@ export const NewActiveOrder = () => {
       address: data.manzil,
       phone: '',
     };
-    if (data.telifon.startsWith('+998')) {
+    if (data.telifon.startsWith('+998') || data.phone.startsWith('998')) {
       sentData.phone = data.telifon.slice(4).trim();
     } else {
       sentData.phone = data.telifon.trim();
     }
-    if (sentData.breadsInfo.length === 0) {
+    sentData.breadsInfo = sentData.breadsInfo.filter(element => element.amount !== 0);
+    if (sentData.breadsInfo.length === 0 ) {
       toast.error('Non miqdorini kiriting');
       return;
     }
@@ -148,7 +149,7 @@ export const NewActiveOrder = () => {
                     placeholder={field.value || 'Mijozni tanlang'}
                   />
                   {errors.mijoz && (
-                    <p className='text-red text-sm mt-1'>
+                    <p className='text-red-500 font-bold text-sm mt-1'>
                       {errors.mijoz.message?.toString()}
                     </p>
                   )}
@@ -176,7 +177,7 @@ export const NewActiveOrder = () => {
                     className=' text-blue-950 bg-white'
                   />
                   {errors.telifon && (
-                    <p className='text-red text-sm'>
+                    <p className='text-red-500 font-bold text-sm'>
                       {errors?.telifon?.message?.toString()}
                     </p>
                   )}
@@ -203,7 +204,7 @@ export const NewActiveOrder = () => {
                     className=' text-blue-950 bg-white'
                   />
                   {errors.manzil && (
-                    <p className='text-red text-sm'>
+                    <p className='text-red-500 font-bold text-sm'>
                       {errors?.manzil?.message?.toString()}
                     </p>
                   )}
@@ -230,7 +231,7 @@ export const NewActiveOrder = () => {
                     className=' text-blue-950 bg-white'
                   />
                   {errors.izoh && (
-                    <p className='text-red text-sm'>
+                    <p className='text-red-500 font-bold text-sm'>
                       {errors?.izoh?.message?.toString()}
                     </p>
                   )}
@@ -248,7 +249,7 @@ export const NewActiveOrder = () => {
           ) : (
             <div className='mt-5 flex flex-col gap-y-2'>
               {breadPrices && (
-                <BreadList breadPrices={breadPrices} setBreads={() => {}} />
+                <BreadList breadPrices={breadPrices} setBreads={setBreads} />
               )}
             </div>
           )}
