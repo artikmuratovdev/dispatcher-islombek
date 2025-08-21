@@ -8,10 +8,10 @@ import { useNavigate } from 'react-router-dom';
 export const ActiveOrders = () => {
   const { data: activeOrders , refetch} =
     useGetActiveDispatchesQuery();
-  const [currentTime, setCurrentTime] = useState(Date.now());
-  const navigate = useNavigate();
-  
-
+    const navigate = useNavigate();
+    
+    
+    const [currentTime, setCurrentTime] = useState(Date.now());
   useEffect(() => {
     refetch()
     const interval = setInterval(() => {

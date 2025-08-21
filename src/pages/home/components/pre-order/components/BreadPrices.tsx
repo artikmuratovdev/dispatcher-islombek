@@ -28,7 +28,6 @@ const BreadPrices = forwardRef(function BreadPrices(
   const countInputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Allow parent to trigger focus
   useImperativeHandle(ref, () => ({
     focus: () => {
       priceInputRef.current?.focus();

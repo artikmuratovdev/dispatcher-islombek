@@ -1,4 +1,4 @@
-import { useLazyGetActiveDispatchQuery } from '@/app/api';
+import { useGetUserQuery, useLazyGetActiveDispatchQuery } from '@/app/api';
 import { activeOrder as ActiveOrderType } from '@/app/api/order/types';
 import { Button, Input, OrderCard } from '@/components';
 import { Card, CardContent } from '@/components/ui/card';
@@ -62,6 +62,8 @@ export const Order = () => {
     }
   }, [id]);
 
+  const {data:Driver} = useGetUserQuery(orderData?.acceptedDriver as string);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {orderData && (
@@ -105,7 +107,7 @@ export const Order = () => {
                 <CardContent className='w-full'>
                   <div className='flex justify-between items-center'>
                     <h3 className='text-blue-950 text-sm font-bold mt-[11px]'>
-                      {orderData.acceptedDriver as string}
+                      {Driver?.fullName}
                     </h3>
                     {orderData.acceptedTimeDriver && (
                       <h4 className='text-blue-950 text-sm font-bold mt-[11px]'>
