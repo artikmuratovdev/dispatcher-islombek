@@ -36,7 +36,7 @@ export const NewPreOrder = () => {
   });
 
   const { data: breadPrice } = useGetBreadPricesQuery('');
-  const [addPreOrder] = useAddPreOrderMutation();
+  const [addPreOrder,{isLoading:isPending}] = useAddPreOrderMutation();
 
   const [breads, setBreads] = useState<breadInfo[]>([]);
   const {
@@ -82,7 +82,7 @@ export const NewPreOrder = () => {
     const { message } = await addPreOrder(data).unwrap();
     if (message) {
       toast.success(message);
-      navigate('/dashboard');
+      navigate('/dashboard',{state:{activeTab:1}});
     }
   };
 
@@ -92,7 +92,7 @@ export const NewPreOrder = () => {
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
         <div className='flex w-[95%] m-auto items-center justify-between'>
           <Button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/dashboard',{state:{activeTab:1}})}
             className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full'
           >
             <ArrowLeft className='text-2xl' />
@@ -311,7 +311,7 @@ export const NewPreOrder = () => {
           )}
         </div>
         <div className='flex justify-end mb-5'>
-          <Button className='w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15]'>
+          <Button className='w-36 h-8 p-3 bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15]' disabled={isPending}>
             Saqlash
           </Button>
         </div>

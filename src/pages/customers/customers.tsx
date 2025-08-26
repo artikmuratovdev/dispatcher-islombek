@@ -26,6 +26,17 @@ export const Customers = () => {
         number.slice(11)
       );
     }
+    if(number.length === 9){
+      return (
+        number.slice(0, 2) +
+        ' ' +
+        number.slice(2, 5) +
+        ' ' +
+        number.slice(5, 7) +
+        ' ' +
+        number.slice(7, 9)
+      );
+    }
   };
 
   const handleSubmit = (data: any) => {
@@ -38,7 +49,7 @@ export const Customers = () => {
 
   return (
     <div>
-      <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full'>
+      <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
         <div className='flex w-[95%] m-auto items-center justify-between'>
           <div className='w-7'></div>
           <h4 className='text-center justify-center text-white text-2xl font-semibold leading-loose'>
@@ -49,14 +60,15 @@ export const Customers = () => {
           </button>
         </div>
       </div>
-      <div className='mt-[120px] m-auto p-[12px] space-y-5'>
-        <div className='relative w-full max-w-sm'>
+      <div className='my-[120px] m-auto p-[12px] space-y-5'>
+        <div className='relative w-full'>
           <Input
             type='text'
             placeholder='Search...'
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className='w-full pl-4 pr-10 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400'
+            className='w-full pl-4 pr-10 py-2 bg-white border border-gray-300 
+            z-10 rounded-md shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400'
           />
           {search && (
             <XCircle

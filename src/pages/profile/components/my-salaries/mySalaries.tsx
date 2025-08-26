@@ -116,7 +116,7 @@ export const MySalaries = () => {
                 value: "hisoblangan",
                 children: (
                   <div>
-                    <div className="mt-5">
+                    <div className="mt-5 mb-10">
                       <div>
                         {calculatedMoney?.length !== 0 ? (
                           <>
@@ -170,7 +170,7 @@ export const MySalaries = () => {
                 label: "Olingan",
                 value: "olingan",
                 children: (
-                  <div className="mt-5">
+                  <div className="mt-5 mb-20">
                     <div className="flex flex-col gap-y-3">
                       {receivedMoney?.length !== 0 ? (
                         receivedMoney?.map((item) => (

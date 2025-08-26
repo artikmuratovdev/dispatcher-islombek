@@ -69,8 +69,8 @@ export const ProfileTop = () => {
         </button>
       </div>
 
-      <div className="flex gap-x-4 mt-5 items-center">
-        <h3 className="text-center justify-center text-white text-base font-bold">
+      <div className="flex gap-x-4 my-auto">
+        <h3 className="text-center justify-center text-white text-lg font-bold">
           {me?.fullName || "Loading..."}
         </h3>
       </div>

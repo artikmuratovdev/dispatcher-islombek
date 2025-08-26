@@ -28,7 +28,7 @@ export const NewActiveOrder = () => {
   const navigate = useNavigate();
   const { data: clients } = useGetClientsQuery({});
   const [getBreadPrices, { data: breadPrices }] = useLazyGetBreadPricesQuery();
-  const [addActiveOrder] = useAddActiveOrderMutation();
+  const [addActiveOrder,{isLoading: isPending}] = useAddActiveOrderMutation();
   const [selectedClient, setSelectedClient] = React.useState({
     fullName: '',
     id: '',
@@ -257,6 +257,7 @@ export const NewActiveOrder = () => {
           <button
             type='submit'
             className='bg-yellow-500 text-black font-semibold py-2 px-4 rounded-lg mt-4'
+            disabled={isPending}
           >
             Yuborish
           </button>

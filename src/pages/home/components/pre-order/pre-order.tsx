@@ -23,7 +23,7 @@ export const PreOrder = () => {
     refetch();
   },[preOrders])
   return (
-    <div className='space-y-3'>
+    <div className='space-y-3 mb-16'>
         {preOrders && preOrders.map((order) => (
       <div key={order._id}
         className='w-full h-10 bg-white rounded-lg border border-yellow-400 p-2'

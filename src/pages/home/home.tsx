@@ -1,10 +1,13 @@
 import { Tabs } from '@/components/common/tabs';
 import { MessagesIcon, Notification } from '@/icons';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate} from 'react-router-dom';
 import { ActiveOrders, PreOrder } from './components';
 
 export const HomePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location)
+  const activeTabIndex = (location && location.state && location.state.activeTab) ? Number(location.state.activeTab) : 0;
   return (
     <div>
       <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full'>
@@ -37,7 +40,7 @@ export const HomePage = () => {
                 children: <PreOrder />,
               },
             ]}
-            defaultTabIndex={0}
+            defaultTabIndex={activeTabIndex}
           />
         </div>
       </div>

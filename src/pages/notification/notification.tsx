@@ -16,9 +16,10 @@ export const Notification = () => {
           >
             <ArrowLeft className='text-2xl' />
           </Button>
-          <h4 className='text-center text-white text-2xl font-semibold ml-[75px] leading-[31.20px]'>
+          <h4 className='text-center text-white text-2xl font-semibold mx-auto  leading-[31.20px]'>
             Notification
           </h4>
+        <span className="w-5"></span>
         </div>
       </nav>
       <div className='mt-[80px] w-[100%] p-[12px]'>

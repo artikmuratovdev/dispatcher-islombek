@@ -73,7 +73,7 @@ export const Order = () => {
             <div className='flex w-[95%] m-auto items-center justify-between'>
               <Button
                 type='button'
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/dashboard',{state:{activeTab:0}})}
                 className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] p-4 rounded-full'
               >
                 <ArrowLeft className='text-2xl' />
@@ -88,7 +88,7 @@ export const Order = () => {
           </div>
 
           {/* Content */}
-          <div className='mt-[80px] p-[16px]'>
+          <div className='my-[80px] p-[16px]'>
             <Card className='border-2 border-[#FFCC15] rounded-lg h-11 mb-3'>
               <CardContent className='w-full'>
                 <div className='flex justify-between items-center'>

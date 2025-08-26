@@ -42,7 +42,7 @@ export const ActiveOrders = () => {
             <Order_item key={item._id} item={item} getTimes={getTimes} />
           ))}
         <Button
-          className='fixed bottom-[104px] right-5 h-10 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
+          className='fixed bottom-[104px] right-10 h-10 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
           onClick={() => navigate('/orders/new-order')}
         >
           <Plus />
