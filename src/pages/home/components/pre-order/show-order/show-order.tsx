@@ -197,7 +197,7 @@ export const ShowPreOrder = () => {
             control={control}
             render={({ field }) => (
               <span className='block text-blue-950 bg-white p-2 rounded-lg'>
-                {Number(field.value).toLocaleString('uz-UZ')} so'm
+                {Number(field.value).toLocaleString('ru-RU')} so'm
               </span>
             )}
           />
@@ -214,7 +214,7 @@ export const ShowPreOrder = () => {
             ))}
           {preOrder?.breadsInfo && (
             <div className='mt-4 text-white text-2xl font-semibold'>
-              Umumiy: {preOrder.totalAmount.toLocaleString('uz-UZ')}
+              Umumiy: {preOrder.totalAmount.toLocaleString('ru-RU')} so'm
             </div>
           )}
         </div>

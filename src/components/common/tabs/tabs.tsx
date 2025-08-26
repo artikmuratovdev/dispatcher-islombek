@@ -32,7 +32,7 @@ export const Tabs = ({
                                     setActiveTabIdx(index);
                                 }}
                                 className={cn(
-                                    "flex-1 duration-150 ease-in-out text-main rounded-lg px-4 py-2 flex items-center justify-center text-[15px] font-bold leading-[130%]",
+                                    "flex-1 duration-150 ease-in-out text-main rounded-lg px-2 md:px-4 py-2 flex items-center justify-center text-[14px] md:text-[15px] font-bold leading-[130%]",
                                     activeTabIdx === index ? "bg-[#FFCC15]" : "bg-white",
                                 )}
                             >

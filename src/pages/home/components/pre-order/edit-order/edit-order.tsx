@@ -152,7 +152,7 @@ export const EditPreOrder = () => {
           >
             <ArrowLeft className='text-2xl' />
           </Button>
-          <h4 className='text-center text-white text-2xl font-semibold font-inter leading-[31.20px]'>
+          <h4 className='text-center text-white text-xl md:text-2xl font-semibold font-inter leading-[31.20px]'>
             Buyurtmani tahrirlash
           </h4>
           <button onClick={() => navigate('/notifications')}>
