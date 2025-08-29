@@ -46,7 +46,7 @@ export const NewActiveOrder = () => {
   const onChangeClient = (values: client) => {
     if (values.fullName === 'Boshqa') {
       setValue('mijoz', 'Boshqa');
-      setValue('telifon', '');
+      setValue('phone', '');
       setValue('manzil', '');
       return;
     }
@@ -55,7 +55,7 @@ export const NewActiveOrder = () => {
       setValue('mijoz', values._id);
     }
     if (values.phone) {
-      setValue('telifon', values.phone);
+      setValue('phone', values.phone);
     }
     if (values.address && typeof values.address === 'string') {
       setValue('manzil', values.address);
@@ -63,6 +63,7 @@ export const NewActiveOrder = () => {
   };
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     const sentData: AddActiveOrderReq = {
       client: data.mijoz,
       breadsInfo: breads,
@@ -87,7 +88,7 @@ export const NewActiveOrder = () => {
       setBreads([]);
       reset({
         mijoz: '',
-        telifon: '',
+        phone: '',
         manzil: '',
         izoh: '',
       });
@@ -160,11 +161,11 @@ export const NewActiveOrder = () => {
 
           {/* Telefon */}
           <div className='flex flex-col gap-y-2'>
-            <label htmlFor='telifon' className='text-yellow-500 text-base'>
+            <label htmlFor='phone' className='text-yellow-500 text-base'>
               Telefon
             </label>
             <Controller
-              name='telifon'
+              name='phone'
               control={control}
               rules={{ required: 'Telefonni kiriting' }}
               render={({ field }) => (
@@ -172,13 +173,13 @@ export const NewActiveOrder = () => {
                   <Input
                     {...field}
                     placeholder='Telefon'
-                    id='telifon'
+                    id='phone'
                     type='tel'
                     className=' text-blue-950 bg-white'
                   />
-                  {errors.telifon && (
+                  {errors.phone && (
                     <p className='text-red-500 font-bold text-sm'>
-                      {errors?.telifon?.message?.toString()}
+                      {errors?.phone?.message?.toString()}
                     </p>
                   )}
                 </>
