@@ -70,10 +70,10 @@ export const NewActiveOrder = () => {
       address: data.manzil,
       phone: '',
     };
-    if (data.telifon.startsWith('+998') || data.phone.startsWith('998')) {
-      sentData.phone = data.telifon.slice(4).trim();
+    if (data.phone.startsWith('+998') || data.phone.startsWith('998')) {
+      sentData.phone = data.phone.slice(4).trim();
     } else {
-      sentData.phone = data.telifon.trim();
+      sentData.phone = data.phone.trim();
     }
     sentData.breadsInfo = sentData.breadsInfo.filter(element => element.amount !== 0);
     if (sentData.breadsInfo.length === 0 ) {
