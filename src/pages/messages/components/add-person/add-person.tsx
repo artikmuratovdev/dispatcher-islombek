@@ -30,7 +30,7 @@ export const AddPerson = () => {
               value={item._id as string}
               className='text-[#1b2b56] text-base font-semibold font-inter bg-white rounded-lg border border-[#ffcb15] mt-[9px] flex items-center gap-x-12'
             >
-              {item.fullName}
+              {item.fullName} --- {item.role}
             </SelectItem>
           ))}
         </SelectContent>

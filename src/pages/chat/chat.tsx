@@ -106,7 +106,7 @@ export const Chat = () => {
                   <p className='text-[15px] font-[400]'>{msg.content}</p>
                   <p className='text-[12px] font-[400] text-end'>
                     {' '}
-                    {msg.createdAt?.toString().slice(0, 10)}
+                    {msg.createdAt?.toString().slice(11,16)}
                   </p>
                 </div>
               </div>
