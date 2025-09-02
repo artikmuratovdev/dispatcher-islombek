@@ -83,7 +83,7 @@ export const DeletePopover: React.FC<DeletePopoverProps> = ({
         toast.success("Buyurtma o'chirildi");
         setOpen(false);
         refetch()
-        navigate('/dashboard')
+        navigate('/dashboard', { state: { activeTab: 1 } })
       } catch (err) {
         setError("O'chirishda xatolik yuz berdi");
       }

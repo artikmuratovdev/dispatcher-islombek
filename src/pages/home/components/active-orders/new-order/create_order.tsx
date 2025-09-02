@@ -26,9 +26,10 @@ export const NewActiveOrder = () => {
   });
 
   const navigate = useNavigate();
-  const { data: clients } = useGetClientsQuery({});
+  const { data: clients } = useGetClientsQuery();
   const [getBreadPrices, { data: breadPrices }] = useLazyGetBreadPricesQuery();
-  const [addActiveOrder,{isLoading: isPending}] = useAddActiveOrderMutation();
+  const [addActiveOrder, { isLoading: isPending }] =
+    useAddActiveOrderMutation();
   const [selectedClient, setSelectedClient] = React.useState({
     fullName: '',
     id: '',
@@ -43,22 +44,23 @@ export const NewActiveOrder = () => {
     }
   }, [selectedClient]);
 
+  console.log(clients);
+
   const onChangeClient = (values: client) => {
     if (values.fullName === 'Boshqa') {
       setValue('mijoz', 'Boshqa');
       setValue('phone', '');
-      setValue('manzil', '');
+      setValue('manzil', ''); // string
       return;
     }
 
-    if (values.fullName) {
-      setValue('mijoz', values._id);
-    }
-    if (values.phone) {
-      setValue('phone', values.phone);
-    }
-    if (values.address && typeof values.address === 'string') {
-      setValue('manzil', values.address);
+    if (values.fullName) setValue('mijoz', values._id);
+    if (values.phone) setValue('phone', values.phone);
+
+    if (typeof values.address === 'string') {
+      setValue('manzil', values.address); // string
+    } else if (typeof values.address === 'object' && values.address !== null) {
+      setValue('manzil', values.address); // object (map location)
     }
   };
 
@@ -68,7 +70,9 @@ export const NewActiveOrder = () => {
       client: data.mijoz,
       breadsInfo: breads,
       commit: data.izoh,
-      address: data.manzil,
+      address:
+        (clients?.find((client) => client._id === data.mijoz)
+          ?.address as AddActiveOrderReq['address']) || data.manzil,
       phone: '',
     };
     if (data.phone.startsWith('+998') || data.phone.startsWith('998')) {
@@ -76,8 +80,10 @@ export const NewActiveOrder = () => {
     } else {
       sentData.phone = data.phone.trim();
     }
-    sentData.breadsInfo = sentData.breadsInfo.filter(element => element.amount !== 0);
-    if (sentData.breadsInfo.length === 0 ) {
+    sentData.breadsInfo = sentData.breadsInfo.filter(
+      (element) => element.amount !== 0
+    );
+    if (sentData.breadsInfo.length === 0) {
       toast.error('Non miqdorini kiriting');
       return;
     }
@@ -93,7 +99,8 @@ export const NewActiveOrder = () => {
         izoh: '',
       });
       navigate('/dashboard');
-    } catch (error : any) {
+      console.log(sentData);
+    } catch (error: any) {
       toast.error(error.msg || error.message);
       return;
     }
@@ -112,7 +119,7 @@ export const NewActiveOrder = () => {
         <h4 className='text-center justify-center text-white text-2xl font-semibold'>
           Yangi buyurtma
         </h4>
-        <button onClick={() => navigate('/notification')}>
+        <button onClick={() => navigate('/notifications')}>
           <Notification className='text-yellow-500' />
         </button>
       </header>
@@ -138,16 +145,8 @@ export const NewActiveOrder = () => {
                     onChange={field.onChange}
                     setValues={onChangeClient}
                     changeBreadPrices={(value) => setSelectedClient(value)}
-                    clients={[
-                      ...(clients?.clients || []),
-                      {
-                        _id: 'other',
-                        fullName: 'Boshqa',
-                        phone: '',
-                        hasOrder: false,
-                      },
-                    ]}
-                    placeholder={field.value || 'Mijozni tanlang'}
+                    clients={clients || []}
+                    placeholder={field.value ? field.value : 'Mijozni tanlang'}
                   />
                   {errors.mijoz && (
                     <p className='text-red-500 font-bold text-sm mt-1'>
@@ -167,7 +166,13 @@ export const NewActiveOrder = () => {
             <Controller
               name='phone'
               control={control}
-              rules={{ required: 'Telefonni kiriting' }}
+              rules={{
+                required: 'Telefonni kiriting',
+                pattern: {
+                  value: /^\+?[0-9]*$/,
+                  message: 'Faqat + va raqam kiriting',
+                },
+              }}
               render={({ field }) => (
                 <>
                   <Input
@@ -175,7 +180,13 @@ export const NewActiveOrder = () => {
                     placeholder='Telefon'
                     id='phone'
                     type='tel'
-                    className=' text-blue-950 bg-white'
+                    className='text-blue-950 bg-white'
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // faqat + va raqam qoldiradi
+                      const cleaned = value.replace(/[^0-9+]/g, '');
+                      field.onChange(cleaned);
+                    }}
                   />
                   {errors.phone && (
                     <p className='text-red-500 font-bold text-sm'>
@@ -192,24 +203,18 @@ export const NewActiveOrder = () => {
             <label htmlFor='manzil' className='text-yellow-500 text-base'>
               Manzil
             </label>
+
             <Controller
               name='manzil'
               control={control}
               rules={{ required: 'Manzilni kiriting' }}
               render={({ field }) => (
-                <>
-                  <Input
-                    {...field}
-                    placeholder='Manzilni kiriting'
-                    id='manzil'
-                    className=' text-blue-950 bg-white'
-                  />
-                  {errors.manzil && (
-                    <p className='text-red-500 font-bold text-sm'>
-                      {errors?.manzil?.message?.toString()}
-                    </p>
-                  )}
-                </>
+                <Input
+                  {...field}
+                  placeholder='Manzil'
+                  id='manzil'
+                  className='text-blue-950 bg-white'
+                />
               )}
             />
           </div>

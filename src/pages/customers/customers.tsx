@@ -1,4 +1,4 @@
-import { useGetClientsQuery } from '@/app/api';
+import { useGetCustomersQuery } from '@/app/api';
 import { Input } from '@/components';
 import { Notification } from '@/icons';
 import { XCircle } from 'lucide-react';
@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 export const Customers = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const { data, refetch } = useGetClientsQuery({ client: search });
+  const { data, refetch } = useGetCustomersQuery({ client: search });
 
   useEffect(() => {
     refetch();

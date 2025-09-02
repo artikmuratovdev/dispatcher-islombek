@@ -30,7 +30,6 @@ export const NewPreOrder = () => {
       Role.BAKER,
       Role.DRIVER,
       Role.DIVIDER,
-      Role.DOUGHMAKER,
       Role.DISPATCHER,
     ],
   });

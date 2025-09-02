@@ -1,4 +1,5 @@
-import { client } from "@/app/api/_dispatcherApi/types";
+import { client } from "@/app/api/order/types";
+
 
 export interface ComboboxProps {
   clients: client[];

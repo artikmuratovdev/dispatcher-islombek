@@ -9,6 +9,7 @@ export enum PATH {
   UPDATE_ACTIVE = "order/update-order/faol-zakaz/",
   UPDATE_PRE = "order/oldindan-zakaz/",
   WITH_CLIENT_ID = "order/client/", // + "/orders"
-  CLIENT_QUERY = "order/client",
+  CUSTOMER_QUERY = "order/client",
+  CLIENT_QUERY = "auth/get-all-users",
   DELETE_ORDER = 'order/orders/'
 }

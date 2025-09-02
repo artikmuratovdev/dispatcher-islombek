@@ -14,6 +14,7 @@ import {
   UpdateReq,
   UpdateRes,
   AddPreOrderReq,
+  client,
 } from './types';
 import { PATH } from './path';
 import { API_TAGS } from '@/constants';
@@ -45,9 +46,16 @@ export const dispatcherApi = baseApi.injectEndpoints({
       query: ({ id }) => PATH.WITH_CLIENT_ID + id + '/orders',
       providesTags: [API_TAGS.ORDER],
     }),
-    getClients: builder.query<Clients, ClientQuery>({
+    getCustomers: builder.query<Clients, ClientQuery>({
       query: ({ client }) => ({
-        url: PATH.CLIENT_QUERY + (client ? `?search=${client}` : ''),
+        url: PATH.CUSTOMER_QUERY + (client ? `?search=${client}` : ''),
+        method: 'GET',
+      }),
+      providesTags: [API_TAGS.ORDER],
+    }),
+    getClients: builder.query<client[], void>({
+      query: () => ({
+        url: PATH.CLIENT_QUERY + '?roles=CLIENT',
         method: 'GET',
       }),
       providesTags: [API_TAGS.ORDER],
@@ -61,7 +69,7 @@ export const dispatcherApi = baseApi.injectEndpoints({
         url: PATH.CREATE_ACTIVE_ORDER,
         method: 'POST',
         body: data,
-        providesTags: [API_TAGS.ORDER],
+        invalidatesTags: [API_TAGS.ORDER],
       }),
     }),
     addPreOrder: builder.mutation<AddActiveOrderRes, AddPreOrderReq>({
@@ -69,14 +77,14 @@ export const dispatcherApi = baseApi.injectEndpoints({
         url: PATH.CREATE_PRE_ORDER,
         method: 'POST',
         body: data,
-        providesTags: [API_TAGS.ORDER],
+        invalidatesTags: [API_TAGS.ORDER],
       }),
     }),
     deleteOrder: builder.mutation<DeleteRes, DeleteReq>({
       query: ({ id }) => ({
         url: `/order/orders/${id}`,
         method: 'DELETE',
-        providesTags: [API_TAGS.ORDER],
+        invalidatesTags: [API_TAGS.ORDER],
       }),
     }),
     updateActiveOrders: builder.mutation<UpdateRes, UpdateReq>({
@@ -84,7 +92,7 @@ export const dispatcherApi = baseApi.injectEndpoints({
         url: PATH.UPDATE_ACTIVE + data._id,
         method: 'PATCH',
         body: data,
-        providesTags: [API_TAGS.ORDER],
+        invalidatesTags: [API_TAGS.ORDER],
       }),
     }),
     updatePreOrders: builder.mutation<UpdateRes, UpdateReq>({
@@ -92,7 +100,7 @@ export const dispatcherApi = baseApi.injectEndpoints({
         url: PATH.UPDATE_PRE + data._id,
         method: 'PATCH',
         body: data,
-        providesTags: [API_TAGS.ORDER],
+        invalidatesTags: [API_TAGS.ORDER],
       }),
     }),
   }),
@@ -104,6 +112,7 @@ export const {
   useGetPreDispatchesQuery,
   useGetBreadPricesQuery,
   useGetClientsQuery,
+  useGetCustomersQuery,
   useGetClientByIdQuery,
   useLazyGetActiveDispatchesQuery,
   useLazyGetActiveDispatchQuery,

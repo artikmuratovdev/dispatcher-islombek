@@ -71,14 +71,28 @@ export interface ClientQuery {
 }
 
 export interface Clients {
-  clients: client[];
+  clients: customer[];
 }
-export interface client {
+export interface customer {
   _id: string;
   fullName: string;
   hasOrder: boolean;
   phone?: string;
   address: string | {lat:number,lng:number};
+}
+
+export interface client {
+  _id: string;
+  fullName: string;
+  username: string;
+  role: string;
+  balance: number;
+  address: {
+    lat: number;
+    lng: number;
+  } | string;
+  phone?: string;
+  createdAt: Date;
 }
 
 export interface AddActiveOrderReq {
@@ -87,6 +101,10 @@ export interface AddActiveOrderReq {
   commit: string;
   address: string;
   phone: string;
+  location?: {
+    lat: number;
+    lng: number;
+  }
 }
 
 export interface AddPreOrderReq {
