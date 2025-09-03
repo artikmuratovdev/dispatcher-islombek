@@ -9,8 +9,8 @@ export const messageApi = baseApi.injectEndpoints({
       query: () => ({
         url: PATHS.CHAT,
         method: "GET",
-        providesTags: [API_TAGS.MESSAGE],
-      })
+      }),
+      providesTags: [API_TAGS.MESSAGE],
     }),
     addMessage: build.mutation<AddMessageRes, MessageRequest>({
       query: (body) => ({
@@ -24,8 +24,8 @@ export const messageApi = baseApi.injectEndpoints({
       query: (id) => ({
         url: PATHS.CHAT + id,
         method: "GET",
-        providesTags: [API_TAGS.MESSAGE],
-      })
+      }),
+      providesTags: [API_TAGS.MESSAGE],
     }),
     readMessages: build.mutation<void, readMessages>({
       query: ({receiverId, messageId: id}) => ({

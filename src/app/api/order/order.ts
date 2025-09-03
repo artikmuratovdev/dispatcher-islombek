@@ -69,39 +69,39 @@ export const dispatcherApi = baseApi.injectEndpoints({
         url: PATH.CREATE_ACTIVE_ORDER,
         method: 'POST',
         body: data,
-        invalidatesTags: [API_TAGS.ORDER],
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     addPreOrder: builder.mutation<AddActiveOrderRes, AddPreOrderReq>({
       query: (data) => ({
         url: PATH.CREATE_PRE_ORDER,
         method: 'POST',
         body: data,
-        invalidatesTags: [API_TAGS.ORDER],
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     deleteOrder: builder.mutation<DeleteRes, DeleteReq>({
       query: ({ id }) => ({
         url: `/order/orders/${id}`,
         method: 'DELETE',
-        invalidatesTags: [API_TAGS.ORDER],
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     updateActiveOrders: builder.mutation<UpdateRes, UpdateReq>({
       query: (data) => ({
         url: PATH.UPDATE_ACTIVE + data._id,
         method: 'PATCH',
         body: data,
-        invalidatesTags: [API_TAGS.ORDER],
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
     updatePreOrders: builder.mutation<UpdateRes, UpdateReq>({
       query: (data) => ({
         url: PATH.UPDATE_PRE + data._id,
         method: 'PATCH',
         body: data,
-        invalidatesTags: [API_TAGS.ORDER],
       }),
+      invalidatesTags: [API_TAGS.ORDER],
     }),
   }),
 });
