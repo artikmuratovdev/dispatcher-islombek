@@ -42,11 +42,13 @@ export const Order = () => {
   };
 
   const getTime = (date: string | Date) => {
-    const d = new Date(date);
-    return `${String(d.getHours()).padStart(2, '0')}:${String(
-      d.getMinutes()
-    ).padStart(2, '0')}`;
-  };
+  return new Date(date).toLocaleTimeString("uz-UZ", {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+};
+
 
   const [orderData, setOrderData] = React.useState<ActiveOrderType | null>(
     null

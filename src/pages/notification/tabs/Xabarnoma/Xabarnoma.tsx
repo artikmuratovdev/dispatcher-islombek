@@ -5,7 +5,7 @@ import { CalendarIcon, Clock } from 'lucide-react';
 export const Xabarnoma = () => {
   const { data: me } = useMeQuery();
 
-  const { data: info } = useGetByUserIdQuery(me?.user || '');
+  const { data: info } = useGetByUserIdQuery(me?._id || '');
   console.log(info);
   const formatTime = (dateString: Date): string => {
     const date = new Date(dateString);
@@ -23,7 +23,7 @@ export const Xabarnoma = () => {
             key={item._id}
             className='rounded-[12px] mb-3 border-[2px] border-[#FFCC15] p-[10px]'
           >
-            <p className='text-[16px] font-[600] text-white'>{item.body}</p>
+            {item.body.split('#').map(item => <p className='text-[16px] font-[600] text-white'>{item}</p>)}
             <div className='flex items-center justify-between pt-[10px]'>
               <div className='flex items-center gap-x-1'>
                 <CalendarIcon className='text-white !w-[18px]' />
