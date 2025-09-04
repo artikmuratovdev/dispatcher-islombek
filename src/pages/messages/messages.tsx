@@ -30,7 +30,7 @@ export const Messages = () => {
           </h3>
         </div>
       </div>
-      <div className='mt-[70px] p-5'>
+      <div className='my-[70px] p-5'>
         <div className='flex flex-col gap-y-[27px]'>
           {messages?.map((item) => (
             <div
