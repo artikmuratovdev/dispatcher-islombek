@@ -10,13 +10,14 @@ import { useHandleRequest } from "@/hooks";
 import { ArrowLeft, Complaint, Notification, Reply } from "@/icons";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast, { Toaster }  from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export const MySalaries = () => {
   const navigate = useNavigate();
-  const { data : me} = useMeQuery();
+  const { data : me, refetch} = useMeQuery();
   const [open, setOpen] = useState(false);
-  const [receivedOpen, setReceivedOpen] = useState(false);
+  const [receivedOpen, setReceivedOpen] = useState<{open:boolean,number:string|null}>({open:false,number:null});
   const [activeTab, setActiveTab] = useState("hisoblangan");
 
   const {
@@ -37,6 +38,10 @@ export const MySalaries = () => {
   const handleRequest = useHandleRequest();
 
   useEffect(() => {
+    refetch();
+  }, [ubdateStaffProfileReturn]);
+
+  useEffect(() => {
     getStaffProfileReceivedMoney({
       id: me?._id as string,
     });
@@ -51,22 +56,26 @@ export const MySalaries = () => {
   const onSubmit = (data: { amount: number }) => {
     handleRequest({
       request: async () => {
-        const response = await ubdateStaffProfileReturn({
+        return await ubdateStaffProfileReturn({
           id: me?._id as string,
           body: {
             amount: Number(data.amount),
           },
-        }).unwrap();
-        return response;
+        });
       },
-      onSuccess: () => {
+      onSuccess: (data:any) => {
+        toast.success(data.data.message);
         setOpen(false);
+      },
+      onError : (error:any) => {
+        toast.error(error?.message || "Xatolik");
       },
     });
   };
 
   return (
     <section className="h-screen bg-blue-950">
+      <Toaster />
       <header className="py-3 border-b border-yellow-400 rounded-b-4xl flex justify-between items-center px-4">
         <button
           className="bg-yellow-400 rounded-full p-2"
@@ -116,7 +125,7 @@ export const MySalaries = () => {
                 value: "hisoblangan",
                 children: (
                   <div>
-                    <div className="mt-5 mb-10">
+                    <div className="mt-5 mb-20">
                       <div>
                         {calculatedMoney?.length !== 0 ? (
                           <>
@@ -175,14 +184,15 @@ export const MySalaries = () => {
                       {receivedMoney?.length !== 0 ? (
                         receivedMoney?.map((item) => (
                           <div
-                            onClick={() => setReceivedOpen(!receivedOpen)}
+                          key={item._id}
+                            onClick={() => setReceivedOpen({open:true,number:item._id})}
                             className="flex justify-between items-center px-3 py-1 cursor-pointer rounded-2xl bg-white"
                           >
                             <div className="flex flex-col gap-y-1">
                               <h4 className="text-blue-950 text-base font-semibold">
                                 {item.amount}
                               </h4>
-                              <h4 className="text-red-600 text-base font-semibold">
+                              <h4 className={`text-${item.amount > item.totalAmount ?  'red' : 'green'}-600 text-base font-semibold`}>
                                 {item.totalAmount}
                               </h4>
                             </div>
@@ -211,7 +221,7 @@ export const MySalaries = () => {
       </main>
       <Button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-15 right-5 bg-amber-400 rounded-full"
+        className="fixed bottom-32 right-5 bg-amber-400 rounded-full"
       >
         <Reply />
       </Button>
@@ -219,7 +229,7 @@ export const MySalaries = () => {
         open={open}
         setOpen={setOpen}
         children={
-          <div className="border-1 border-yellow-400 mt-10 px-3 py-2 rounded-xl">
+          <div className="border-1 border-yellow-400 mt-10 px-3 py-2 rounded-xl border-2">
             <form onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor="amount" className="text-yellow-400 text-base">
                 Berilgan pul
@@ -233,6 +243,8 @@ export const MySalaries = () => {
                     <Input
                       {...field}
                       type="number"
+                      value={(field.value ?? 0).toString()}
+                      onChange={({target: {value}}) => field.onChange(Number(value) || 0)}
                       placeholder="Berilgan pul"
                       className="mt-2 bg-white rounded-lg"
                     />
@@ -249,34 +261,34 @@ export const MySalaries = () => {
               </h3>
 
               <div className="flex justify-end mt-5">
-                <Button>Yuborish</Button>
+                <Button className="bg-yellow-500">Yuborish</Button>
               </div>
             </form>
           </div>
         }
       />
       <BottomSheet
-        open={receivedOpen}
-        setOpen={setReceivedOpen}
+        open={receivedOpen.open}
+        setOpen={() => setReceivedOpen({open:false,number:null})}
         children={
           <div className="border-1 border-yellow-400 mt-2 px-2 py-3 rounded-lg">
             <div className="flex flex-col gap-y-3">
               <div className="bg-white px-3 py-1 rounded-lg">
                 <h4 className="text-blue-950 text-base font-semibold">
-                  Shuhrat (Admin)
+                  {receivedMoney?.find((item) => item._id === receivedOpen.number)?.fromUser ? (receivedMoney?.find((item) => item._id === receivedOpen.number)?.fromUser.fullName) : "Noma'lum"}
                 </h4>
               </div>
               <div className="bg-white px-3 py-1 rounded-lg flex justify-between">
                 <h4 className="text-blue-950 text-base font-semibold">
-                  500 000
+                  {receivedMoney?.find((item) => item._id === receivedOpen.number)?.amount}
                 </h4>
                 <h4 className="text-blue-950 text-base font-semibold">
-                  04.12.2024 10:35
+                  {receivedMoney?.find((item) => item._id === receivedOpen.number)?.createdAt.slice(0, 16).split('T').join(' ')}
                 </h4>
               </div>
               <div className="flex justify-end mt-5">
                 <Button
-                  onClick={() => setReceivedOpen(!receivedOpen)}
+                  onClick={() => setReceivedOpen({open:false,number:null})}
                   className="bg-yellow-400"
                 >
                   Yopish

@@ -79,7 +79,7 @@ export const Chat = () => {
         </span>
       </div>
 
-      <div className='pb-20 pt-16 px-4 flex flex-col gap-4 mt-[29px]'>
+      <div className='py-20 px-4 flex flex-col gap-4 mt-[29px]'>
         {chat && chat.messages.map(
           (msg, index) => (
             (msg = chat.messages[chat.messages.length - index - 1]),
