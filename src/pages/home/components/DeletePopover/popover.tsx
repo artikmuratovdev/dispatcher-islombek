@@ -23,7 +23,7 @@ export const PopoverAnchor = ({ open, setOpen, id, title ,children}: Props) => {
           onClick={() => navigate(`/orders/active-order/${id}`)}
         >
           <Edit />
-          <h3 className='text-blue-950 text-sm font-semibold'>Tahrirlash</h3>
+          <h3 className='text-blue-950 text-sm font-semibold'>Buyurtmani ko'rish</h3>
         </div>
         <div className='h-[1px] bg-gray-200 mb-2'></div>
         <DeletePopover

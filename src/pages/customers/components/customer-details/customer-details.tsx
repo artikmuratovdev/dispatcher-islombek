@@ -1,51 +1,14 @@
-import { useGetClientByIdQuery, useLazyGetUserQuery } from '@/app/api';
+import { useGetClientByIdQuery } from '@/app/api';
 import { Button } from '@/components';
 import { ArrowLeft, Clock, Notification } from '@/icons';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { distanceTime, setTime } from './triggers';
 
 export const CustomerDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data } = useGetClientByIdQuery({ id });
-  const [searchParams] = useSearchParams();
-  const name = searchParams.get('name');
-  const number = searchParams.get('number');
-
-  const [getDriver] = useLazyGetUserQuery();
-  const [drivers, setDrivers] = useState<Record<string, any>>({});
-
-  useEffect(() => {
-    const fetchDrivers = async () => {
-      if (!data?.orders) return;
-
-      const results: Record<string, any> = {};
-
-      for (const order of data.orders) {
-        const driverId =
-          typeof order.acceptedDriver === 'string'
-            ? order.acceptedDriver
-            : order.acceptedDriver._id;
-
-        try {
-          const res = await getDriver(driverId).unwrap();
-          results[driverId] = res.fullName;
-        } catch (err) {
-          console.error('Failed to fetch driver', driverId, err);
-        }
-      }
-
-      setDrivers(results);
-    };
-
-    fetchDrivers();
-  }, [data, getDriver]);
-  console.log(drivers);
-
-  
-
-  
+  const { data } = useGetClientByIdQuery({ id },{skip: !id});
+  const location = useLocation();
 
   return (
     <div>
@@ -58,7 +21,7 @@ export const CustomerDetails = () => {
             <ArrowLeft className='text-2xl' />
           </Button>
           <h4 className='text-center justify-center text-white text-2xl font-semibold'>
-            {name} <br /> {number}
+            {location?.state?.name} <br /> {location?.state?.number}
           </h4>
           <button onClick={() => navigate('/notifications')}>
             <Notification className='cursor-pointer text-[#FFCC15] w-6 h-6' />
@@ -66,7 +29,7 @@ export const CustomerDetails = () => {
         </div>
       </div>
 
-      <div className='mt-[120px] m-auto p-[16px] space-y-5'>
+      <div className='my-[120px] m-auto p-[16px] space-y-5'>
         {data &&
           (data.orders && data.orders.length > 0 ?
           data.orders.map((order) => (
@@ -76,7 +39,7 @@ export const CustomerDetails = () => {
             >
               <div className='flex justify-between items-center gap-1 mb-2'>
                 <p className='text-blue-950 text-base font-bold leading-tight'>
-                  {drivers[order.acceptedDriver as string]}
+                  {order.acceptedDriver?.fullName || ''}
                 </p>
                 <p className='text-red-700 text-base font-semibold leading-none bg-gray-200 p-1 rounded-[10px] w-20 h-7 flex justify-center items-center'>
                   {setTime(order.createdAt)}

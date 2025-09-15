@@ -82,7 +82,6 @@ export const Chat = () => {
       <div className='py-20 px-4 flex flex-col gap-4 mt-[29px]'>
         {chat && chat.messages.map(
           (msg, index) => (
-            (msg = chat.messages[chat.messages.length - index - 1]),
             (
               <div key={msg._id}>
                 {msg.createdAt &&
@@ -119,6 +118,16 @@ export const Chat = () => {
           onChange={(e) => setMessage(e.target.value)}
           className='flex-1 rounded-full border border-white bg-[#000] text-white pl-4'
           placeholder='Type a message...'
+          style={{
+            fontSize: '16px',
+            WebkitAppearance: 'none',
+            borderRadius: '25px'
+          }}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleSendMessage();
+            }
+          }}
         />
         <Button
           onClick={handleSendMessage}

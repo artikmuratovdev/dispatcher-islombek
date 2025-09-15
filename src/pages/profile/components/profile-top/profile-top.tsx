@@ -48,9 +48,9 @@ export const ProfileTop = () => {
   return (
     <div className="flex items-start gap-x-5">
       <div className="flex flex-col relative">
-        <Avatar className="w-[95px] h-[95px]">
+        <Avatar className="w-[75px] h-[75px]">
           <AvatarImage src={me?.avatar} alt="@shadcn" />
-          <AvatarFallback>{me?.fullName?.charAt(0)}</AvatarFallback>
+          <AvatarFallback className="text-xl">{me?.fullName?.charAt(0)}</AvatarFallback>
         </Avatar>
 
         <input
@@ -70,7 +70,7 @@ export const ProfileTop = () => {
       </div>
 
       <div className="flex gap-x-4 my-auto">
-        <h3 className="text-center justify-center text-white text-lg font-bold">
+        <h3 className="text-center justify-center text-white text-xl font-bold">
           {me?.fullName || "Loading..."}
         </h3>
       </div>

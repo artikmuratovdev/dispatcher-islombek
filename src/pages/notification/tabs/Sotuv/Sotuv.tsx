@@ -3,6 +3,8 @@ import { CalendarIcon } from 'lucide-react';
 import { Clock } from '@/icons';
 import { Button } from '@/components';
 import { useState, useEffect } from 'react';
+import { useHandleRequest } from '@/hooks';
+import toast from 'react-hot-toast';
 
 export const Sotuv = () => {
   const { data } = useSaleNotificationQuery('');
@@ -36,14 +38,40 @@ export const Sotuv = () => {
     );
   }
 
+  const handleRequest = useHandleRequest();
+
   const accepted = async (id: string) => {
-    const res = await editNotification(id+'/accepted').unwrap();
-    console.log(res)
+    await handleRequest({
+      request: async () => {
+        const result = await editNotification(id+'/accepted').unwrap();
+        return result;
+      },
+      onSuccess: (data) => {
+        toast.success(data.message);
+        console.log(data.message)
+      },
+      onError: (error) => {
+        toast.error(error.data.message);
+        console.log(error.data.message)
+      },
+    })
   }
 
   const rejected = async (id:string) => {
-    const res = await editNotification(id+'/rejected').unwrap();
-    console.log(res)
+    await handleRequest({
+      request: async () => {
+        const result = await editNotification(id+'/rejected').unwrap();
+        return result;
+      },
+      onSuccess: (data) => {
+        toast.success(data.message);
+        console.log(data.message)
+      },
+      onError: (error) => {
+        toast.error(error.data.message);
+        console.log(error.data.message)
+      },
+    })
   }
 
   return (

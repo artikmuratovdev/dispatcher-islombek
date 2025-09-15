@@ -10,7 +10,7 @@ import { useHandleRequest } from "@/hooks";
 import { ArrowLeft, Complaint, Notification, Reply } from "@/icons";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast, { Toaster }  from "react-hot-toast";
+import toast  from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export const MySalaries = () => {
@@ -75,7 +75,6 @@ export const MySalaries = () => {
 
   return (
     <section className="h-screen bg-blue-950">
-      <Toaster />
       <header className="py-3 border-b border-yellow-400 rounded-b-4xl flex justify-between items-center px-4">
         <button
           className="bg-yellow-400 rounded-full p-2"

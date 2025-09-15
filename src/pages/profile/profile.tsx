@@ -1,12 +1,8 @@
-import { useMeQuery } from "@/app/api";
 import { EditPasswordForm, Logout, ProfileTop } from "./components";
 import { ArrowDown } from "@/icons";
 import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
-  const { data } = useMeQuery();
-  console.log(data);
-
   const navigate = useNavigate();
 
   return (

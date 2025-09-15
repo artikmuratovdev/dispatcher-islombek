@@ -64,7 +64,7 @@ export const Order = () => {
     }
   }, [id]);
 
-  const {data:Driver} = useGetUserQuery(orderData?.acceptedDriver as string);
+  const {data:Driver} = useGetUserQuery(orderData?.acceptedDriver._id as string);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

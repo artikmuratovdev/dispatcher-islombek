@@ -9,7 +9,6 @@ export const uploadImg = baseApi.injectEndpoints({
         url: PATHS.UPLOAD,
         method: "POST",
         body: file,
-        responseHandler: 'text',
       }),
     }),
   }),

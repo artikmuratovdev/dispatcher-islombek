@@ -16,7 +16,7 @@ export interface activeOrder {
   acceptedDriver: {
     _id: string;
     fullName: string;
-  } | string;
+  };
   acceptedTimeDriver?: string;
   commit: string;
   phone: string;

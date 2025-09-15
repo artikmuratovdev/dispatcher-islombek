@@ -65,9 +65,9 @@ export const Messages = () => {
       </div>
       <Button
         onClick={() => setOpen(true)}
-        className='fixed bottom-[104px] right-5 h-10 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
+        className='fixed bottom-[104px] right-5 h-8 scale-125 w-8 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
       >
-        <AddPersonIcons />
+        <AddPersonIcons className='scale-125' />
       </Button>
       <BottomSheet children={<AddPerson />} open={open} setOpen={setOpen} />
     </div>

@@ -40,10 +40,10 @@ export const PreOrder = () => {
       </div>
         ))}
       <Button
-        className='fixed bottom-[104px] right-5 h-10 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
+        className='fixed bottom-[104px] right-5 h-8 w-8 scale-125 p-3 bg-[#ffcb15] text-3xl rounded-full justify-center items-center gap-1 inline-flex text-[#1C2C57] hover:bg-[#ffcb15]'
         onClick={() => navigate('/orders/new-pre-order')}
       >
-        <Plus />
+        <Plus className='scale-150' />
       </Button>
     </div>
   );

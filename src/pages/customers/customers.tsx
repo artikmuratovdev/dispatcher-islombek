@@ -39,12 +39,9 @@ export const Customers = () => {
     }
   };
 
-  const handleSubmit = (data: any) => {
-    const params = new URLSearchParams();
-    if (data.fullName) params.set('name', data.fullName);
-    if (data.phone) params.set('number', data.phone.toString());
+  const handleSubmit = ({ _id, fullName, phone }: any) => {
 
-    navigate('customer-details/' + data._id + `?${params.toString()}`);
+    navigate(`customer-details/${_id}` , {state : {name:fullName, number:phone}});
   };
 
   return (
