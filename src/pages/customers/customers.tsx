@@ -17,24 +17,28 @@ export const Customers = () => {
   const setNumber = (number: string) => {
     if (number.startsWith('+998') || number.startsWith('998')) {
       return (
-        number.slice(4, 6) +
-        ' ' +
-        number.slice(6, 9) +
-        ' ' +
-        number.slice(9, 11) +
-        ' ' +
-        number.slice(11)
+        <a href="tel:+998">{
+          number.slice(4, 6) +
+          ' ' +
+          number.slice(6, 9) +
+          ' ' +
+          number.slice(9, 11) +
+          ' ' +
+          number.slice(11)}
+        </a>
       );
     }
     if(number.length === 9){
       return (
+        <a href="tel:+998">{
         number.slice(0, 2) +
         ' ' +
         number.slice(2, 5) +
         ' ' +
         number.slice(5, 7) +
         ' ' +
-        number.slice(7, 9)
+        number.slice(7, 9)}
+        </a>
       );
     }
   };
@@ -89,7 +93,7 @@ export const Customers = () => {
               >
                 {client.fullName}
               </h1>
-              <h3 className='bg-gray-200 rounded-[10px] w-32 h-7 flex justify-center items-center'>
+              <h3 className='bg-gray-200 rounded-[10px] w-32 h-7 flex justify-center items-center' onClick={(e) => e.stopPropagation()}>
                 {client.phone && setNumber(client.phone)}
               </h3>
             </div>

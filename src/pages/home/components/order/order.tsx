@@ -1,16 +1,27 @@
-import { useGetUserQuery, useGetActiveDispatchQuery } from '@/app/api';
-import { activeOrder as ActiveOrderType } from '@/app/api/order/types';
-import { Button, OrderCard } from '@/components';
+import {
+  useGetActiveDispatchQuery,
+  useGetBreadPricesQuery,
+  useUpdateActiveOrdersMutation,
+} from '@/app/api';
+import {
+  activeOrder as ActiveOrderType,
+  breadInfo,
+} from '@/app/api/order/types';
+import { Button } from '@/components';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Notification } from '@/icons';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useHandleRequest } from '@/hooks';
+import toast from 'react-hot-toast';
+import BreadList from '../active-orders/new-order/components/BreadList';
 
 export const Order = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { data } = useGetActiveDispatchQuery({ id }, { skip: !id });
+  const [updateOrder, { isLoading }] = useUpdateActiveOrdersMutation();
 
   const getTime = (date: string | Date) => {
     return new Date(date).toLocaleTimeString('uz-UZ', {
@@ -23,6 +34,24 @@ export const Order = () => {
   const [orderData, setOrderData] = React.useState<ActiveOrderType | null>(
     null
   );
+  const { data: breadPrices } = useGetBreadPricesQuery('');
+  const [breads, setBreads] = useState<breadInfo[]>([]);
+
+  useEffect(() => {
+    if (data && breadPrices) {
+      const breadPricesWithAmount = breadPrices.map((bread) => {
+        const preOrderBread = data.breadsInfo.find((b) => b._id === bread._id);
+        return {
+          ...bread,
+          amount: preOrderBread?.amount ?? 0,
+          breadSoldPrice: preOrderBread?.breadSoldPrice ?? bread.breadSoldPrice,
+        };
+      });
+
+      setBreads(breadPricesWithAmount);
+    }
+  }, [data, breadPrices]);
+
   useEffect(() => {
     if (data) {
       setOrderData(data);
@@ -31,35 +60,38 @@ export const Order = () => {
 
   console.log(orderData);
 
-  // useEffect(() => {
-  //   if (id) {
-  //     getUser(id).then((res) => {
-  //       if (res) {
-  //         setOrderData(res);
-  //       }
-  //     });
+  const handleRequest = useHandleRequest();
 
-  // reset({
-  //       mijoz:
-  //         typeof data.client === 'string' ? data.client : data.client.fullName,
-  //       telifon: data.phone,
-  //       manzil:
-  //         typeof data.address === 'string' ? data.address : data.address.lat,
-  //       izoh: data.commit || '',
-  //     });
-  //   }
-  // }, [id]);
-
-  const { data: Driver } = useGetUserQuery(
-    orderData?.acceptedDriver._id as string,
-    { skip: !orderData?.acceptedDriver._id }
-  );
+  const handleSubmit = async () => {
+    await handleRequest({
+      request: async () => {
+        if(!orderData) return
+        const { message } = await updateOrder({
+          _id : orderData._id,
+          breadsInfo: breads.filter((b) => b.amount !== 0),
+          client: typeof orderData.client === 'string'
+                      ? orderData.client
+                      : orderData?.client._id,
+          commit: orderData.commit,
+          address: orderData.address as string,
+          phone: orderData.phone,
+        }).unwrap();
+        return message;
+      },
+      onSuccess: (data) => {
+        toast.success(data);
+        navigate('/dashboard', { state: { activeTab: 0 } });
+      },
+      onError: (error) => {
+        toast.error(error.data.message || 'Yangilashda xatolik');
+      },
+    });
+  };
 
   return (
-    <form>
+    <div>
       {orderData && (
         <>
-          {/* Header */}
           <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
             <div className='flex w-[95%] m-auto items-center justify-between'>
               <Button
@@ -80,7 +112,6 @@ export const Order = () => {
             </div>
           </div>
 
-          {/* Content */}
           <div className='my-[80px] p-[16px]'>
             <Card className='border-2 border-[#FFCC15] rounded-lg h-11 mb-3'>
               <CardContent className='w-full'>
@@ -100,7 +131,7 @@ export const Order = () => {
                 <CardContent className='w-full'>
                   <div className='flex justify-between items-center'>
                     <h3 className='text-blue-950 text-sm font-bold mt-[11px]'>
-                      {Driver?.fullName}
+                      {orderData.acceptedDriver.fullName}
                     </h3>
                     {orderData.acceptedTimeDriver && (
                       <h4 className='text-blue-950 text-sm font-bold mt-[11px]'>
@@ -112,13 +143,14 @@ export const Order = () => {
               </Card>
             )}
 
-            {/* Form fields */}
             <div className='flex flex-col gap-y-1 mb-3'>
               <Label className='text-yellow-400 text-base font-semibold'>
                 Mijoz
               </Label>
               <span className='bg-white border border-[#FFCC15] rounded-lg px-3 py-1.5 font-light'>
-                {typeof (orderData.client) === 'string' ? orderData.client : orderData.client.fullName}
+                {typeof orderData.client === 'string'
+                  ? orderData.client
+                  : orderData.client.fullName}
               </span>
             </div>
 
@@ -136,7 +168,9 @@ export const Order = () => {
                 Manzili
               </Label>
               <span className='bg-white border border-[#FFCC15] rounded-lg px-3 py-1.5 font-light'>
-                {typeof orderData.address === 'string' ? orderData.address : orderData.address.lat}
+                {typeof orderData.address === 'string'
+                  ? orderData.address
+                  : orderData.address.lat}
               </span>
             </div>
 
@@ -151,18 +185,18 @@ export const Order = () => {
 
             {/* Bread items */}
             <div className='space-y-3 pt-2 mb-3'>
-              {orderData.breadsInfo.map((item) => (
-                <OrderCard key={item._id} item={item} />
-              ))}
+              {orderData?.breadsInfo && (
+                <BreadList breadPrices={breads} setBreads={setBreads} />
+              )}
             </div>
-            <h1 className="text-white text-2xl font-semibold font-['Inter'] leading-none">
-              Umumiy summa:{' '}
-              {new Intl.NumberFormat('uz-UZ').format(orderData.totalAmount)}{' '}
-              so'm
-            </h1>
+
+            <Button onClick={handleSubmit} className='w-full h-11 bg-[#FFCC15]' disabled={isLoading}>
+              {' '}
+              Yangilash
+            </Button>
           </div>
         </>
       )}
-    </form>
+    </div>
   );
 };

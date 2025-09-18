@@ -38,8 +38,13 @@ export const dispatcherApi = baseApi.injectEndpoints({
       providesTags: [API_TAGS.ORDER],
     }),
     getBreadPrices: builder.query<breadInfo[], string>({
-      query: (clientId) =>
-        PATH.BREAD_PRICES + (clientId ? `?client=${clientId}` : ''),
+      query: (client) => {
+        return {
+          url: PATH.BREAD_PRICES,
+          method: 'GET',
+          params : {client}
+        };
+      },
       providesTags: [API_TAGS.ORDER],
     }),
     getOrderByClientId: builder.query<activeOrder[], GetRequest>({
