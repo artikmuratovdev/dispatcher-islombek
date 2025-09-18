@@ -109,6 +109,7 @@ export const dispatcherApi = baseApi.injectEndpoints({
 export const {
   useGetPreDispatchQuery,
   useGetActiveDispatchesQuery,
+  useGetActiveDispatchQuery,
   useGetPreDispatchesQuery,
   useGetBreadPricesQuery,
   useGetClientsQuery,

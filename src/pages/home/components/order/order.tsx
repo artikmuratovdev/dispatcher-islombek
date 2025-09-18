@@ -1,73 +1,62 @@
-import { useGetUserQuery, useLazyGetActiveDispatchQuery } from '@/app/api';
+import { useGetUserQuery, useGetActiveDispatchQuery } from '@/app/api';
 import { activeOrder as ActiveOrderType } from '@/app/api/order/types';
-import { Button, Input, OrderCard } from '@/components';
+import { Button, OrderCard } from '@/components';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Notification } from '@/icons';
 import React, { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const Order = () => {
   const navigate = useNavigate();
-  const [getActiveDispatch] = useLazyGetActiveDispatchQuery();
   const { id } = useParams<{ id: string }>();
-
-  const { control, handleSubmit, reset } = useForm();
-
-  const getUser = async (orderId: string) => {
-    try {
-      const data: ActiveOrderType = await getActiveDispatch({
-        id: orderId,
-      }).unwrap();
-
-      reset({
-        mijoz:
-          typeof data.client === 'string' ? data.client : data.client.fullName,
-        telifon: data.phone,
-        manzil:
-          typeof data.address === 'string' ? data.address : data.address.lat,
-        izoh: data.commit || '',
-      });
-
-      return data;
-    } catch (error) {
-      console.error('Failed to fetch active order:', error);
-      return null;
-    }
-  };
-
-  const onSubmit = (formData: any) => {
-    console.log('Submitted:', formData);
-  };
+  const { data } = useGetActiveDispatchQuery({ id }, { skip: !id });
 
   const getTime = (date: string | Date) => {
-  return new Date(date).toLocaleTimeString("uz-UZ", {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  });
-};
-
+    return new Date(date).toLocaleTimeString('uz-UZ', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  };
 
   const [orderData, setOrderData] = React.useState<ActiveOrderType | null>(
     null
   );
-
   useEffect(() => {
-    if (id) {
-      getUser(id).then((res) => {
-        if (res) {
-          setOrderData(res);
-        }
-      });
+    if (data) {
+      setOrderData(data);
     }
-  }, [id]);
+  });
 
-  const {data:Driver} = useGetUserQuery(orderData?.acceptedDriver._id as string);
+  console.log(orderData);
+
+  // useEffect(() => {
+  //   if (id) {
+  //     getUser(id).then((res) => {
+  //       if (res) {
+  //         setOrderData(res);
+  //       }
+  //     });
+
+  // reset({
+  //       mijoz:
+  //         typeof data.client === 'string' ? data.client : data.client.fullName,
+  //       telifon: data.phone,
+  //       manzil:
+  //         typeof data.address === 'string' ? data.address : data.address.lat,
+  //       izoh: data.commit || '',
+  //     });
+  //   }
+  // }, [id]);
+
+  const { data: Driver } = useGetUserQuery(
+    orderData?.acceptedDriver._id as string,
+    { skip: !orderData?.acceptedDriver._id }
+  );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       {orderData && (
         <>
           {/* Header */}
@@ -75,7 +64,9 @@ export const Order = () => {
             <div className='flex w-[95%] m-auto items-center justify-between'>
               <Button
                 type='button'
-                onClick={() => navigate('/dashboard',{state:{activeTab:0}})}
+                onClick={() =>
+                  navigate('/dashboard', { state: { activeTab: 0 } })
+                }
                 className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:bg-[#FFCC15] p-4 rounded-full'
               >
                 <ArrowLeft className='text-2xl' />
@@ -126,68 +117,36 @@ export const Order = () => {
               <Label className='text-yellow-400 text-base font-semibold'>
                 Mijoz
               </Label>
-              <Controller
-                name='mijoz'
-                control={control}
-                render={({ field }) => (
-                  <Input {...field} readOnly className='bg-white' />
-                )}
-              />
+              <span className='bg-white border border-[#FFCC15] rounded-lg px-3 py-1.5 font-light'>
+                {typeof (orderData.client) === 'string' ? orderData.client : orderData.client.fullName}
+              </span>
             </div>
 
             <div className='flex flex-col gap-y-1 mb-3'>
               <Label className='text-yellow-400 text-base font-semibold'>
                 Telefon
               </Label>
-              <Controller
-                name='telifon'
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    readOnly
-                    {...field}
-                    placeholder='998991234567'
-                    type='tel'
-                    className='bg-white border border-[#FFCC15] rounded-lg'
-                  />
-                )}
-              />
+              <span className='bg-white border border-[#FFCC15] rounded-lg px-3 py-1.5 font-light'>
+                {orderData.phone}
+              </span>
             </div>
 
             <div className='flex flex-col gap-y-1 mb-3'>
               <Label className='text-yellow-400 text-base font-semibold'>
                 Manzili
               </Label>
-              <Controller
-                name='manzil'
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    readOnly
-                    placeholder='Begoyim'
-                    className='bg-white border border-[#FFCC15] rounded-lg'
-                  />
-                )}
-              />
+              <span className='bg-white border border-[#FFCC15] rounded-lg px-3 py-1.5 font-light'>
+                {typeof orderData.address === 'string' ? orderData.address : orderData.address.lat}
+              </span>
             </div>
 
             <div className='flex flex-col gap-y-1 mb-3'>
               <Label className='text-yellow-400 text-base font-semibold'>
                 Izoh
               </Label>
-              <Controller
-                name='izoh'
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    readOnly
-                    placeholder='Izoh qoldiring'
-                    className='bg-white border border-[#FFCC15] rounded-lg'
-                  />
-                )}
-              />
+              <span className='bg-white border border-[#FFCC15] rounded-lg px-3 py-1.5 font-light'>
+                {orderData.commit}
+              </span>
             </div>
 
             {/* Bread items */}
@@ -196,7 +155,6 @@ export const Order = () => {
                 <OrderCard key={item._id} item={item} />
               ))}
             </div>
-
             <h1 className="text-white text-2xl font-semibold font-['Inter'] leading-none">
               Umumiy summa:{' '}
               {new Intl.NumberFormat('uz-UZ').format(orderData.totalAmount)}{' '}

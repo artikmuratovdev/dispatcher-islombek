@@ -303,7 +303,7 @@ export const EditPreOrder = () => {
             rules={{ required: 'Xodimni kiriting' }}
             render={({ field }) => (
               <>
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select disabled value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className='w-full bg-white font-semibold'>
                     <SelectValue placeholder='Xodimni tanlang' />
                   </SelectTrigger>
