@@ -27,14 +27,19 @@ const Order_item = ({
         ' w-full h-10 rounded-lg   mt-10 justify-between flex items-center p-2'
       }
     >
-      <h3
-        className={
-          (!item.acceptedDriver ? 'text-white' : 'text-green-700') +
-          ' text-base font-bold leading-tight'
-        }
-      >
-        {setClientName(item.client)}
-      </h3>
+      <div className='flex items-center gap-3'>
+        <h3
+          className={
+            (!item.acceptedDriver ? 'text-white' : 'text-green-700') +
+            ' text-base font-bold leading-tight'
+          }
+        >
+          {setClientName(item.client)}
+        </h3>
+        <div className='w-16 h-7 bg-blue-100 rounded-lg flex justify-center items-center'>
+          <h3 className='text-blue-900 text-sm font-semibold'>{item.breadCount}</h3>
+        </div>
+      </div>
       <div className='flex items-center gap-2'>
         <div className='w-20 h-7 bg-gray-200 rounded-[10px] flex justify-center items-center'>
           <h3>{getTimes(item.updatedAt.toString())}</h3>

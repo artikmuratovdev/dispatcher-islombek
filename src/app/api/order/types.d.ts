@@ -8,7 +8,7 @@ export interface activeOrder {
     | string;
   branch: string;
   status: number;
-  address: string | {lat:number,lng:number};
+  address: string | { lat: number; lng: number };
   paidAmount: number;
   totalAmount: number;
   debtAmount: number;
@@ -21,6 +21,7 @@ export interface activeOrder {
   commit: string;
   phone: string;
   approval: string;
+  breadCount: number;
   deliveryStatus: string;
   breadsInfo: breadInfo[];
   isClient: boolean;
@@ -32,7 +33,7 @@ export interface activeOrder {
   updatedAt: Date | string;
 }
 
-export interface preOrder extends activeOrder {}
+export type preOrder = activeOrder;
 
 export interface breadInfo {
   _id: string;
@@ -78,7 +79,7 @@ export interface customer {
   fullName: string;
   hasOrder: boolean;
   phone?: string;
-  address: string | {lat:number,lng:number};
+  address: string | { lat: number; lng: number };
 }
 
 export interface client {
@@ -87,10 +88,12 @@ export interface client {
   username: string;
   role: string;
   balance: number;
-  address: {
-    lat: number;
-    lng: number;
-  } | string;
+  address:
+    | {
+        lat: number;
+        lng: number;
+      }
+    | string;
   phone?: string;
   createdAt: Date;
 }
@@ -104,7 +107,7 @@ export interface AddActiveOrderReq {
   location?: {
     lat: number;
     lng: number;
-  }
+  };
 }
 
 export interface AddPreOrderReq {
@@ -125,10 +128,10 @@ export interface AddActiveOrderRes {
 export interface DeleteReq {
   id: string;
 }
-export interface DeleteRes extends AddActiveOrderRes {}
+export type DeleteRes = AddActiveOrderRes;
 
 export interface UpdateReq extends AddActiveOrderReq {
-  _id:string;
+  _id: string;
 }
 export interface UpdateRes extends AddActiveOrderRes {
   order: activeOrder;
