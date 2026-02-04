@@ -3,7 +3,6 @@ import { toast, Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { useLazyMeQuery } from "@/app/api/authApi";
 import { Loader } from "./components";
-import { useHandleRequest } from "./hooks/use-handle-request/use-handle-reuqest";
 import { Layouts } from "./layouts";
 import {
   Chat,
@@ -30,22 +29,9 @@ import { MySalaries } from "./pages/profile/components";
 
 const App = () => {
   const [getUser, { isError, isLoading, data }] = useLazyMeQuery();
-  const handleRequest = useHandleRequest();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const isFirstRender = useRef(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      await handleRequest({
-        request: async () => {
-          const result = await getUser();
-          return result;
-        },
-      });
-    };
-    fetchUser();
-  }, [getUser, handleRequest]);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -63,7 +49,8 @@ const App = () => {
       }
     };
     checkToken();
-  }, [navigate, getUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
