@@ -21,10 +21,10 @@ const Order_item = ({ item, getTimes }: Props) => {
         (!item.acceptedDriver
           ? "bg-[#C71A1A]"
           : "bg-white border border-yellow-400") +
-        " w-full h-10 rounded-lg   mt-10 justify-between flex items-center p-2"
+        " w-full h-10 rounded-lg   mt-10 justify-between flex items-center p-2 gap-2"
       }
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 justify-between w-full">
         <h3
           className={
             (!item.acceptedDriver ? "text-white" : "text-green-700") +
@@ -33,7 +33,7 @@ const Order_item = ({ item, getTimes }: Props) => {
         >
           {setClientName(item.client)}
         </h3>
-        <div className="w-16 h-7 bg-blue-100 rounded-lg flex justify-center items-center">
+        <div className="w-7 h-7 bg-blue-100 rounded-lg flex justify-center items-center">
           <h3 className="text-blue-900 text-sm font-semibold">
             {item.breadCount}
           </h3>
