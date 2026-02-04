@@ -4,6 +4,10 @@ import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
 
 export default defineConfig({
+  server: {
+    port: 3000,
+    host: true,
+  },
   plugins: [
     react(),
     VitePWA({
@@ -51,7 +55,7 @@ export default defineConfig({
         ],
       },
       injectManifest: {
-        swSrc:"src/sw.js",
+        swSrc: "src/sw.js",
         globPatterns: ["**/*.{js,css,html,png,svg,jpg}"],
       },
     }),
