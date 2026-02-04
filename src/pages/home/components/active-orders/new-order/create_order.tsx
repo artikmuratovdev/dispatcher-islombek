@@ -2,16 +2,23 @@ import {
   useAddActiveOrderMutation,
   useLazyGetBreadPricesQuery,
   useGetClientsQuery,
-} from '@/app/api';
-import { AddActiveOrderReq, breadInfo, client } from '@/app/api/order/types';
-import { Combobox } from '@/components/common/combobox/combobox';
-import { Input } from '@/components/ui/input';
-import { ArrowLeft, Notification } from '@/icons';
-import React, { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import BreadList from './components/BreadList';
+} from "@/app/api";
+import { AddActiveOrderReq, breadInfo, client } from "@/app/api/order/types";
+import { Combobox } from "@/components/common/combobox/combobox";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Notification } from "@/icons";
+import React, { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import BreadList from "./components/BreadList";
+
+interface FormData {
+  mijoz: string;
+  phone: string;
+  manzil: string | { lat: number; lng: number };
+  izoh?: string;
+}
 
 export const NewActiveOrder = () => {
   const {
@@ -20,9 +27,9 @@ export const NewActiveOrder = () => {
     handleSubmit,
     setValue,
     reset,
-  } = useForm({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+  } = useForm<FormData>({
+    mode: "onBlur",
+    reValidateMode: "onBlur",
   });
 
   const navigate = useNavigate();
@@ -31,113 +38,119 @@ export const NewActiveOrder = () => {
   const [addActiveOrder, { isLoading: isPending }] =
     useAddActiveOrderMutation();
   const [selectedClient, setSelectedClient] = React.useState({
-    fullName: '',
-    id: '',
+    fullName: "",
+    id: "",
   });
   const [breads, setBreads] = React.useState<breadInfo[]>([]);
 
   useEffect(() => {
-    if (selectedClient.fullName === 'Boshqa') {
-      getBreadPrices('').unwrap();
+    if (selectedClient.fullName === "Boshqa") {
+      getBreadPrices("").unwrap();
     } else {
       getBreadPrices(selectedClient.id).unwrap();
     }
-  }, [selectedClient]);
+  }, [selectedClient, getBreadPrices]);
 
   console.log(clients);
 
   const onChangeClient = (values: client) => {
-    if (values.fullName === 'Boshqa') {
-      setValue('mijoz', 'Boshqa');
-      setValue('phone', '');
-      setValue('manzil', ''); // string
+    if (values.fullName === "Boshqa") {
+      setValue("mijoz", "Boshqa");
+      setValue("phone", "");
+      setValue("manzil", ""); // string
       return;
     }
 
-    if (values.fullName) setValue('mijoz', values._id);
-    if (values.phone) setValue('phone', values.phone);
+    if (values.fullName) setValue("mijoz", values._id);
+    if (values.phone) setValue("phone", values.phone);
 
-    if (typeof values.address === 'string') {
-      setValue('manzil', values.address); // string
-    } else if (typeof values.address === 'object' && values.address !== null) {
-      setValue('manzil', values.address); // object (map location)
+    if (typeof values.address === "string") {
+      setValue("manzil", values.address); // string
+    } else if (typeof values.address === "object" && values.address !== null) {
+      setValue("manzil", values.address); // object (map location)
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     console.log(data);
     const sentData: AddActiveOrderReq = {
       client: data.mijoz,
       breadsInfo: breads,
-      commit: data.izoh,
+      commit: data.izoh || "",
       address:
-        (clients?.find((client) => client._id === data.mijoz)
-          ?.address as AddActiveOrderReq['address']) || data.manzil,
-      phone: '',
+        typeof clients?.find((client) => client._id === data.mijoz)?.address ===
+        "string"
+          ? (clients?.find((client) => client._id === data.mijoz)
+              ?.address as string)
+          : typeof data.manzil === "string"
+            ? data.manzil
+            : "",
+      phone: "",
     };
-    if (data.phone.startsWith('+998') || data.phone.startsWith('998')) {
+    if (data.phone.startsWith("+998") || data.phone.startsWith("998")) {
       sentData.phone = data.phone.slice(4).trim();
     } else {
       sentData.phone = data.phone.trim();
     }
     sentData.breadsInfo = sentData.breadsInfo.filter(
-      (element) => element.amount !== 0
+      (element) => element.amount !== 0,
     );
     if (sentData.breadsInfo.length === 0) {
-      toast.error('Non miqdorini kiriting');
+      toast.error("Non miqdorini kiriting");
       return;
     }
 
     try {
       await addActiveOrder(sentData).unwrap();
-      toast.success('Buyurtma yuborildi');
+      toast.success("Buyurtma yuborildi");
       setBreads([]);
       reset({
-        mijoz: '',
-        phone: '',
-        manzil: '',
-        izoh: '',
+        mijoz: "",
+        phone: "",
+        manzil: "",
+        izoh: "",
       });
-      navigate('/dashboard');
+      navigate("/dashboard");
       console.log(sentData);
-    } catch (error: any) {
-      toast.error(error.msg || error.message);
+    } catch (error: unknown) {
+      const err = error as { msg?: string; message?: string };
+      toast.error(err.msg || err.message || "Xatolik yuz berdi");
       return;
     }
-    console.warn('Yuborilayotgan data:', sentData);
+    console.warn("Yuborilayotgan data:", sentData);
   };
 
   return (
     <section>
-      <header className='flex items-center justify-between border-b-2 rounded-b-[20px] border-yellow-500 px-5 w-full pt-[25px] pb-8'>
+      <header className="flex items-center justify-between border-b-2 rounded-b-[20px] border-yellow-500 px-5 w-full pt-[25px] pb-8">
         <button
           onClick={() => navigate(-1)}
-          className='bg-yellow-500 rounded-full p-1'
+          className="bg-yellow-500 rounded-full p-1"
         >
-          <ArrowLeft className='text-black' />
+          <ArrowLeft className="text-black" />
         </button>
-        <h4 className='text-center justify-center text-white text-2xl font-semibold'>
+        <h4 className="text-center justify-center text-white text-2xl font-semibold">
           Yangi buyurtma
         </h4>
-        <button onClick={() => navigate('/notifications')}>
-          <Notification className='text-yellow-500' />
+        <button onClick={() => navigate("/notifications")}>
+          <Notification className="text-yellow-500" />
         </button>
       </header>
 
-      <main className='mt-5 mb-20 px-5'>
+      <main className="mt-5 mb-20 px-5">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className='flex flex-col gap-y-2 mb-5'
+          className="flex flex-col gap-y-2 mb-5"
         >
           {/* Mijoz */}
-          <div className='flex flex-col gap-y-2'>
-            <label htmlFor='mijoz' className='text-yellow-500 text-base'>
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="mijoz" className="text-yellow-500 text-base">
               Mijoz
             </label>
             <Controller
-              name='mijoz'
+              name="mijoz"
               control={control}
-              rules={{ required: 'Mijozni tanlang' }}
+              rules={{ required: "Mijozni tanlang" }}
               render={({ field }) => (
                 <>
                   <Combobox
@@ -146,10 +159,10 @@ export const NewActiveOrder = () => {
                     setValues={onChangeClient}
                     changeBreadPrices={(value) => setSelectedClient(value)}
                     clients={clients || []}
-                    placeholder={field.value ? field.value : 'Mijozni tanlang'}
+                    placeholder={field.value ? field.value : "Mijozni tanlang"}
                   />
                   {errors.mijoz && (
-                    <p className='text-red-500 font-bold text-sm mt-1'>
+                    <p className="text-red-500 font-bold text-sm mt-1">
                       {errors.mijoz.message?.toString()}
                     </p>
                   )}
@@ -159,37 +172,37 @@ export const NewActiveOrder = () => {
           </div>
 
           {/* Telefon */}
-          <div className='flex flex-col gap-y-2'>
-            <label htmlFor='phone' className='text-yellow-500 text-base'>
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="phone" className="text-yellow-500 text-base">
               Telefon
             </label>
             <Controller
-              name='phone'
+              name="phone"
               control={control}
               rules={{
-                required: 'Telefonni kiriting',
+                required: "Telefonni kiriting",
                 pattern: {
                   value: /^\+?[0-9]*$/,
-                  message: 'Faqat + va raqam kiriting',
+                  message: "Faqat + va raqam kiriting",
                 },
               }}
               render={({ field }) => (
                 <>
                   <Input
                     {...field}
-                    placeholder='Telefon'
-                    id='phone'
-                    type='tel'
-                    className='text-blue-950 bg-white'
+                    placeholder="Telefon"
+                    id="phone"
+                    type="tel"
+                    className="text-blue-950 bg-white"
                     onChange={(e) => {
                       const value = e.target.value;
                       // faqat + va raqam qoldiradi
-                      const cleaned = value.replace(/[^0-9+]/g, '');
+                      const cleaned = value.replace(/[^0-9+]/g, "");
                       field.onChange(cleaned);
                     }}
                   />
                   {errors.phone && (
-                    <p className='text-red-500 font-bold text-sm'>
+                    <p className="text-red-500 font-bold text-sm">
                       {errors?.phone?.message?.toString()}
                     </p>
                   )}
@@ -199,61 +212,55 @@ export const NewActiveOrder = () => {
           </div>
 
           {/* Manzil */}
-          <div className='flex flex-col gap-y-2'>
-            <label htmlFor='manzil' className='text-yellow-500 text-base'>
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="manzil" className="text-yellow-500 text-base">
               Manzil
             </label>
 
             <Controller
-              name='manzil'
+              name="manzil"
               control={control}
-              rules={{ required: 'Manzilni kiriting' }}
+              rules={{ required: "Manzilni kiriting" }}
               render={({ field }) => (
                 <Input
-                  {...field}
-                  placeholder='Manzil'
-                  id='manzil'
-                  className='text-blue-950 bg-white'
+                  value={typeof field.value === "string" ? field.value : ""}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  placeholder="Manzil"
+                  id="manzil"
+                  className="text-blue-950 bg-white"
                 />
               )}
             />
           </div>
 
           {/* Izoh */}
-          <div className='flex flex-col gap-y-2'>
-            <label htmlFor='izoh' className='text-yellow-500 text-base'>
-              Izoh
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="izoh" className="text-yellow-500 text-base">
+              Izoh (ixtiyoriy)
             </label>
             <Controller
-              name='izoh'
+              name="izoh"
               control={control}
-              rules={{ required: 'Izohni kiriting' }}
               render={({ field }) => (
-                <>
-                  <Input
-                    {...field}
-                    placeholder='Izoh'
-                    id='izoh'
-                    className=' text-blue-950 bg-white'
-                  />
-                  {errors.izoh && (
-                    <p className='text-red-500 font-bold text-sm'>
-                      {errors?.izoh?.message?.toString()}
-                    </p>
-                  )}
-                </>
+                <Input
+                  {...field}
+                  placeholder="Izoh"
+                  id="izoh"
+                  className=" text-blue-950 bg-white"
+                />
               )}
             />
           </div>
 
-          {selectedClient.fullName === '' ? (
-            <div className='mt-5 flex flex-col gap-y-2 bg-slate-300 rounded-lg min-h-[135px] items-center justify-center'>
-              <p className='text-slate-900 text-lg max-w-[270px] font-bold p-2 text-center'>
+          {selectedClient.fullName === "" ? (
+            <div className="mt-5 flex flex-col gap-y-2 bg-slate-300 rounded-lg min-h-[135px] items-center justify-center">
+              <p className="text-slate-900 text-lg max-w-[270px] font-bold p-2 text-center">
                 Mijoz tanlangandan so’ng non miqdorini kirita olasiz
               </p>
             </div>
           ) : (
-            <div className='mt-5 flex flex-col gap-y-2'>
+            <div className="mt-5 flex flex-col gap-y-2">
               {breadPrices && (
                 <BreadList breadPrices={breadPrices} setBreads={setBreads} />
               )}
@@ -261,8 +268,8 @@ export const NewActiveOrder = () => {
           )}
 
           <button
-            type='submit'
-            className='bg-yellow-500 text-black font-semibold py-2 px-4 rounded-lg mt-4'
+            type="submit"
+            className="bg-yellow-500 text-black font-semibold py-2 px-4 rounded-lg mt-4"
             disabled={isPending}
           >
             Yuborish
