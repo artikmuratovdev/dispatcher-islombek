@@ -1,4 +1,9 @@
+import { precacheAndRoute } from "workbox-precaching";
+
 const CACHE_NAME = "version-2";
+
+// Precache all assets
+precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener("install", async () => {
   const cache = await caches.open(CACHE_NAME);
@@ -29,14 +34,14 @@ self.addEventListener("fetch", (event) => {
           new Response("No internet", { status: 503 })
         );
       }
-    })
+    }),
   );
 });
 
 self.addEventListener("activate", async () => {
   const cacheNames = await caches.keys();
   await Promise.all(
-    cacheNames.map((name) => name !== CACHE_NAME && caches.delete(name))
+    cacheNames.map((name) => name !== CACHE_NAME && caches.delete(name)),
   );
   self.clients.claim();
 });
@@ -58,6 +63,6 @@ self.addEventListener("notificationclick", (event) => {
           return client.focus();
       }
       if (self.clients.openWindow) return self.clients.openWindow(targetUrl);
-    })
+    }),
   );
 });
