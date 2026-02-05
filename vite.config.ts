@@ -11,10 +11,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      strategies: "generateSW",
+      strategies: "injectManifest",
       registerType: "autoUpdate",
       injectRegister: false,
-      srcDir: "src",
+      srcDir: ".",
       filename: "sw.js",
       manifest: {
         name: "Islombek nonlari dispatcher",
@@ -31,32 +31,10 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,png,svg,jpg}"],
-        runtimeCaching: [
-          {
-            urlPattern: ({ request }) => request.destination === "document",
-            handler: "NetworkFirst",
-            options: {
-              cacheName: "pages-cache",
-            },
-          },
-          {
-            urlPattern: /\.(?:js|css|html|png|jpg|svg)$/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "static-assets",
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 30 * 24 * 60 * 60,
-              },
-            },
-          },
-        ],
-      },
       injectManifest: {
-        swSrc: "src/sw.js",
+        swSrc: "sw.js",
         globPatterns: ["**/*.{js,css,html,png,svg,jpg}"],
+        swDest: "dist/sw.js",
       },
     }),
   ],
