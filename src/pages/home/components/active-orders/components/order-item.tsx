@@ -11,7 +11,7 @@ type Props = {
 const Order_item = ({ item, getTimes }: Props) => {
   const setClientName = (client: activeOrder["client"]) => {
     if (typeof client === "string") return client;
-    return client.fullName;
+    return client?.fullName || "Boshqa";
   };
 
   const [open, setOpen] = React.useState(false);
