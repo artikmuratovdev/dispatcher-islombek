@@ -13,6 +13,7 @@ export const useHandleRequest = () => {
         result?.error ||
         result?.errors?.data?.errors ||
         result?.errors?.data ||
+        result?.errors?.message ||
         result?.errors;
 
       if (errors) {

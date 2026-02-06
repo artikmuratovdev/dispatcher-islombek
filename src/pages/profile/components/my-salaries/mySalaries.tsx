@@ -10,14 +10,17 @@ import { useHandleRequest } from "@/hooks";
 import { ArrowLeft, Complaint, Notification, Reply } from "@/icons";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import toast  from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export const MySalaries = () => {
   const navigate = useNavigate();
-  const { data : me, refetch} = useMeQuery();
+  const { data: me, refetch } = useMeQuery();
   const [open, setOpen] = useState(false);
-  const [receivedOpen, setReceivedOpen] = useState<{open:boolean,number:string|null}>({open:false,number:null});
+  const [receivedOpen, setReceivedOpen] = useState<{
+    open: boolean;
+    number: string | null;
+  }>({ open: false, number: null });
   const [activeTab, setActiveTab] = useState("hisoblangan");
 
   const {
@@ -63,12 +66,9 @@ export const MySalaries = () => {
           },
         });
       },
-      onSuccess: (data:any) => {
+      onSuccess: (data: any) => {
         toast.success(data.data.message);
         setOpen(false);
-      },
-      onError : (error:any) => {
-        toast.error(error?.message || "Xatolik");
       },
     });
   };
@@ -117,7 +117,7 @@ export const MySalaries = () => {
         </div>
         <div>
           <Tabs
-            setValue={(val : string) => setActiveTab(val)}
+            setValue={(val: string) => setActiveTab(val)}
             tabs={[
               {
                 label: "Hisoblangan",
@@ -183,15 +183,19 @@ export const MySalaries = () => {
                       {receivedMoney?.length !== 0 ? (
                         receivedMoney?.map((item) => (
                           <div
-                          key={item._id}
-                            onClick={() => setReceivedOpen({open:true,number:item._id})}
+                            key={item._id}
+                            onClick={() =>
+                              setReceivedOpen({ open: true, number: item._id })
+                            }
                             className="flex justify-between items-center px-3 py-1 cursor-pointer rounded-2xl bg-white"
                           >
                             <div className="flex flex-col gap-y-1">
                               <h4 className="text-blue-950 text-base font-semibold">
                                 {item.amount}
                               </h4>
-                              <h4 className={`text-${item.amount > item.totalAmount ?  'red' : 'green'}-600 text-base font-semibold`}>
+                              <h4
+                                className={`text-${item.amount > item.totalAmount ? "red" : "green"}-600 text-base font-semibold`}
+                              >
                                 {item.totalAmount}
                               </h4>
                             </div>
@@ -243,7 +247,9 @@ export const MySalaries = () => {
                       {...field}
                       type="number"
                       value={(field.value ?? 0).toString()}
-                      onChange={({target: {value}}) => field.onChange(Number(value) || 0)}
+                      onChange={({ target: { value } }) =>
+                        field.onChange(Number(value) || 0)
+                      }
                       placeholder="Berilgan pul"
                       className="mt-2 bg-white rounded-lg"
                     />
@@ -268,26 +274,40 @@ export const MySalaries = () => {
       />
       <BottomSheet
         open={receivedOpen.open}
-        setOpen={() => setReceivedOpen({open:false,number:null})}
+        setOpen={() => setReceivedOpen({ open: false, number: null })}
         children={
           <div className="border-1 border-yellow-400 mt-2 px-2 py-3 rounded-lg">
             <div className="flex flex-col gap-y-3">
               <div className="bg-white px-3 py-1 rounded-lg">
                 <h4 className="text-blue-950 text-base font-semibold">
-                  {receivedMoney?.find((item) => item._id === receivedOpen.number)?.fromUser ? (receivedMoney?.find((item) => item._id === receivedOpen.number)?.fromUser.fullName) : "Noma'lum"}
+                  {receivedMoney?.find(
+                    (item) => item._id === receivedOpen.number,
+                  )?.fromUser
+                    ? receivedMoney?.find(
+                        (item) => item._id === receivedOpen.number,
+                      )?.fromUser.fullName
+                    : "Noma'lum"}
                 </h4>
               </div>
               <div className="bg-white px-3 py-1 rounded-lg flex justify-between">
                 <h4 className="text-blue-950 text-base font-semibold">
-                  {receivedMoney?.find((item) => item._id === receivedOpen.number)?.amount}
+                  {
+                    receivedMoney?.find(
+                      (item) => item._id === receivedOpen.number,
+                    )?.amount
+                  }
                 </h4>
                 <h4 className="text-blue-950 text-base font-semibold">
-                  {receivedMoney?.find((item) => item._id === receivedOpen.number)?.createdAt.slice(0, 16).split('T').join(' ')}
+                  {receivedMoney
+                    ?.find((item) => item._id === receivedOpen.number)
+                    ?.createdAt.slice(0, 16)
+                    .split("T")
+                    .join(" ")}
                 </h4>
               </div>
               <div className="flex justify-end mt-5">
                 <Button
-                  onClick={() => setReceivedOpen({open:false,number:null})}
+                  onClick={() => setReceivedOpen({ open: false, number: null })}
                   className="bg-yellow-400"
                 >
                   Yopish
