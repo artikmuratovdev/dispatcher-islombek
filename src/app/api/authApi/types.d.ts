@@ -20,6 +20,7 @@ export interface MeResponse {
   updatedAt?: string;
   user?: string;
   debt?: number;
+  balance?: number;
   salaryBalance?: number;
   subsription?: {
     endpoint: string;
