@@ -74,7 +74,7 @@ export const Order = () => {
           client:
             typeof orderData.client === "string"
               ? orderData.client
-              : orderData?.client._id,
+              : orderData?.client?._id,
           commit: commit,
           address: orderData.address as string,
           phone: orderData.phone,
@@ -153,7 +153,7 @@ export const Order = () => {
               <span className="bg-white border border-[#FFCC15] rounded-lg px-3 py-1.5 font-light">
                 {typeof orderData.client === "string"
                   ? orderData.client
-                  : orderData.client.fullName}
+                  : orderData.client?.fullName || "Boshqa"}
               </span>
             </div>
 
