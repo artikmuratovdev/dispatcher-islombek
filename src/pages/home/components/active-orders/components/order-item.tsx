@@ -9,9 +9,12 @@ type Props = {
 };
 
 const Order_item = ({ item, getTimes }: Props) => {
-  const setClientName = (client: activeOrder["client"]) => {
-    if (typeof client === "string") return client;
-    return client?.fullName || "Boshqa";
+  const setClientAddress = (address: activeOrder["address"]) => {
+    if (typeof address === "string") return address;
+    if (address && typeof address === "object") {
+      return `${address.lat}, ${address.lng}`;
+    }
+    return "Manzil yo'q";
   };
 
   const [open, setOpen] = React.useState(false);
@@ -31,7 +34,7 @@ const Order_item = ({ item, getTimes }: Props) => {
             " text-base font-bold leading-tight"
           }
         >
-          {setClientName(item.client)}
+          {setClientAddress(item.address)}
         </h3>
         <div className="w-7 h-7 bg-blue-100 rounded-lg flex justify-center items-center">
           <h3 className="text-blue-900 text-sm font-semibold">
@@ -41,10 +44,10 @@ const Order_item = ({ item, getTimes }: Props) => {
       </div>
       <div className="flex items-center gap-2">
         <div className="w-20 h-7 bg-gray-200 rounded-[10px] flex justify-center items-center">
-          <h3>{getTimes(item.updatedAt.toString())}</h3>
+          <h3>{getTimes(item.createdAt.toString())}</h3>
         </div>
         <PopoverAnchor
-          title={setClientName(item.client)}
+          title={setClientAddress(item.address)}
           open={open}
           id={item._id}
           setOpen={setOpen}
