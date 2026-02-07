@@ -2,6 +2,7 @@ import { activeOrder } from "@/app/api/order/types";
 import { PopoverAnchor } from "../..";
 import React from "react";
 import { Delete } from "@/icons";
+import { formatNumber } from "@/utils";
 
 type Props = {
   item: activeOrder;
@@ -38,7 +39,7 @@ const Order_item = ({ item, getTimes }: Props) => {
         </h3>
         <div className="w-7 h-7 bg-blue-100 rounded-lg flex justify-center items-center">
           <h3 className="text-blue-900 text-sm font-semibold">
-            {item.breadCount}
+            {formatNumber(item.breadCount)}
           </h3>
         </div>
       </div>

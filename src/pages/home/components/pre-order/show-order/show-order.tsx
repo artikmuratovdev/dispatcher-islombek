@@ -1,23 +1,22 @@
-import { useGetPreDispatchQuery, useLazyGetUserQuery } from '@/app/api';
-import {
-  Button
-} from '@/components';
-import { Label } from '@/components/ui/label';
-import { ArrowLeft, Notification } from '@/icons';
-import { format, isValid, parse } from 'date-fns';
-import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
-import { DeletePopover } from '../../DeletePopover';
-import { BreadItem } from '../components/BreadItem';
+import { useGetPreDispatchQuery, useLazyGetUserQuery } from "@/app/api";
+import { Button } from "@/components";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, Notification } from "@/icons";
+import { format, isValid, parse } from "date-fns";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { DeletePopover } from "../../DeletePopover";
+import { BreadItem } from "../components/BreadItem";
+import { formatNumber } from "@/utils";
 export const ShowPreOrder = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: preOrder, refetch } = useGetPreDispatchQuery({ id: id ?? '' });
+  const { data: preOrder, refetch } = useGetPreDispatchQuery({ id: id ?? "" });
   const [getUser, { data: user }] = useLazyGetUserQuery();
 
   const { control, reset } = useForm({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: "onBlur",
+    reValidateMode: "onBlur",
   });
 
   useEffect(() => {
@@ -29,14 +28,14 @@ export const ShowPreOrder = () => {
 
   useEffect(() => {
     if (preOrder && user) {
-      let deliveryTime = '';
+      let deliveryTime = "";
 
       if (preOrder.deliveryTime) {
         const isoParsed = new Date(preOrder.deliveryTime);
         const fallbackParsed = parse(
           preOrder.deliveryTime,
-          'dd.MM.yyyy HH:mm',
-          new Date()
+          "dd.MM.yyyy HH:mm",
+          new Date(),
         );
 
         if (isValid(isoParsed)) {
@@ -47,12 +46,12 @@ export const ShowPreOrder = () => {
       }
 
       reset({
-        client: preOrder.client ? String(preOrder.client) : '',
-        phone: preOrder.phone || '',
-        address: (preOrder.address as { lat: number; lng: number }) || '',
-        commit: preOrder.commit || '',
+        client: preOrder.client ? String(preOrder.client) : "",
+        phone: preOrder.phone || "",
+        address: (preOrder.address as { lat: number; lng: number }) || "",
+        commit: preOrder.commit || "",
         deliveryTime,
-        fromStaff: user ? user.fullName : '',
+        fromStaff: user ? user.fullName : "",
         paidAmount: preOrder.paidAmount || 0,
       });
     }
@@ -66,8 +65,8 @@ export const ShowPreOrder = () => {
 
     const fallback = parse(
       preOrder.deliveryTime,
-      'dd.MM.yyyy HH:mm',
-      new Date()
+      "dd.MM.yyyy HH:mm",
+      new Date(),
     );
     return isValid(fallback) ? fallback : null;
   })();
@@ -76,64 +75,64 @@ export const ShowPreOrder = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <div className='border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10'>
-        <div className='flex w-[95%] m-auto items-center justify-between'>
+      <div className="border-b-2 border-[#FFCC15] rounded-b-[30px] bg-[#1C2C57] p-[16px] pt-[20px] fixed top-0 w-full z-10">
+        <div className="flex w-[95%] m-auto items-center justify-between">
           <Button
             onClick={() => navigate("/dashboard", { state: { activeTab: 1 } })}
-            className='w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full'
+            className="w-5 h-5 px-[3.33px] py-[5px] justify-center items-center bg-[#FFCC15] text-[#1B2B56] hover:text-white p-4 rounded-full"
           >
-            <ArrowLeft className='text-2xl' />
+            <ArrowLeft className="text-2xl" />
           </Button>
-          <h4 className='text-center text-white text-2xl font-semibold font-inter leading-[31.20px]'>
+          <h4 className="text-center text-white text-2xl font-semibold font-inter leading-[31.20px]">
             Buyurtma
           </h4>
-          <button onClick={() => navigate('/notifications')}>
-            <Notification className='cursor-pointer text-[#FFCC15] w-6 h-6' />
+          <button onClick={() => navigate("/notifications")}>
+            <Notification className="cursor-pointer text-[#FFCC15] w-6 h-6" />
           </button>
         </div>
       </div>
       {/* form */}
-      <form className='my-[70px] p-[16px] space-y-3'>
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+      <form className="my-[70px] p-[16px] space-y-3">
+        <div className="mb-2 space-y-2">
+          <Label className="text-yellow-400 text-base font-semibold leading-none">
             Mijoz
           </Label>
           <Controller
-            name='client'
+            name="client"
             control={control}
             render={({ field }) => (
-              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+              <span className="block text-blue-950 bg-white p-2 rounded-lg">
                 {field.value}
               </span>
             )}
           />
         </div>
 
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+        <div className="mb-2 space-y-2">
+          <Label className="text-yellow-400 text-base font-semibold leading-none">
             Telefon
           </Label>
           <Controller
-            name='phone'
+            name="phone"
             control={control}
             render={({ field }) => (
-              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+              <span className="block text-blue-950 bg-white p-2 rounded-lg">
                 {field.value}
               </span>
             )}
           />
         </div>
 
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+        <div className="mb-2 space-y-2">
+          <Label className="text-yellow-400 text-base font-semibold leading-none">
             Manzil
           </Label>
           <Controller
-            name='address'
+            name="address"
             control={control}
             render={({ field }) => (
-              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
-                {typeof field.value === 'object'
+              <span className="block text-blue-950 bg-white p-2 rounded-lg">
+                {typeof field.value === "object"
                   ? `Latitude: ${field.value.lat}, Longitude: ${field.value.lng}`
                   : field.value}
               </span>
@@ -141,68 +140,68 @@ export const ShowPreOrder = () => {
           />
         </div>
 
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+        <div className="mb-2 space-y-2">
+          <Label className="text-yellow-400 text-base font-semibold leading-none">
             Izoh
           </Label>
           <Controller
-            name='commit'
+            name="commit"
             control={control}
             render={({ field }) => (
-              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+              <span className="block text-blue-950 bg-white p-2 rounded-lg">
                 {field.value}
               </span>
             )}
           />
         </div>
 
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+        <div className="mb-2 space-y-2">
+          <Label className="text-yellow-400 text-base font-semibold leading-none">
             Topshirish vaqti
           </Label>
           <Controller
-            name='deliveryTime'
+            name="deliveryTime"
             control={control}
             render={({ field }) => (
-              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+              <span className="block text-blue-950 bg-white p-2 rounded-lg">
                 {field.value
-                  ? `${format(new Date(field.value), 'dd.MM.yyyy HH:mm')}`
-                  : ''}
+                  ? `${format(new Date(field.value), "dd.MM.yyyy HH:mm")}`
+                  : ""}
               </span>
             )}
           />
         </div>
 
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+        <div className="mb-2 space-y-2">
+          <Label className="text-yellow-400 text-base font-semibold leading-none">
             Olgan xodim
           </Label>
           <Controller
-            name='fromStaff'
+            name="fromStaff"
             control={control}
             render={({ field }) => (
-              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
+              <span className="block text-blue-950 bg-white p-2 rounded-lg">
                 {field.value}
               </span>
             )}
           />
         </div>
 
-        <div className='mb-2 space-y-2'>
-          <Label className='text-yellow-400 text-base font-semibold leading-none'>
+        <div className="mb-2 space-y-2">
+          <Label className="text-yellow-400 text-base font-semibold leading-none">
             Olingan pul
           </Label>
           <Controller
-            name='paidAmount'
+            name="paidAmount"
             control={control}
             render={({ field }) => (
-              <span className='block text-blue-950 bg-white p-2 rounded-lg'>
-                {Number(field.value).toLocaleString('ru-RU')} so'm
+              <span className="block text-blue-950 bg-white p-2 rounded-lg">
+                {formatNumber(Number(field.value))} so'm
               </span>
             )}
           />
         </div>
-        <div className='space-y-3 pt-2 mb-5'>
+        <div className="space-y-3 pt-2 mb-5">
           {preOrder?.breadsInfo &&
             preOrder?.breadsInfo.map((bread) => (
               <BreadItem
@@ -213,50 +212,50 @@ export const ShowPreOrder = () => {
               />
             ))}
           {preOrder?.breadsInfo && (
-            <div className='mt-4 text-white text-2xl font-semibold'>
-              Umumiy: {preOrder.totalAmount.toLocaleString('ru-RU')} so'm
+            <div className="mt-4 text-white text-2xl font-semibold">
+              Umumiy: {formatNumber(preOrder.totalAmount)} so'm
             </div>
           )}
         </div>
         {preOrder && (
-          <div className='w-full relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 px-2 py-1 flex justify-between mb-4'>
-            <h3 className='text-blue-950 text-base font-semibold'>
+          <div className="w-full relative bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-yellow-400 px-2 py-1 flex justify-between mb-4">
+            <h3 className="text-blue-950 text-base font-semibold">
               {user?.fullName}
               <br />
-              <span className='text-green-700 text-base font-semibold'>
-                {preOrder.paidAmount}
+              <span className="text-green-700 text-base font-semibold">
+                {formatNumber(preOrder.paidAmount)}
               </span>
             </h3>
-            <h3 className='text-blue-950 text-base font-semibold'>
+            <h3 className="text-blue-950 text-base font-semibold">
               {parsedDate && (
                 <>
-                  {format(parsedDate, 'dd.MM.yyyy')}
+                  {format(parsedDate, "dd.MM.yyyy")}
                   <br />
-                  {format(parsedDate, 'HH:mm')}
+                  {format(parsedDate, "HH:mm")}
                 </>
               )}
             </h3>
           </div>
         )}
-        <div className='flex justify-between'>
+        <div className="flex justify-between">
           {preOrder && (
             <DeletePopover
               title={preOrder.client.toString()}
               id={preOrder._id}
               setOpenTag={setOpen}
               trigger={
-                <Button className='w-36 h-7 p-3 bg-red-700 hover:bg-white hover:text-blue-950 rounded-lg shadow-[0px_9px_28px_0px_rgba(0,0,0,0.05)]  gap-1'>
+                <Button className="w-36 h-7 p-3 bg-red-700 hover:bg-white hover:text-blue-950 rounded-lg shadow-[0px_9px_28px_0px_rgba(0,0,0,0.05)]  gap-1">
                   O'chirish
                 </Button>
               }
             />
           )}
           <Button
-            type='button'
+            type="button"
             onClick={() => {
               if (preOrder) navigate(`/orders/pre-order/${preOrder._id}/edit`);
             }}
-            className='w-36 h-7 p-3 bg-yellow-400 hover:bg-white rounded-lg shadow-[0px_9px_28px_0px_rgba(0,0,0,0.05)] shadow-[0px_3px_6px_0px_rgba(0,0,0,0.12)] shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] gap-1 text-[#1B2B56] font-bold'
+            className="w-36 h-7 p-3 bg-yellow-400 hover:bg-white rounded-lg shadow-[0px_9px_28px_0px_rgba(0,0,0,0.05)] shadow-[0px_3px_6px_0px_rgba(0,0,0,0.12)] shadow-[0px_6px_16px_0px_rgba(0,0,0,0.08)] gap-1 text-[#1B2B56] font-bold"
           >
             Tahrirlash
           </Button>

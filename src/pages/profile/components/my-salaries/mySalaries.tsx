@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { formatNumber, parseFormattedNumber } from "@/utils";
 
 export const MySalaries = () => {
   const navigate = useNavigate();
@@ -84,7 +85,7 @@ export const MySalaries = () => {
         </button>
         <div className="flex flex-col items-center">
           <h4 className="text-center justify-center text-white text-2xl font-semibold">
-            Balans <br /> {me?.salaryBalance as number}
+            Balans <br /> {formatNumber(me?.salaryBalance as number)}
           </h4>
         </div>
         <button onClick={() => navigate("/notifications")}>
@@ -144,7 +145,7 @@ export const MySalaries = () => {
                                     className="flex justify-between items-center px-3 py-1"
                                   >
                                     <h3 className="text-blue-950 text-base font-semibold pl-5">
-                                      {item.amount.toLocaleString("ru-RU")}
+                                      {formatNumber(item.amount)}
                                     </h3>
                                     <div className="flex gap-x-2">
                                       <h4 className="text-blue-950 text-sm font-semibold">
@@ -191,12 +192,12 @@ export const MySalaries = () => {
                           >
                             <div className="flex flex-col gap-y-1">
                               <h4 className="text-blue-950 text-base font-semibold">
-                                {item.amount}
+                                {formatNumber(item.amount)}
                               </h4>
                               <h4
                                 className={`text-${item.amount > item.totalAmount ? "red" : "green"}-600 text-base font-semibold`}
                               >
-                                {item.totalAmount}
+                                {formatNumber(item.totalAmount)}
                               </h4>
                             </div>
                             <div className="flex gap-x-3">
@@ -245,11 +246,12 @@ export const MySalaries = () => {
                   <>
                     <Input
                       {...field}
-                      type="number"
-                      value={(field.value ?? 0).toString()}
-                      onChange={({ target: { value } }) =>
-                        field.onChange(Number(value) || 0)
-                      }
+                      type="text"
+                      value={formatNumber(field.value ?? 0)}
+                      onChange={({ target: { value } }) => {
+                        const numValue = parseFormattedNumber(value);
+                        field.onChange(numValue);
+                      }}
                       placeholder="Berilgan pul"
                       className="mt-2 bg-white rounded-lg"
                     />
@@ -262,7 +264,7 @@ export const MySalaries = () => {
                 )}
               />
               <h3 className="text-white text-base mt-5">
-                Balans: {me?.salaryBalance}
+                Balans: {formatNumber(me?.salaryBalance)}
               </h3>
 
               <div className="flex justify-end mt-5">
@@ -291,11 +293,11 @@ export const MySalaries = () => {
               </div>
               <div className="bg-white px-3 py-1 rounded-lg flex justify-between">
                 <h4 className="text-blue-950 text-base font-semibold">
-                  {
+                  {formatNumber(
                     receivedMoney?.find(
                       (item) => item._id === receivedOpen.number,
-                    )?.amount
-                  }
+                    )?.amount,
+                  )}
                 </h4>
                 <h4 className="text-blue-950 text-base font-semibold">
                   {receivedMoney

@@ -3,6 +3,7 @@ import { Tabs } from "@/components/common/tabs";
 import { MessagesIcon, Notification } from "@/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ActiveOrders, PreOrder } from "./components";
+import { formatNumber } from "@/utils";
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -28,8 +29,8 @@ export const HomePage = () => {
       </div>
       <div className="mt-[80px] w-[100%] p-[12px]">
         <div className="flex items-center justify-between">
-          <h4 className="text-center justify-center text-[#ffffff] text-2xl font-semibold leading-loose">
-            Balanse: {me?.balance || 0} so'm
+          <h4 className="text-center justify-center text-[#ffffff] text-lg font-semibold leading-loose">
+            Balanse: {formatNumber(me?.balance || 0)} so'm
           </h4>
           <button onClick={() => navigate("/complaints")}>
             <MessagesIcon className="w-6 h-6 text-[#FFCC15]" />
