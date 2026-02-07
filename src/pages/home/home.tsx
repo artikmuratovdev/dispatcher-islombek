@@ -28,7 +28,7 @@ export const HomePage = () => {
       </div>
       <div className="mt-[80px] w-[100%] p-[12px]">
         <div className="flex items-center justify-between">
-          <h4 className="text-center justify-center text-[#ffffff] text-2xl font-semibold leading-loose">
+          <h4 className="text-center justify-center text-[#ffffff] text-lg font-semibold leading-loose">
             Balanse: {me?.balance || 0} so'm
           </h4>
           <button onClick={() => navigate("/complaints")}>
