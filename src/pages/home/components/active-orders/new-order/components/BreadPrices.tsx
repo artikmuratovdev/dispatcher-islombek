@@ -4,10 +4,11 @@ import {
   useState,
   forwardRef,
   useImperativeHandle,
-} from 'react';
-import { Minus, Plus } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { breadInfo } from '@/app/api/order/types';
+} from "react";
+import { Minus, Plus } from "lucide-react";
+import toast from "react-hot-toast";
+import { breadInfo } from "@/app/api/order/types";
+import { formatNumber, parseFormattedNumber } from "@/utils";
 
 type Props = {
   bread: breadInfo;
@@ -17,7 +18,7 @@ type Props = {
 
 const BreadPrices = forwardRef(function BreadPrices(
   { bread, onChange, setBreads }: Props,
-  ref
+  ref,
 ) {
   const [count, setCount] = useState<number>(bread.amount ?? 0);
   const [price, setPrice] = useState<number>(bread.breadSoldPrice ?? 0);
@@ -101,65 +102,60 @@ const BreadPrices = forwardRef(function BreadPrices(
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
     <div
       ref={wrapperRef}
-      className='grid grid-cols-3 gap-5 bg-white rounded-lg px-3 py-2'
+      className="grid grid-cols-3 gap-5 bg-white rounded-lg px-3 py-2"
     >
-      <h3 className='text-blue-950 font-semibold'>{bread.title}</h3>
+      <h3 className="text-blue-950 font-semibold">{bread.title}</h3>
 
-      <div className='text-blue-950 font-semibold flex gap-2 justify-center mr-5'>
-        {!priceVisible && <p>{price}</p>}
+      <div className="text-blue-950 font-semibold flex gap-2 justify-center mr-5">
+        {!priceVisible && <p>{formatNumber(price)}</p>}
 
         <input
           ref={priceInputRef}
-          type='number'
-          value={(price ?? "").toString().replace(/^0+(?=\d)/, "")}
+          type="text"
+          value={priceVisible ? formatNumber(price) : ""}
           onChange={(e) => {
-            const val = Number(e.target.value);
+            const val = parseFormattedNumber(e.target.value);
             setPrice(isNaN(val) ? 0 : val);
           }}
           className={`max-w-[80px] ${
-            priceVisible ? 'block' : 'hidden'
-          } border border-[#FFCC15] transition-all duration-200 appearance-none 
-          [&::-webkit-inner-spin-button]:appearance-none 
-          [&::-webkit-outer-spin-button]:appearance-none`}
+            priceVisible ? "block" : "hidden"
+          } border border-[#FFCC15] transition-all duration-200 px-1`}
         />
       </div>
 
-      <div className='text-blue-950 font-semibold flex items-center justify-center gap-2'>
+      <div className="text-blue-950 font-semibold flex items-center justify-center gap-2">
         <Minus
-          className='bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer'
+          className="bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer"
           onClick={() => setCount((prev) => Math.max(prev - 1, 0))}
         />
 
         <input
           ref={countInputRef}
-          type='number'
-          value={(count ?? "").toString().replace(/^0+(?=\d)/, "")}
+          type="text"
+          value={formatNumber(count ?? 0)}
           onChange={(e) => {
-            const value = Number(e.target.value);
+            const value = parseFormattedNumber(e.target.value);
             setCount(isNaN(value) ? 0 : Math.max(value, 0));
           }}
-          className='w-10 text-center border border-[#FFCC15] rounded bg-white
-            [&::-webkit-inner-spin-button]:appearance-none 
-            [&::-webkit-outer-spin-button]:appearance-none 
-            [appearance:textfield]'
+          className="w-10 text-center border border-[#FFCC15] rounded bg-white px-1"
         />
 
         <Plus
-          className='bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer'
+          className="bg-primary text-[#FFCC15] rounded-lg p-0.5 cursor-pointer"
           onClick={() => {
             if (price > 0) {
               setCount((prev) => prev + 1);
             } else {
-              toast.error('Narx nol bo‘lishi mumkin emas');
+              toast.error("Narx nol bo‘lishi mumkin emas");
             }
           }}
         />

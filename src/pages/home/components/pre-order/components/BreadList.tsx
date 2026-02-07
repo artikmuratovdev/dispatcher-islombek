@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import BreadPrices from './BreadPrices';
-import { breadInfo } from '@/app/api/order/types';
+import { useState } from "react";
+import BreadPrices from "./BreadPrices";
+import { breadInfo } from "@/app/api/order/types";
+import { formatNumber } from "@/utils";
 
 type BreadListProps = {
   breadPrices: breadInfo[];
@@ -11,18 +12,18 @@ const BreadList = ({ breadPrices, setBreads }: BreadListProps) => {
   const [totals, setTotals] = useState<Record<string, number>>({});
 
   const handleTotalChange = (id: string, value: number) => {
-    setTotals((prev) => ({...prev,[id]: Number(value) || 0,}));
+    setTotals((prev) => ({ ...prev, [id]: Number(value) || 0 }));
   };
 
   // Safely calculate grand total
   const grandTotal = Object.values(totals).reduce(
     (acc, val) => acc + (Number(val) || 0),
-    0
+    0,
   );
 
   return (
     <div>
-      <div className='mt-5 flex flex-col gap-y-2'>
+      <div className="mt-5 flex flex-col gap-y-2">
         {breadPrices.map((bread) => (
           <BreadPrices
             key={bread._id}
@@ -33,8 +34,8 @@ const BreadList = ({ breadPrices, setBreads }: BreadListProps) => {
         ))}
       </div>
 
-      <div className='mt-4 text-white text-2xl font-semibold'>
-        Umumiy: {grandTotal.toLocaleString('uz-UZ')} so'm
+      <div className="mt-4 text-white text-2xl font-semibold">
+        Umumiy: {formatNumber(grandTotal)} so'm
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { Button } from "@/components";
 import { Plus } from "@/icons";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatNumber } from "@/utils";
 
 export const PreOrder = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export const PreOrder = () => {
                 </h1>
                 <div className="min-w-[2rem] h-5 bg-blue-100 rounded-lg flex justify-center items-center px-1">
                   <h3 className="text-blue-900 text-sm font-semibold tabular-nums">
-                    {order.breadCount}
+                    {formatNumber(order.breadCount)}
                   </h3>
                 </div>
               </div>
